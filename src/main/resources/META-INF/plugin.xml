@@ -1,7 +1,7 @@
 <!-- Plugin Configuration File. Read more: https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
 <idea-plugin>
     <id>com.github.astyer.naturallanguagelabplugin</id>
-    <name>natural-language-lab-plugin</name>
+    <name>Natural Language Lab Identifier Helper</name>
     <vendor>astyer</vendor>
 
     <depends>com.intellij.modules.platform</depends>
@@ -15,4 +15,9 @@
         <listener class="com.github.astyer.naturallanguagelabplugin.listeners.MyProjectManagerListener"
                   topic="com.intellij.openapi.project.ProjectManagerListener"/>
     </applicationListeners>
+
+<!--    <projectListeners>-->
+<!--        <listener class="com.github.astyer.naturallanguagelabplugin.listeners.ProjectListener"-->
+<!--                  topic="com.intellij.openapi.project.ProjectManagerListener"/>-->
+<!--    </projectListeners>-->
 </idea-plugin>
