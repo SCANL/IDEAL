@@ -5,6 +5,8 @@
     <vendor>astyer</vendor>
 
     <depends>com.intellij.modules.platform</depends>
+    <depends>com.intellij.modules.java</depends>
+    <!-- we'll probably need a dependency on com.intellij.modules.lang for actually editing and highlighting text -->
 
     <extensions defaultExtensionNs="com.intellij">
         <applicationService serviceImplementation="com.github.astyer.naturallanguagelabplugin.services.MyApplicationService"/>
