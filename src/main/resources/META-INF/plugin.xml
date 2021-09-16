@@ -8,6 +8,12 @@
     <depends>com.intellij.modules.java</depends>
     <!-- we'll probably need a dependency on com.intellij.modules.lang for actually editing and highlighting text -->
 
+    <actions>
+        <action id="variablefinder" class="com.github.astyer.naturallanguagelabplugin.actions.VariableFinder" text="Find Variables" >
+            <add-to-group group-id="EditorPopupMenu" anchor="first"></add-to-group>
+        </action>
+    </actions>
+
     <extensions defaultExtensionNs="com.intellij">
         <applicationService serviceImplementation="com.github.astyer.naturallanguagelabplugin.services.MyApplicationService"/>
         <projectService serviceImplementation="com.github.astyer.naturallanguagelabplugin.services.MyProjectService"/>
