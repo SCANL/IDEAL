@@ -17,6 +17,14 @@
     <extensions defaultExtensionNs="com.intellij">
         <applicationService serviceImplementation="com.github.astyer.naturallanguagelabplugin.services.MyApplicationService"/>
         <projectService serviceImplementation="com.github.astyer.naturallanguagelabplugin.services.MyProjectService"/>
+        <localInspection language="JAVA"
+                         displayName="Example inspection"
+                         groupPath="Java"
+                         groupBundle="messages.InspectionsBundle"
+                         groupKey="group.names.naming.conventions"
+                         enabledByDefault="true"
+                         level="TYPO"
+                         implementationClass="com.github.astyer.naturallanguagelabplugin.extensions.ExampleInspection"/>
     </extensions>
 
     <applicationListeners>
