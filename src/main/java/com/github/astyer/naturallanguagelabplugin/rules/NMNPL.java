@@ -6,7 +6,7 @@ import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class NMNPL implements RuleVisitor{
+public class NMNPL extends RuleVisitor{
     private final String regexStr = "(NM )*NPL";
     private final String resultStr = "NM* NPL";
     private final int priority = 1;

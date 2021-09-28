@@ -5,6 +5,7 @@ import com.github.astyer.naturallanguagelabplugin.rules.Result;
 import com.github.astyer.naturallanguagelabplugin.rules.RuleVisitor;
 import com.intellij.psi.PsiElement;
 
+import java.util.List;
 import java.util.Optional;
 
 public class Class implements Identifier {
@@ -67,6 +68,16 @@ public class Class implements Identifier {
             pos = POSTagger.getInstance().tag(getName());
         }
         return pos;
+    }
+
+    @Override
+    public Identifier getParent() {
+        return null;
+    }
+
+    @Override
+    public List<Identifier> getChildren() {
+        return null;
     }
 }
 
