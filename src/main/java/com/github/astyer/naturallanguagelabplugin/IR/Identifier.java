@@ -4,14 +4,17 @@ import com.github.astyer.naturallanguagelabplugin.rules.Result;
 import com.github.astyer.naturallanguagelabplugin.rules.RuleVisitor;
 import com.intellij.psi.PsiElement;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface Identifier {
-    public String getName();
-    public int getLineNumber();
-    public int getColumnNumber();
-    public String getType();
-    public PsiElement getPsiObject();
-    public Optional<Result> accept(RuleVisitor visitor);
-    public String getPOS();
+    String getName();
+    int getLineNumber();
+    int getColumnNumber();
+    String getType();
+    PsiElement getPsiObject();
+    Optional<Result> accept(RuleVisitor visitor);
+    String getPOS();
+    Identifier getParent();
+    List<Identifier> getChildren();
 }
