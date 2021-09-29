@@ -18,19 +18,22 @@ public class ExampleInspection extends AbstractBaseJavaLocalInspectionTool {
             @Override
             public void visitVariable(PsiVariable variable) {
                 super.visitVariable(variable);
-                holder.registerProblem(variable, "Variable name '" + variable.getName() + "' may use the wrong grammar pattern", myQuickFix);
+                PsiIdentifier variableName = variable.getNameIdentifier();
+                holder.registerProblem(variableName, "Variable name '" + variableName.getText() + "' may use the wrong grammar pattern", myQuickFix);
             }
 
             @Override
             public void visitClass(PsiClass aClass) {
                 super.visitClass(aClass);
-                holder.registerProblem(aClass, "Class name '" + aClass.getName() + "' may use the wrong grammar pattern", myQuickFix);
+                PsiIdentifier className = aClass.getNameIdentifier();
+                holder.registerProblem(className, "Class name '" + className.getText() + "' may use the wrong grammar pattern", myQuickFix);
             }
 
             @Override
             public void visitMethod(PsiMethod method) {
                 super.visitMethod(method);
-                holder.registerProblem(method, "Method name '" + method.getName() + "' may use the wrong grammar pattern", myQuickFix);
+                PsiIdentifier methodName = method.getNameIdentifier();
+                holder.registerProblem(methodName, "Method name '" + methodName.getText() + "' may use the wrong grammar pattern", myQuickFix);
             }
         };
     }
