@@ -2,7 +2,7 @@ package com.github.astyer.naturallanguagelabplugin.rules;
 
 public class Result{
     boolean pass;
-    String recommendation;
+    public String recommendation;
     int priority;
     public Result(){
         pass = true;
