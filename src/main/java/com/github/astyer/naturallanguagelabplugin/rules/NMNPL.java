@@ -27,16 +27,4 @@ public class NMNPL extends RuleVisitor{
         }
         return Optional.empty();
     }
-
-    @Override
-    public Optional<Result> visitClass(Class c) {
-        if(c.getReturnType().equals("Array")){
-            Matcher m = p.matcher(c.getPOS());
-            if(!m.matches()){
-                return Optional.of(new Result(resultStr, priority));
-            }
-        }
-        return Optional.empty();
-    }
-
 }
