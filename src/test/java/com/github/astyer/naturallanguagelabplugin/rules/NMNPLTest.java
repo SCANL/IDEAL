@@ -2,6 +2,7 @@ package com.github.astyer.naturallanguagelabplugin.rules;
 
 import com.github.astyer.naturallanguagelabplugin.IR.Class;
 import com.github.astyer.naturallanguagelabplugin.IR.Identifier;
+import com.github.astyer.naturallanguagelabplugin.IR.Variable;
 import junit.framework.TestCase;
 import org.junit.Test;
 
@@ -17,7 +18,7 @@ public class NMNPLTest extends TestCase {
 
     @Test
     public void testMatchViolation(){
-        Identifier id = new Class("training_example", 0, 0, Class.ClassType.Class, "Array",null);
+        Identifier id = new Variable("training_example", 0, 0, "Array",null);
         Optional<Result> result = id.accept(instance);
         assertTrue(result.isPresent());
         assertEquals("NM* NPL", result.get().recommendation);
@@ -26,14 +27,14 @@ public class NMNPLTest extends TestCase {
 
     @Test
     public void testMatchNoViolation(){
-        Identifier id = new Class("training_examples", 0, 0, Class.ClassType.Class, "Array",null);
+        Identifier id = new Variable("training_examples", 0, 0, "Array",null);
         Optional<Result> result = id.accept(instance);
         assertFalse(result.isPresent());
     }
 
     @Test
     public void testNoMatch(){
-        Identifier id = new Class("training_examples", 0, 0, Class.ClassType.Class, "Int",null);
+        Identifier id = new Variable("training_examples", 0, 0, "Int",null);
         Optional<Result> result = id.accept(instance);
         assertFalse(result.isPresent());
     }

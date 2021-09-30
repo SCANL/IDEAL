@@ -2,6 +2,7 @@ package com.github.astyer.naturallanguagelabplugin.rules;
 
 import com.github.astyer.naturallanguagelabplugin.IR.Class;
 import com.github.astyer.naturallanguagelabplugin.IR.Identifier;
+import com.github.astyer.naturallanguagelabplugin.IR.Variable;
 import junit.framework.TestCase;
 import org.junit.Test;
 
@@ -17,7 +18,7 @@ public class AggregateRulesTest extends TestCase {
 
     @Test
     public void testRunAll(){
-        Identifier id = new Class("training_example", 0, 0, Class.ClassType.Class, "Array",null);
+        Identifier id = new Variable("training_example", 0, 0, "Array",null);
         Optional<Result> result = instance.runAll(id);
         assertTrue(result.isPresent());
         assertEquals("NM* NPL", result.get().recommendation);
