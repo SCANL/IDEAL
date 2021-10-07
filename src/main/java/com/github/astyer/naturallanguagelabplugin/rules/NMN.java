@@ -18,7 +18,7 @@ public class NMN extends RuleVisitor {
 
     @Override
     public Optional<Result> visitVariable(Variable v) {
-        if(!v.getType().equals("Array") && !v.getType().equals("Boolean")){
+        if(!v.getType().equals("Array") && !v.getType().equals("PsiType:boolean")){
             Matcher m = p.matcher(v.getPOS());
             if(!m.matches()){
                 return Optional.of(new Result(resultStr, priority));
