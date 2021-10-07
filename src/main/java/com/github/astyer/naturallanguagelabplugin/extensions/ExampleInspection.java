@@ -13,6 +13,7 @@ import com.intellij.psi.*;
 import com.intellij.psi.util.PsiTreeUtil;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Comparator;
 import java.util.Optional;
 
 public class ExampleInspection extends AbstractBaseJavaLocalInspectionTool {
@@ -29,7 +30,7 @@ public class ExampleInspection extends AbstractBaseJavaLocalInspectionTool {
                 super.visitVariable(variable);
 
                 Variable IRVariable = irFactory.createVariable(variable);
-                Optional<Result> result = aggregateRules.runAll(IRVariable);
+                Optional<Result> result = aggregateRules.runAll(IRVariable).stream().max(Comparator.comparingInt(a -> a.priority));
                 if (result.isPresent()) {
                     PsiIdentifier variableIdentifier = variable.getNameIdentifier();
                     String description = "Variable name '" + variable.getName() + "' should use grammar pattern " + result.get().recommendation;
