@@ -9,16 +9,16 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class AggregateRules {
-    RuleVisitor[] rules = {new NMNPL()};
+    RuleVisitor[] rules = {new NMNPL(), new NMN()};
 
-    public Optional<Result> runAll(Identifier i){
+    public List<Result> runAll(Identifier i){
         List<Result> results = Arrays.stream(rules)
                 .parallel()
                 .map(i::accept)
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .collect(Collectors.toList());
-        return results.stream().max(Comparator.comparingInt(a -> a.priority));
+        return results;
     }
 
 }
