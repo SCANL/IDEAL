@@ -6,6 +6,7 @@ import com.github.astyer.naturallanguagelabplugin.IR.Variable;
 import junit.framework.TestCase;
 import org.junit.Test;
 
+import java.util.Comparator;
 import java.util.Optional;
 
 public class AggregateRulesTest extends TestCase {
@@ -19,9 +20,18 @@ public class AggregateRulesTest extends TestCase {
     @Test
     public void testRunAll(){
         Identifier id = new Variable("training_example", 0, 0, "Array",null);
-        Optional<Result> result = instance.runAll(id);
+        Optional<Result> result =  instance.runAll(id).stream().max(Comparator.comparingInt(a -> a.priority));
         assertTrue(result.isPresent());
         assertEquals("NM* NPL", result.get().recommendation);
+        assertEquals(1, result.get().priority);
+    }
+
+    @Test
+    public void testRunAllNMN(){
+        Identifier id = new Variable("training_examples", 0, 0, "int",null);
+        Optional<Result> result =  instance.runAll(id).stream().max(Comparator.comparingInt(a -> a.priority));
+        assertTrue(result.isPresent());
+        assertEquals("NM* N", result.get().recommendation);
         assertEquals(1, result.get().priority);
     }
 
