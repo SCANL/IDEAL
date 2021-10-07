@@ -12,6 +12,6 @@ public class IRFactory {
         if (type instanceof PsiArrayType) {
             typeString = "Array";
         }
-        return new Variable(psiVariable.getName(), 0, 0, typeString, psiVariable);
+        return new Variable(psiVariable.getName(), typeString, psiVariable);
     }
 }

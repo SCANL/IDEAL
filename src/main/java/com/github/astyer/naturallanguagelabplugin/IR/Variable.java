@@ -13,10 +13,8 @@ public class Variable implements Identifier{
     int lineNumber, colNumber;
     PsiElement element;
 //    TODO: make type enum or class/enum
-    public Variable(String name, int lineNumber, int colNumber, String type, PsiElement element){
+    public Variable(String name, String type, PsiElement element){
         this.name = name;
-        this.lineNumber = lineNumber;
-        this.colNumber = colNumber;
         this.type = type;
         this.element = element;
     }
@@ -24,16 +22,6 @@ public class Variable implements Identifier{
     @Override
     public String getName() {
         return this.name;
-    }
-
-    @Override
-    public int getLineNumber() {
-        return this.lineNumber;
-    }
-
-    @Override
-    public int getColumnNumber() {
-        return this.lineNumber;
     }
 
     @Override

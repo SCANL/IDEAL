@@ -13,10 +13,8 @@ public class Method implements Identifier{
     int lineNumber, colNumber;
     PsiElement element;
 
-    public Method(String name, int lineNumber, int colNumber, String type, PsiElement element){
+    public Method(String name, String type, PsiElement element){
         this.name = name;
-        this.lineNumber = lineNumber;
-        this.colNumber = colNumber;
         this.type = type;
         this.element = element;
     }
@@ -24,16 +22,6 @@ public class Method implements Identifier{
     @Override
     public String getName() {
         return this.name;
-    }
-
-    @Override
-    public int getLineNumber() {
-        return this.lineNumber;
-    }
-
-    @Override
-    public int getColumnNumber() {
-        return this.colNumber;
     }
 
     @Override
