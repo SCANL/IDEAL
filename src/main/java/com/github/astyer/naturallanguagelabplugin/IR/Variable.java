@@ -12,7 +12,7 @@ public class Variable implements Identifier{
     String name, type, pos;
     int lineNumber, colNumber;
     PsiElement element;
-//    TODO: make type enum or class/enum
+//    TODO: make type enum or class
     public Variable(String name, int lineNumber, int colNumber, String type, PsiElement element){
         this.name = name;
         this.lineNumber = lineNumber;
