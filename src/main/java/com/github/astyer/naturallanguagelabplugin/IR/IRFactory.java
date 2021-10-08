@@ -6,9 +6,9 @@ import com.intellij.psi.PsiVariable;
 
 public class IRFactory {
 
-    public Variable createVariable(PsiVariable psiVariable) {
+    public static Variable createVariable(PsiVariable psiVariable) {
         PsiType type = psiVariable.getType();
-        String typeString = type.toString();
+        String typeString = type.getCanonicalText();
         if (type instanceof PsiArrayType) {
             typeString = "Array";
         }
