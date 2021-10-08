@@ -9,8 +9,6 @@ import java.util.Optional;
 
 public interface Identifier {
     String getName();
-    int getLineNumber();
-    int getColumnNumber();
     String getType();
     PsiElement getPsiObject();
     Optional<Result> accept(RuleVisitor visitor);

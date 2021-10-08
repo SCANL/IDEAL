@@ -8,12 +8,12 @@ import com.intellij.psi.PsiElement;
 import java.util.List;
 import java.util.Optional;
 
-public class Variable implements Identifier{
+public class Method implements Identifier{
     String name, type, pos;
     int lineNumber, colNumber;
     PsiElement element;
-//    TODO: make type enum or class/enum
-    public Variable(String name, String type, PsiElement element){
+
+    public Method(String name, String type, PsiElement element){
         this.name = name;
         this.type = type;
         this.element = element;
@@ -36,7 +36,7 @@ public class Variable implements Identifier{
 
     @Override
     public Optional<Result> accept(RuleVisitor visitor) {
-        return visitor.visitVariable(this);
+        return visitor.visitMethod(this);
     }
 
     @Override
