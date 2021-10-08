@@ -16,7 +16,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Comparator;
 import java.util.Optional;
 
-public class ExampleInspection extends AbstractBaseJavaLocalInspectionTool {
+public class IdentifierGrammerInspection extends AbstractBaseJavaLocalInspectionTool {
 
     private final ExampleQuickFix myQuickFix = new ExampleQuickFix();
     private IRFactory irFactory = new IRFactory();
