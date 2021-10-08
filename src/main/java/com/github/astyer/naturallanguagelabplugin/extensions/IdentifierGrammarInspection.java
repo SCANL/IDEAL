@@ -16,10 +16,9 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Comparator;
 import java.util.Optional;
 
-public class IdentifierGrammerInspection extends AbstractBaseJavaLocalInspectionTool {
+public class IdentifierGrammarInspection extends AbstractBaseJavaLocalInspectionTool {
 
     private final ExampleQuickFix myQuickFix = new ExampleQuickFix();
-    private IRFactory irFactory = new IRFactory();
     private AggregateRules aggregateRules = new AggregateRules();
 
     @Override
@@ -29,7 +28,7 @@ public class IdentifierGrammerInspection extends AbstractBaseJavaLocalInspection
             public void visitVariable(PsiVariable variable) {
                 super.visitVariable(variable);
 
-                Variable IRVariable = irFactory.createVariable(variable);
+                Variable IRVariable = IRFactory.createVariable(variable);
                 Optional<Result> result = aggregateRules.runAll(IRVariable).stream().max(Comparator.comparingInt(a -> a.priority));
                 if (result.isPresent()) {
                     PsiIdentifier variableIdentifier = variable.getNameIdentifier();
@@ -38,26 +37,26 @@ public class IdentifierGrammerInspection extends AbstractBaseJavaLocalInspection
                 }
             }
 
-//            @Override
-//            public void visitClass(PsiClass aClass) {
-//                super.visitClass(aClass);
-//                PsiIdentifier className = aClass.getNameIdentifier();
-//                holder.registerProblem(className, "Class name '" + className.getText() + "' may use the wrong grammar pattern", myQuickFix);
-//            }
+            @Override
+            public void visitClass(PsiClass aClass) {
+                super.visitClass(aClass);
+                PsiIdentifier className = aClass.getNameIdentifier();
+                holder.registerProblem(className, "Class name '" + className.getText() + "' may use the wrong grammar pattern", myQuickFix);
+            }
 
-//            @Override
-//            public void visitMethod(PsiMethod method) {
-//                super.visitMethod(method);
-//                PsiIdentifier methodName = method.getNameIdentifier();
-//                holder.registerProblem(methodName, "Method name '" + methodName.getText() + "' may use the wrong grammar pattern", myQuickFix);
-//            }
+            @Override
+            public void visitMethod(PsiMethod method) {
+                super.visitMethod(method);
+                PsiIdentifier methodName = method.getNameIdentifier();
+                holder.registerProblem(methodName, "Method name '" + methodName.getText() + "' may use the wrong grammar pattern", myQuickFix);
+            }
         };
     }
 
     private static class ExampleQuickFix implements LocalQuickFix {
         @Override
         public @IntentionName @NotNull String getName() {
-            return "Switch identifier to use suggested grammar pattern";
+            return "View suggested grammar pattern explanation";
         }
 
         @Override
@@ -68,7 +67,7 @@ public class IdentifierGrammerInspection extends AbstractBaseJavaLocalInspection
         @Override
         public void applyFix(@NotNull Project project, @NotNull ProblemDescriptor descriptor) {
 //            PsiElement psiElement = descriptor.getPsiElement();
-            System.out.println("Fix on line " + (descriptor.getLineNumber()+1) + " applied!");
+            System.out.println("Viewing grammar pattern explanation for identifier on line " + (descriptor.getLineNumber()+1));
         }
     }
 }
