@@ -8,7 +8,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class NMNPL extends RuleVisitor{
-    private final String regexStr = "(NM )*NPL";
+    private final String regexStr = "((N|NM) )*NPL";
     private final String resultStr = "NM* NPL";
     private final int priority = 1;
     Pattern p;
