@@ -18,7 +18,7 @@ public class NMNPLTest extends TestCase {
 
     @Test
     public void testMatchViolation(){
-        Identifier id = new Variable("training_example", 0, 0, "Array",null);
+        Identifier id = new Variable("training_example", "Array",null);
         Optional<Result> result = id.accept(instance);
         assertTrue(result.isPresent());
         assertEquals("NM* NPL", result.get().recommendation);
@@ -27,14 +27,14 @@ public class NMNPLTest extends TestCase {
 
     @Test
     public void testMatchNoViolation(){
-        Identifier id = new Variable("training_examples", 0, 0, "Array",null);
+        Identifier id = new Variable("training_examples", "Array",null);
         Optional<Result> result = id.accept(instance);
         assertFalse(result.isPresent());
     }
 
     @Test
     public void testNoMatch(){
-        Identifier id = new Variable("training_examples", 0, 0, "Int",null);
+        Identifier id = new Variable("training_examples", "Int",null);
         Optional<Result> result = id.accept(instance);
         assertFalse(result.isPresent());
     }
