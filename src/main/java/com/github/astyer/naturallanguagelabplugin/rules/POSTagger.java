@@ -1,7 +1,19 @@
 package com.github.astyer.naturallanguagelabplugin.rules;
 
+import com.github.astyer.naturallanguagelabplugin.IR.Identifier;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 public class POSTagger {
     static POSTagger instance;
+    Map<String, String> cache;
 
     public static POSTagger getInstance(){
         if(instance == null){
@@ -11,19 +23,50 @@ public class POSTagger {
     }
 
     private POSTagger(){
-
+        cache = new HashMap<>();
     }
 
+    private String getKey(String name, String type, String context){
+        return name  + "|" + type +"|"+context;
+    }
 
+    public String tag(Identifier id){
+        String name = id.getName();
+        String type = id.getType();
+        String context = id.getContext();
+        String key = getKey(name, type, context);
+        if(cache.containsKey(key)){
+            System.out.println(name + " is in the cache");
+            return cache.get(key);
+        }
+        try {
+            String urlStr = String.format("http://127.0.0.1:5000/%s/%s/%s", type, name, context);
+            System.out.println("Tagging "+urlStr);
+            URL url = new URL(urlStr);
+            HttpURLConnection con = (HttpURLConnection) url.openConnection();
+            con.setRequestMethod("GET");
+            int status = con.getResponseCode();
+            System.out.println("got response code of "+status);
+            if(status == 200) {
+                BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+                String inputLine;
+                StringBuilder content = new StringBuilder();
+                while ((inputLine = in.readLine()) != null) {
+                    content.append(inputLine);
+                }
+                System.out.println("recieved content of "+content);
+                in.close();
+                con.disconnect();
+                String result = Arrays.stream(content.toString().split(","))
+                        .map(w -> w.split("\\|")[1])
+                        .collect(Collectors.joining(" "));
 
-    public String tag(String name){
-        switch (name){
-            case "training_examples":
-                return "NM NPL";
-            case "training_example":
-                return "NM N";
-            case "dynamic_Table_Index":
-                return "NM NM N";
+                System.out.println("final result of "+result);
+                cache.put(key, result);
+                return result.toString();
+            }
+        }catch (Exception ex){
+            System.err.println("Error getting pos tag for " + name);
         }
         return "";
     }

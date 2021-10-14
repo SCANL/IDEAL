@@ -42,7 +42,7 @@ public class Method implements Identifier{
     @Override
     public String getPOS() {
         if(pos == null){
-            pos = POSTagger.getInstance().tag(getName());
+            pos = POSTagger.getInstance().tag(this);
         }
         return pos;
     }
@@ -55,5 +55,10 @@ public class Method implements Identifier{
     @Override
     public List<Identifier> getChildren() {
         return null;
+    }
+
+    @Override
+    public String getContext() {
+        return "FUNCTION";
     }
 }

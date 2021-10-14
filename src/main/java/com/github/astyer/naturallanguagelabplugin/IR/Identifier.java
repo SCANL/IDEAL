@@ -15,4 +15,5 @@ public interface Identifier {
     String getPOS();
     Identifier getParent();
     List<Identifier> getChildren();
+    String getContext();
 }

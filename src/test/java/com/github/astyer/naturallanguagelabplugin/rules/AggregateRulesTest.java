@@ -19,7 +19,7 @@ public class AggregateRulesTest extends TestCase {
 
     @Test
     public void testRunAll(){
-        Identifier id = new Variable("training_example", 0, 0, "Array",null);
+        Identifier id = new Variable("training_example", "Array",null);
         Optional<Result> result =  instance.runAll(id).stream().max(Comparator.comparingInt(a -> a.priority));
         assertTrue(result.isPresent());
         assertEquals("NM* NPL", result.get().recommendation);
@@ -28,7 +28,7 @@ public class AggregateRulesTest extends TestCase {
 
     @Test
     public void testRunAllNMN(){
-        Identifier id = new Variable("training_examples", 0, 0, "int",null);
+        Identifier id = new Variable("training_examples", "int",null);
         Optional<Result> result =  instance.runAll(id).stream().max(Comparator.comparingInt(a -> a.priority));
         assertTrue(result.isPresent());
         assertEquals("NM* N", result.get().recommendation);
