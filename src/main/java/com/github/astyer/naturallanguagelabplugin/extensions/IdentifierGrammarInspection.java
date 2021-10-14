@@ -1,16 +1,17 @@
 package com.github.astyer.naturallanguagelabplugin.extensions;
 
-import com.github.astyer.naturallanguagelabplugin.IR.Class;
 import com.github.astyer.naturallanguagelabplugin.IR.IRFactory;
 import com.github.astyer.naturallanguagelabplugin.IR.Variable;
 import com.github.astyer.naturallanguagelabplugin.rules.AggregateRules;
 import com.github.astyer.naturallanguagelabplugin.rules.Result;
+import com.github.astyer.naturallanguagelabplugin.ui.IdentifierGrammarToolWindow;
 import com.intellij.codeInspection.*;
 import com.intellij.codeInspection.util.IntentionFamilyName;
 import com.intellij.codeInspection.util.IntentionName;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.wm.ToolWindow;
+import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.psi.*;
-import com.intellij.psi.util.PsiTreeUtil;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Comparator;
@@ -18,7 +19,7 @@ import java.util.Optional;
 
 public class IdentifierGrammarInspection extends AbstractBaseJavaLocalInspectionTool {
 
-    private final ExampleQuickFix myQuickFix = new ExampleQuickFix();
+    private final ViewExplanationQuickFix myQuickFix = new ViewExplanationQuickFix();
     private AggregateRules aggregateRules = new AggregateRules();
 
     @Override
@@ -53,7 +54,7 @@ public class IdentifierGrammarInspection extends AbstractBaseJavaLocalInspection
         };
     }
 
-    private static class ExampleQuickFix implements LocalQuickFix {
+    private static class ViewExplanationQuickFix implements LocalQuickFix {
         @Override
         public @IntentionName @NotNull String getName() {
             return "View suggested grammar pattern explanation";
@@ -68,6 +69,9 @@ public class IdentifierGrammarInspection extends AbstractBaseJavaLocalInspection
         public void applyFix(@NotNull Project project, @NotNull ProblemDescriptor descriptor) {
 //            PsiElement psiElement = descriptor.getPsiElement();
             System.out.println("Viewing grammar pattern explanation for identifier on line " + (descriptor.getLineNumber()+1));
+            //IdentifierGrammarToolWindow.setSomething()?
+            ToolWindow toolWindow = ToolWindowManager.getInstance(project).getToolWindow("Identifier Grammar Pattern Suggestions"); //maybe store this toolwindow so we don't keep refetching it?
+            toolWindow.show();
         }
     }
 }

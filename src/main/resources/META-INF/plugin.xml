@@ -25,6 +25,8 @@
                          enabledByDefault="true"
                          level="TYPO"
                          implementationClass="com.github.astyer.naturallanguagelabplugin.extensions.IdentifierGrammarInspection"/>
+        <toolWindow id="Identifier Grammar Pattern Suggestions" secondary="true" icon="AllIcons.General.Modified" anchor="right"
+                    factoryClass="com.github.astyer.naturallanguagelabplugin.ui.IdentifierGrammarToolWindowFactory"/>
     </extensions>
 
     <applicationListeners>
