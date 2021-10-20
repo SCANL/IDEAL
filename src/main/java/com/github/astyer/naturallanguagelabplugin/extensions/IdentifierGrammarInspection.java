@@ -1,6 +1,7 @@
 package com.github.astyer.naturallanguagelabplugin.extensions;
 
 import com.github.astyer.naturallanguagelabplugin.IR.IRFactory;
+import com.github.astyer.naturallanguagelabplugin.IR.Method;
 import com.github.astyer.naturallanguagelabplugin.IR.Variable;
 import com.github.astyer.naturallanguagelabplugin.rules.AggregateRules;
 import com.github.astyer.naturallanguagelabplugin.rules.Result;
@@ -28,7 +29,6 @@ public class IdentifierGrammarInspection extends AbstractBaseJavaLocalInspection
             @Override
             public void visitVariable(PsiVariable variable) {
                 super.visitVariable(variable);
-
                 Variable IRVariable = IRFactory.createVariable(variable);
                 Optional<Result> result = aggregateRules.runAll(IRVariable).stream().max(Comparator.comparingInt(a -> a.priority));
                 if (result.isPresent()) {
@@ -38,18 +38,23 @@ public class IdentifierGrammarInspection extends AbstractBaseJavaLocalInspection
                 }
             }
 
-            @Override
-            public void visitClass(PsiClass aClass) {
-                super.visitClass(aClass);
-                PsiIdentifier className = aClass.getNameIdentifier();
-                holder.registerProblem(className, "Class name '" + className.getText() + "' may use the wrong grammar pattern", myQuickFix);
-            }
+//            @Override
+//            public void visitClass(PsiClass aClass) {
+//                super.visitClass(aClass);
+//                PsiIdentifier className = aClass.getNameIdentifier();
+//                holder.registerProblem(className, "Class name '" + className.getText() + "' may use the wrong grammar pattern", myQuickFix);
+//            }
 
             @Override
             public void visitMethod(PsiMethod method) {
                 super.visitMethod(method);
-                PsiIdentifier methodName = method.getNameIdentifier();
-                holder.registerProblem(methodName, "Method name '" + methodName.getText() + "' may use the wrong grammar pattern", myQuickFix);
+                Method IRMethod = IRFactory.createMethod(method);
+                Optional<Result> result = aggregateRules.runAll(IRMethod).stream().max(Comparator.comparingInt(a -> a.priority));
+                if (result.isPresent()) {
+                    PsiIdentifier methodIdentifier = method.getNameIdentifier();
+                    String description = "Method name '" + method.getName() + "' should use grammar pattern " + result.get().recommendation;
+                    holder.registerProblem(methodIdentifier, description, myQuickFix);
+                }
             }
         };
     }
