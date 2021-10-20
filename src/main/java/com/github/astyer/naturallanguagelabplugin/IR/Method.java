@@ -10,12 +10,14 @@ import java.util.Optional;
 
 public class Method implements Identifier{
     String name, type, pos;
-    int lineNumber, colNumber;
+    boolean performsConversion, performsEventDrivenFunctionality;
     PsiElement element;
 
-    public Method(String name, String type, PsiElement element){
+    public Method(String name, String type, boolean performsConversion, boolean performsEventDrivenFunctionality, PsiElement element){
         this.name = name;
         this.type = type;
+        this.performsConversion = performsConversion;
+        this.performsEventDrivenFunctionality = performsEventDrivenFunctionality;
         this.element = element;
     }
 
