@@ -7,7 +7,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class V extends RuleVisitor{
-    private final String regexStr = "(V )+";
+    private final String regexStr = "V( V)*";
     private final String resultStr = "V+";
     private final int priority = 2;
     private Pattern p;

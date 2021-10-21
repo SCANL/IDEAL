@@ -26,6 +26,14 @@ public class Method implements Identifier{
         return this.name;
     }
 
+    public boolean performsConversion() {
+        return performsConversion;
+    }
+
+    public boolean performsEventDrivenFunctionality() {
+        return performsEventDrivenFunctionality;
+    }
+
     @Override
     public String getType() {
         return this.type;

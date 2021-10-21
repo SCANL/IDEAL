@@ -1,26 +1,35 @@
 package com.github.astyer.naturallanguagelabplugin.IR;
 
-import com.intellij.psi.PsiArrayType;
-import com.intellij.psi.PsiMethod;
-import com.intellij.psi.PsiType;
-import com.intellij.psi.PsiVariable;
+import com.intellij.psi.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class IRFactory {
 
-    public static Variable createVariable(PsiVariable psiVariable) {
-        PsiType type = psiVariable.getType();
-        String typeString = type.getCanonicalText();
+    private static String typeToString(PsiType type){
         if (type instanceof PsiArrayType) {
-            typeString = "Array";
+            return "Array";
+        }else{
+            return type.getCanonicalText();
         }
+    }
+
+    public static Variable createVariable(PsiVariable psiVariable) {
+        String typeString = typeToString(psiVariable.getType());
         return new Variable(psiVariable.getName(), typeString, psiVariable);
     }
 
     public static Method createMethod(PsiMethod psiMethod) {
-        PsiType returnType = psiMethod.getReturnType();
-        String typeString = returnType.getCanonicalText();
+        String typeString = typeToString(psiMethod.getReturnType());
         boolean performsConversion = false; //traverse psi tree to figure out if any casting happens inside the method
         boolean performsEventDrivenFunctionality = false;
-        return new Method(psiMethod.getName(), typeString, performsConversion, performsEventDrivenFunctionality, psiMethod);
+
+        List<String> params = new ArrayList();
+        for(PsiParameter param : psiMethod.getParameterList().getParameters()){
+            params.add(typeToString(param.getType()));
+        }
+        String name = psiMethod.getName() + "("+ String.join(",", params) + ")";
+        return new Method(name, typeString, performsConversion, performsEventDrivenFunctionality, psiMethod);
     }
 }

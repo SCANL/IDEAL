@@ -29,11 +29,11 @@ public class VNMN extends RuleVisitor {
 
     @Override
     public Optional<Result> visitMethod(Method m) {
-        //if method not implementing event driven functionality
-        //no conversion
-        Matcher match = p.matcher(m.getPOS());
-        if(!match.matches()){
-            return Optional.of(new Result(resultStr, priority));
+        if(!m.performsConversion() && !m.performsEventDrivenFunctionality() && !m.getType().equals("void")) {
+            Matcher match = p.matcher(m.getPOS());
+            if (!match.matches()) {
+                return Optional.of(new Result(resultStr, priority));
+            }
         }
         return Optional.empty();
     }

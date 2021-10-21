@@ -9,7 +9,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class AggregateRules {
-    RuleVisitor[] rules = {new NMNPL(), new NMN()};
+    RuleVisitor[] rules = {new NMNPL(), new NMN(), new V(), new VNMN()};
 
     public List<Result> runAll(Identifier i){
         List<Result> results = Arrays.stream(rules)
