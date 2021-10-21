@@ -10,7 +10,7 @@ public class IRFactory {
     private static String typeToString(PsiType type){
         if (type instanceof PsiArrayType) {
             return "Array";
-        }else{
+        } else {
             return type.getCanonicalText();
         }
     }
