@@ -54,7 +54,7 @@ public class POSTagger {
                 while ((inputLine = in.readLine()) != null) {
                     content.append(inputLine);
                 }
-                System.out.println("recieved content of "+content);
+                System.out.println("received content of "+content);
                 in.close();
                 con.disconnect();
                 String result = Arrays.stream(content.toString().split(","))
@@ -65,8 +65,13 @@ public class POSTagger {
                 cache.put(key, result);
                 return result.toString();
             }
+            else {
+                System.err.println("Error while making connection to " + urlStr);
+                System.err.println("Received status code of " + status);
+            }
         }catch (Exception ex){
-            System.err.println("Error getting pos tag for " + name);
+            System.err.println("Unable to retrieve POS tags for " + name);
+            System.err.println(ex.getMessage());
         }
         return "";
     }
