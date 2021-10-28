@@ -3,32 +3,27 @@ package com.github.astyer.naturallanguagelabplugin.extensions;
 import com.github.astyer.naturallanguagelabplugin.IR.IRFactory;
 import com.github.astyer.naturallanguagelabplugin.IR.Method;
 import com.github.astyer.naturallanguagelabplugin.IR.Variable;
+import com.github.astyer.naturallanguagelabplugin.common.IdentifierSuggestionResults;
 import com.github.astyer.naturallanguagelabplugin.rules.AggregateRules;
 import com.github.astyer.naturallanguagelabplugin.rules.Result;
-import com.github.astyer.naturallanguagelabplugin.ui.IdentifierGrammarToolWindow;
 import com.intellij.codeInspection.*;
 import com.intellij.codeInspection.util.IntentionFamilyName;
 import com.intellij.codeInspection.util.IntentionName;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.wm.ToolWindow;
-import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.psi.*;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.Optional;
 
 public class IdentifierGrammarInspection extends AbstractBaseJavaLocalInspectionTool {
 
     private final ViewExplanationQuickFix myQuickFix = new ViewExplanationQuickFix();
     private static AggregateRules aggregateRules = new AggregateRules();
-    private static HashMap<PsiIdentifier, Result> identifierResults = new HashMap<>(); //store this in a separate class so a listener can access it
 
     @Override
     public void inspectionStarted(@NotNull LocalInspectionToolSession session, boolean isOnTheFly) {
-        identifierResults.clear();
+        IdentifierSuggestionResults.clear();
     }
 
     @Override
@@ -40,7 +35,7 @@ public class IdentifierGrammarInspection extends AbstractBaseJavaLocalInspection
                 Optional<Result> result = aggregateRules.runAll(IRVariable).stream().max(Comparator.comparingInt(a -> a.priority));
                 if (result.isPresent()) {
                     PsiIdentifier variableIdentifier = variable.getNameIdentifier();
-                    identifierResults.put(variableIdentifier, result.get());
+                    IdentifierSuggestionResults.put(variableIdentifier, result.get());
                     String description = "Variable name '" + variable.getName() + "' should use grammar pattern " + result.get().recommendation;
                     holder.registerProblem(variableIdentifier, description, myQuickFix);
                 }
@@ -58,7 +53,7 @@ public class IdentifierGrammarInspection extends AbstractBaseJavaLocalInspection
                 Optional<Result> result = aggregateRules.runAll(IRMethod).stream().max(Comparator.comparingInt(a -> a.priority));
                 if (result.isPresent()) {
                     PsiIdentifier methodIdentifier = method.getNameIdentifier();
-                    identifierResults.put(methodIdentifier, result.get());
+                    IdentifierSuggestionResults.put(methodIdentifier, result.get());
                     String description = "Method name '" + method.getName() + "' should use grammar pattern " + result.get().recommendation;
                     holder.registerProblem(methodIdentifier, description, myQuickFix);
                 }
@@ -79,17 +74,8 @@ public class IdentifierGrammarInspection extends AbstractBaseJavaLocalInspection
 
         @Override
         public void applyFix(@NotNull Project project, @NotNull ProblemDescriptor descriptor) {
-            ToolWindow toolWindow = ToolWindowManager.getInstance(project).getToolWindow("Identifier Grammar Pattern Suggestions"); //maybe store this toolwindow so we don't keep refetching it?
-            if (toolWindow != null) {
-                PsiIdentifier identifier = (PsiIdentifier) descriptor.getPsiElement();
-                Result result = identifierResults.get(identifier);
-
-                IdentifierGrammarToolWindow toolWindowContent = IdentifierGrammarToolWindow.getInstance(); //maybe store this instance too?
-                toolWindowContent.setIdentifierName(identifier.getText());
-                toolWindowContent.setSuggestedPattern(result.recommendation);
-
-                toolWindow.show();
-            }
+            // When the fix is applied, the cursor moves to the identifier.
+            // The cursor being on the identifier triggers the listener to fill out the sidebar, so we're all done.
         }
     }
 }

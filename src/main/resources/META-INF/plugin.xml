@@ -9,14 +9,9 @@
     <!-- we'll probably need a dependency on com.intellij.modules.lang for actually editing and highlighting text -->
 
     <actions>
-        <action id="variablefinder" class="com.github.astyer.naturallanguagelabplugin.actions.VariableFinder" text="Find Variables" >
-            <add-to-group group-id="EditorPopupMenu" anchor="first"></add-to-group>
-        </action>
     </actions>
 
     <extensions defaultExtensionNs="com.intellij">
-        <applicationService serviceImplementation="com.github.astyer.naturallanguagelabplugin.services.MyApplicationService"/>
-        <projectService serviceImplementation="com.github.astyer.naturallanguagelabplugin.services.MyProjectService"/>
         <localInspection language="JAVA"
                          displayName="Identifier grammar analysis"
                          groupPath="Java"
@@ -27,15 +22,6 @@
                          implementationClass="com.github.astyer.naturallanguagelabplugin.extensions.IdentifierGrammarInspection"/>
         <toolWindow id="Identifier Grammar Pattern Suggestions" secondary="true" icon="AllIcons.General.Modified" anchor="right"
                     factoryClass="com.github.astyer.naturallanguagelabplugin.ui.IdentifierGrammarToolWindowFactory"/>
+        <postStartupActivity implementation="com.github.astyer.naturallanguagelabplugin.extensions.MyStartupActivity"/>
     </extensions>
-
-    <applicationListeners>
-        <listener class="com.github.astyer.naturallanguagelabplugin.listeners.MyProjectManagerListener"
-                  topic="com.intellij.openapi.project.ProjectManagerListener"/>
-    </applicationListeners>
-
-<!--    <projectListeners>-->
-<!--        <listener class="com.github.astyer.naturallanguagelabplugin.listeners.ProjectListener"-->
-<!--                  topic="com.intellij.openapi.project.ProjectManagerListener"/>-->
-<!--    </projectListeners>-->
 </idea-plugin>
