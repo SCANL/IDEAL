@@ -24,15 +24,11 @@ public class IRFactory {
         PsiType collectionPsiType = psiElementFactory.createTypeByFQClassName(Collection.class.getName());
         PsiType mapPsiType = psiElementFactory.createTypeByFQClassName(Map.class.getName());
 
-        // look at all the direct super classes and check if any are assignable to Collection or Map
-        PsiType[] superTypes = type.getSuperTypes();
-        for(PsiType superType: superTypes) {
-            if(collectionPsiType.isAssignableFrom(superType) || mapPsiType.isAssignableFrom(superType)) {
-                isCollectionPsiTypeCache.put(type, true);
-                return true;
-            }
+        //check if the type is assignable to Collection or Map
+        if(collectionPsiType.isAssignableFrom(type) || mapPsiType.isAssignableFrom(type)) {
+            isCollectionPsiTypeCache.put(type, true);
+            return true;
         }
-
         isCollectionPsiTypeCache.put(type, false);
         return false;
     }
