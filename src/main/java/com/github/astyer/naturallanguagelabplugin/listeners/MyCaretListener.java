@@ -37,7 +37,6 @@ public class MyCaretListener implements CaretListener {
                     Result result = IdentifierSuggestionResults.get(identifier);
                     if (result != null) {
                         populateToolWindow(identifier, result);
-                        toolWindow.show();
                     }
                 }
             }
