@@ -2,28 +2,35 @@ package com.github.astyer.naturallanguagelabplugin.rules;
 
 import com.github.astyer.naturallanguagelabplugin.IR.Variable;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class NMN extends RuleVisitor {
-    private final String regexStr = "((N|MN) )*N";
-    private final String resultStr = "NM* N";
-    private final int priority = 1;
-    Pattern p;
-
-    public NMN(){
-        p = Pattern.compile(regexStr);
+public class NMN extends Rule {
+    @Override
+    List<Checkbox> getCheckboxes() {
+        List<Checkbox> results = new ArrayList<>();
+        results.add(new Checkbox("return type not array or boolean",
+                null,
+                null,
+                variable -> new CheckboxResult(!variable.getType().equals("Array") && !variable.getType().equals("boolean"))));
+        return results;
     }
 
     @Override
-    public Optional<Result> visitVariable(Variable v) {
-        if(!v.getType().equals("Array") && !v.getType().equals("boolean")){
-            Matcher m = p.matcher(v.getPOS());
-            if(!m.matches()){
-                return Optional.of(new Result(resultStr, priority));
-            }
-        }
-        return Optional.empty();
+    String getRecommendation() {
+        return "NM* N";
+    }
+
+    @Override
+    int getPriority() {
+        return 1;
+    }
+
+    @Override
+    Pattern getPattern() {
+        return Pattern.compile("((N|MN) )*N");
     }
 }
