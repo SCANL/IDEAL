@@ -1,9 +1,14 @@
 package com.github.astyer.naturallanguagelabplugin.ui;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableColumnModel;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
+import javax.swing.table.TableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusAdapter;
 import java.io.IOException;
 import java.net.URI;
 
@@ -27,6 +32,9 @@ public class IdentifierGrammarToolWindow {
     private JButton catalogueButton;
     private JLabel othersTitle;
     private JLabel othersValue;
+    private JTable suggestedPattern;
+    private JTable otherSuggestedPattern;
+    private JTable currentPattern;
 
     public IdentifierGrammarToolWindow() {
         othersValue.setText("<html>GrammarPattern1<br>GrammarPattern2<br>GrammarPattern3</html>");
@@ -40,6 +48,8 @@ public class IdentifierGrammarToolWindow {
                 }
             }
         });
+        createTable();
+
     }
 
     public static IdentifierGrammarToolWindow getInstance() {
@@ -60,4 +70,23 @@ public class IdentifierGrammarToolWindow {
     public JPanel getContent() {
         return myToolWindowContent;
     }
+
+    private void createTable() {
+        String[] currentHeaders = {"Type", "Identifier", "Current Grammar Pattern" };
+        String[] suggestedHeaders = {"Type", "Identifier", "Recommended", "Generic" };
+
+        currentPattern.setModel(new DefaultTableModel(
+                new String[][] {{"List", "Dynamic Table Index", "NM NM N"}},
+                currentHeaders
+        ));
+        suggestedPattern.setModel(new DefaultTableModel(
+                new String[][] {{"List", "Dynamic Table Index", "NM NM NPL", "NM* NPL"}},
+                suggestedHeaders
+        ));
+        otherSuggestedPattern.setModel(new DefaultTableModel(
+                new String[][] {{"List", "Dynamic Table Index", "V NM NPL", "V NM* NPL"}},
+                suggestedHeaders
+        ));
+    }
+
 }
