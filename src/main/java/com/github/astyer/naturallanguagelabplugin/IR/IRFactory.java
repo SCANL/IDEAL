@@ -34,6 +34,9 @@ public class IRFactory {
     }
 
     private static String typeToString(PsiType type, Project project){
+        if(type == null) {
+            return "null";
+        }
         if (isSomeCollection(type, project)) {
             return "Array";
         } else {
