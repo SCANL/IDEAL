@@ -12,6 +12,13 @@ public class IdentifierGrammarToolWindow {
     final String knowMoreText = "These recommendations are all part of a catalogue of grammar patterns. This catalogue documents the identifier naming styles and patterns that have been discovered by software researchers. You can access this catalogue via the button below.";
     final Font titleFont = new Font(null, Font.BOLD, 16);
 
+    String[] currentHeaders = {"Type", "Identifier", "Current Grammar Pattern" };
+    String[] recommendedHeaders = {"Type", "Identifier", "Recommended", "Generic" };
+    private String currentType = "";
+    private String currentIdentifier = "";
+    private String currentRecommended = "";
+    private String currentGeneric = "";
+
     private static IdentifierGrammarToolWindow instance = null;
 
     private JPanel myToolWindowContent;
@@ -55,36 +62,47 @@ public class IdentifierGrammarToolWindow {
     }
 
     private void setInitialTextAndStyling() {
-        for(JLabel titleLabel: titleLabels) {
+        for (JLabel titleLabel : titleLabels) {
             titleLabel.setFont(titleFont);
         }
         knowMoreValue.setText("<html><body style='width: 275px'>" + knowMoreText); //determines the min width of the tables unfortunately
     }
 
     private void createTables() {
-        String[] currentHeaders = {"Type", "Identifier", "Current Grammar Pattern" };
-        String[] recommendedHeaders = {"Type", "Identifier", "Recommended", "Generic" };
+        updateCurrentTable();
+        updateRecommendedTable();
+        updateOthersTable();
+    }
 
+    private void updateCurrentTable() {
         currentTable.setModel(new DefaultTableModel(
                 new String[][] {{"List", "Dynamic Table Index", "NM NM N"}},
                 currentHeaders
         ));
+    }
+    private void updateRecommendedTable() {
         recommendedTable.setModel(new DefaultTableModel(
-                new String[][] {{"List", "Dynamic Table Index", "NM NM NPL", "NM* NPL"}},
+                new String[][] {{currentType, currentIdentifier, currentRecommended, currentGeneric}},
                 recommendedHeaders
         ));
+    }
+    private void updateOthersTable() {
         othersTable.setModel(new DefaultTableModel(
-                new String[][] {{"List", "Dynamic Table Index", "V NM NPL", "V NM* NPL"}},
+                new String[][] {{currentType, currentIdentifier, currentRecommended, currentGeneric}},
                 recommendedHeaders
         ));
     }
 
     public void setIdentifierName(String currentIdentifierName) {
-//        identifierNameValue.setText(currentIdentifierName); //@todo reimplement this using the tables
+        currentIdentifier = currentIdentifierName;
+        updateRecommendedTable();
+        updateOthersTable();
     }
 
-    public void setSuggestedPattern(String suggestedPattern) {
-//        suggestionValue.setText(suggestedPattern); //@todo reimplement this using the tables
+    public void setRecommendedGenericPattern(String suggestedPattern) {
+        currentGeneric = suggestedPattern;
+        updateRecommendedTable();
+        updateOthersTable();
     }
 
     public JPanel getContent() {
