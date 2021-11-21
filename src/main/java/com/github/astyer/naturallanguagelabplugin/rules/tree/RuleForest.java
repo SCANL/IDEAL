@@ -1,0 +1,95 @@
+package com.github.astyer.naturallanguagelabplugin.rules.tree;
+
+import com.github.astyer.naturallanguagelabplugin.IR.Class;
+import com.github.astyer.naturallanguagelabplugin.IR.Identifier;
+import com.github.astyer.naturallanguagelabplugin.IR.Method;
+import com.github.astyer.naturallanguagelabplugin.IR.Variable;
+import com.github.astyer.naturallanguagelabplugin.rules.Checkbox;
+import com.github.astyer.naturallanguagelabplugin.rules.CheckboxResult;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Pattern;
+
+public class RuleForest {
+    static RuleForest instance = null;
+    public static RuleForest getInstance(){
+        if(instance == null){
+            instance = new RuleForest();
+        }
+        return instance;
+    }
+
+    private RuleForest(){
+        //create var
+        RuleNode nmn = new RuleNode("NM* N", Pattern.compile("(NM )*N"));
+        RuleNode vnmn = new RuleNode("V NM* N(PL)", Pattern.compile("V (NM )*(N|NPL)"));
+        RuleNode nmnpl = new RuleNode("NM* NPL", Pattern.compile("(NM )*NPL"));
+
+        nmn.addBranch(new RuleBranch(
+                "Type of Bool",
+                vnmn,
+                new Checkbox(
+                        "Type of Bool",
+                        null,
+                        null,
+                        variable -> new CheckboxResult(variable.getType().equals("boolean"))
+                )
+        ));
+
+        nmn.addBranch(new RuleBranch(
+                "Type of Collection",
+                nmnpl,
+                new Checkbox(
+                        "Type of Collection",
+                        null,
+                        null,
+                        variable -> new CheckboxResult(variable.getType().equals("Array"))
+                )
+        ));
+        this.varTree = nmn;
+
+        //class tree
+        this.classTree = new RuleNode("NM* (N|NPL)", Pattern.compile("(NM )*(N|NPL)"));
+
+        //method tree
+        RuleNode methodRoot = new RuleNode("empty", Pattern.compile(".*"));
+        RuleNode weirdRulePt1 = new RuleNode("V NM* N(PL)|V+ pt1", Pattern.compile("(V (NM )*(N|NPL))|V+"));
+        RuleNode weirdRulePt2 = new RuleNode("V NM* N(PL)|V+ pt2", Pattern.compile("(V (NM )*(N|NPL))|V+"));
+        RuleNode pnmn = new RuleNode("P NM* N(PL)", Pattern.compile("P (NM )*(N|NPL)"));
+        RuleNode vp = new RuleNode("V P NM* N", Pattern.compile("V P (NM )*N"));
+
+        methodRoot.addBranch(new RuleBranch("No Void/Generics", weirdRulePt1, new Checkbox("No Void/Generics",null, method -> new CheckboxResult(!method.getType().equals("void")), null)));
+        methodRoot.addBranch(new RuleBranch("Void/Generics", weirdRulePt2, new Checkbox("Void/Generics", null, method -> new CheckboxResult(method.getType().equals("void")), null)));
+        weirdRulePt1.addBranch(new RuleBranch("Event Driven Code", pnmn, new Checkbox("Event Driven Code", null, method -> new CheckboxResult(method.performsEventDrivenFunctionality()), null)));
+        weirdRulePt1.addBranch(new RuleBranch("Code contains Casting", pnmn, new Checkbox("Code contains Casting", null, method -> new CheckboxResult(method.performsConversion()), null)));
+        weirdRulePt1.addBranch(new RuleBranch("Loop in body", vp, new Checkbox("Loop in body", null, null, null))); //todo:check for loops
+        this.methodTree = methodRoot;
+
+    }
+    private RuleNode varTree;
+    private RuleNode classTree;
+    private RuleNode methodTree;
+
+
+
+
+    public List<NodeResult> runIdentifier(Identifier id){
+        if(id instanceof Variable) {
+            List<NodeResult> results = varTree.checkIdentifier(id, 0);
+            System.out.println(id.getName() + ": " + id.getPOS());
+            for (NodeResult nr : results) {
+                System.out.println(nr.getRecommendation() + ": " + nr.getDepth() + ": " + nr.isIdentifierMatchesRegex());
+            }
+            return results;
+        }else if(id instanceof Method) {
+            List<NodeResult> results = methodTree.checkIdentifier(id, 0);
+            return results;
+        }else if(id instanceof Class){
+            List<NodeResult> results = classTree.checkIdentifier(id, 0);
+            return results;
+        }else{
+            return new ArrayList<>();
+        }
+    }
+}
