@@ -23,8 +23,11 @@ public class VNMN extends RuleVisitor {
             if(!m.matches()){
                 return Optional.of(new Result(resultStr, priority));
             }
+            else {
+                return Optional.empty();
+            }
         }
-        return Optional.empty();
+        return null;
     }
 
     @Override
@@ -34,7 +37,10 @@ public class VNMN extends RuleVisitor {
             if (!match.matches()) {
                 return Optional.of(new Result(resultStr, priority));
             }
+            else {
+                return Optional.empty();
+            }
         }
-        return Optional.empty();
+        return null;
     }
 }
