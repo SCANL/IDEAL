@@ -37,7 +37,6 @@ public class MyCaretListener implements CaretListener {
                     Result result = IdentifierSuggestionResults.get(identifier);
                     if (result != null) {
                         populateToolWindow(identifier, result);
-                        toolWindow.show();
                     }
                 }
             }
@@ -45,7 +44,8 @@ public class MyCaretListener implements CaretListener {
     }
 
     private void populateToolWindow(PsiIdentifier identifier, Result result) {
+        // might set this to one method in the future
         toolWindowContent.setIdentifierName(identifier.getText());
-        toolWindowContent.setSuggestedPattern(result.recommendation);
+        toolWindowContent.setRecommendedGenericPattern(result.recommendation);
     }
 }

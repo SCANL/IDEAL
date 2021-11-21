@@ -10,6 +10,8 @@ import com.intellij.codeInspection.*;
 import com.intellij.codeInspection.util.IntentionFamilyName;
 import com.intellij.codeInspection.util.IntentionName;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.wm.ToolWindow;
+import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.psi.*;
 import org.jetbrains.annotations.NotNull;
 
@@ -72,10 +74,17 @@ public class IdentifierGrammarInspection extends AbstractBaseJavaLocalInspection
             return getName();
         }
 
+        /**
+         * When the fix is applied, the cursor moves to the identifier.
+         * The cursor being on the identifier triggers the listener to fill out the sidebar.
+         * So, all that's left to do is open the tool window.
+         */
         @Override
         public void applyFix(@NotNull Project project, @NotNull ProblemDescriptor descriptor) {
-            // When the fix is applied, the cursor moves to the identifier.
-            // The cursor being on the identifier triggers the listener to fill out the sidebar, so we're all done.
+            ToolWindow toolWindow = ToolWindowManager.getInstance(project).getToolWindow("Identifier Grammar Pattern Suggestions");
+            if(toolWindow != null) {
+                toolWindow.show();
+            }
         }
     }
 }
