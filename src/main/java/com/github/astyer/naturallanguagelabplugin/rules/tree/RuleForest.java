@@ -33,7 +33,7 @@ public class RuleForest {
                         "Type of Bool",
                         null,
                         null,
-                        variable -> new CheckboxResult(variable.getType().equals("boolean"))
+                        variable -> new CheckboxResult(variable.getType().equals("java.lang.Boolean"))
                 )
         ));
 
