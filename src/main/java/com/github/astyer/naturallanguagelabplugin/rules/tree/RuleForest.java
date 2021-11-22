@@ -9,7 +9,7 @@ import com.github.astyer.naturallanguagelabplugin.rules.CheckboxResult;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Pattern;
+import com.kipust.regex.Pattern;
 
 public class RuleForest {
     static RuleForest instance = null;
@@ -22,9 +22,9 @@ public class RuleForest {
 
     private RuleForest(){
         //create var
-        RuleNode nmn = new RuleNode("NM* N", Pattern.compile("(NM )*N"));
-        RuleNode vnmn = new RuleNode("V NM* N(PL)", Pattern.compile("V (NM )*(N|NPL)"));
-        RuleNode nmnpl = new RuleNode("NM* NPL", Pattern.compile("(NM )*NPL"));
+        RuleNode nmn = new RuleNode("NM* N", Pattern.Compile("&(*('NM_'),'N_')"));
+        RuleNode vnmn = new RuleNode("V NM* N(PL)", Pattern.Compile("&('V_',&(*('NM_'),|('N_','NPL_')))"));//("V (NM )*(N|NPL)"));
+        RuleNode nmnpl = new RuleNode("NM* NPL", Pattern.Compile("&(*('NM_'),'NPL_')"));//("(NM )*NPL"));
 
         nmn.addBranch(new RuleBranch(
                 "Type of Bool",
@@ -50,14 +50,14 @@ public class RuleForest {
         this.varTree = nmn;
 
         //class tree
-        this.classTree = new RuleNode("NM* (N|NPL)", Pattern.compile("(NM )*(N|NPL)"));
+        this.classTree = new RuleNode("NM* (N|NPL)", Pattern.Compile("&(*('NM_'),|('N_','NPL_'))"));//("(NM )*(N|NPL)"));
 
         //method tree
-        RuleNode methodRoot = new RuleNode("empty", Pattern.compile(".*"));
-        RuleNode weirdRulePt1 = new RuleNode("V NM* N(PL)|V+ pt1", Pattern.compile("(V (NM )*(N|NPL))|V+"));
-        RuleNode weirdRulePt2 = new RuleNode("V NM* N(PL)|V+ pt2", Pattern.compile("(V (NM )*(N|NPL))|V+"));
-        RuleNode pnmn = new RuleNode("P NM* N(PL)", Pattern.compile("P (NM )*(N|NPL)"));
-        RuleNode vp = new RuleNode("V P NM* N", Pattern.compile("V P (NM )*N"));
+        RuleNode methodRoot = new RuleNode("empty", Pattern.AcceptAny());
+        RuleNode weirdRulePt1 = new RuleNode("V NM* N(PL)|V+ pt1", Pattern.Compile("|(&('V_',&(*('NM_'),|('N_','NPL_'))),&('V_',*('V_')))"));//("(V (NM )*(N|NPL))|V+"));
+        RuleNode weirdRulePt2 = new RuleNode("V NM* N(PL)|V+ pt2", Pattern.Compile("|(&('V_',&(*('NM_'),|('N_','NPL_'))),&('V_',*('V_')))"));//("(V (NM )*(N|NPL))|V+"));
+        RuleNode pnmn = new RuleNode("P NM* N(PL)", Pattern.Compile("&('P_',&(*('NM_'),|('N_','NPL_'))))"));//("P (NM )*(N|NPL)"));
+        RuleNode vp = new RuleNode("V P NM* N", Pattern.Compile("&('V_',&('P_',&(*('NM_'),'N_')))"));//("V P (NM )*N"));
 
         methodRoot.addBranch(new RuleBranch("No Void/Generics", weirdRulePt1, new Checkbox("No Void/Generics",null, method -> new CheckboxResult(!method.getType().equals("void")), null)));
         methodRoot.addBranch(new RuleBranch("Void/Generics", weirdRulePt2, new Checkbox("Void/Generics", null, method -> new CheckboxResult(method.getType().equals("void")), null)));

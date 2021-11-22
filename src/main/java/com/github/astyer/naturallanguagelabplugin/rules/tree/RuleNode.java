@@ -4,8 +4,9 @@ import com.github.astyer.naturallanguagelabplugin.IR.Identifier;
 import com.github.astyer.naturallanguagelabplugin.rules.Checkbox;
 
 import java.util.*;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import com.kipust.regex.*;
+
 
 public class RuleNode {
     private String name;
@@ -22,7 +23,7 @@ public class RuleNode {
 
     public List<NodeResult> checkIdentifier(Identifier id, int depth){
         List<NodeResult> results = new ArrayList<>();
-        results.add(new NodeResult(regex.matcher(id.getPOS()).matches(), name, depth));
+        results.add(new NodeResult(regex.match(id.getPOS()).success(), name, depth));
         for(RuleBranch branch: branches){
             Optional<RuleNode> optRuleNode =  branch.checkBranch(id);
             if(optRuleNode.isPresent()){
