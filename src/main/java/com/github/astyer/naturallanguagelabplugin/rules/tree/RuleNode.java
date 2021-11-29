@@ -1,7 +1,6 @@
 package com.github.astyer.naturallanguagelabplugin.rules.tree;
 
 import com.github.astyer.naturallanguagelabplugin.IR.Identifier;
-import com.github.astyer.naturallanguagelabplugin.rules.Checkbox;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -9,12 +8,23 @@ import com.kipust.regex.*;
 
 
 public class RuleNode {
-    private String name;
+//    private String name;
     private Pattern regex;
+    private GetResultAttr getName;
+    private GetResultAttr getExplanation;
+    private GetResultAttr getExample;
     private List<RuleBranch> branches = new ArrayList<>();
-    public RuleNode(String name, Pattern regex){
-        this.name = name;
+    public RuleNode(GetResultAttr getName, Pattern regex, GetResultAttr getExplanation, GetResultAttr getExample){
+        this.getName = getName;
         this.regex = regex;
+        this.getExplanation = getExplanation;
+        this.getExample = getExample;
+    }
+    public RuleNode(String name, Pattern regex, String getExplanation, String getExample){
+        this.getName = ()->name;
+        this.regex = regex;
+        this.getExplanation = ()->getExplanation;
+        this.getExample = ()->getExample;
     }
 
     public void addBranch(RuleBranch branch){
@@ -23,7 +33,7 @@ public class RuleNode {
 
     public List<NodeResult> checkIdentifier(Identifier id, int depth){
         List<NodeResult> results = new ArrayList<>();
-        results.add(new NodeResult(regex.match(id.getPOS()).success(), name, depth));
+        results.add(new NodeResult(regex.match(id.getPOS()), getName.getResultAttr(), depth, getExplanation.getResultAttr(), getExample.getResultAttr()));
         for(RuleBranch branch: branches){
             Optional<RuleNode> optRuleNode =  branch.checkBranch(id);
             if(optRuleNode.isPresent()){
