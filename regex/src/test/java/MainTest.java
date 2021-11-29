@@ -9,8 +9,8 @@ import static org.junit.jupiter.api.Assertions.*;
 class MainTest {
     @Test
     public void debugTest() throws Exception {
-        String regex = "&('V ',&(*('NM '),|('N','NPL')))";
-        String str = "NM NPL";
+        String regex = "&(*('NM_'),'N_')";
+        String str = "NM_N_V_";
         Pattern p = Pattern.Compile(regex);
         Dfa.DFAResult result = p.match(str);
     }

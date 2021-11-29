@@ -1,9 +1,7 @@
 package com.github.astyer.naturallanguagelabplugin.rules.tree;
 
+import com.github.astyer.naturallanguagelabplugin.IR.*;
 import com.github.astyer.naturallanguagelabplugin.IR.Class;
-import com.github.astyer.naturallanguagelabplugin.IR.Identifier;
-import com.github.astyer.naturallanguagelabplugin.IR.Method;
-import com.github.astyer.naturallanguagelabplugin.IR.Variable;
 import com.github.astyer.naturallanguagelabplugin.rules.Checkbox;
 import com.github.astyer.naturallanguagelabplugin.rules.CheckboxResult;
 
@@ -33,7 +31,7 @@ public class RuleForest {
                         "Type of Bool",
                         null,
                         null,
-                        variable -> new CheckboxResult(variable.getType().equals("java.lang.Boolean"))
+                        variable -> new CheckboxResult(variable.getType().equals(IRFactory.IRType.TYPE_BOOLEAN))
                 )
         ));
 
@@ -44,7 +42,7 @@ public class RuleForest {
                         "Type of Collection",
                         null,
                         null,
-                        variable -> new CheckboxResult(variable.getType().equals("Array"))
+                        variable -> new CheckboxResult(variable.getType().equals(IRFactory.IRType.TYPE_COLLECTION))
                 )
         ));
         this.varTree = nmn;
@@ -59,8 +57,8 @@ public class RuleForest {
         RuleNode pnmn = new RuleNode("P NM* N(PL)", Pattern.Compile("&('P_',&(*('NM_'),|('N_','NPL_'))))"));//("P (NM )*(N|NPL)"));
         RuleNode vp = new RuleNode("V P NM* N", Pattern.Compile("&('V_',&('P_',&(*('NM_'),'N_')))"));//("V P (NM )*N"));
 
-        methodRoot.addBranch(new RuleBranch("No Void/Generics", weirdRulePt1, new Checkbox("No Void/Generics",null, method -> new CheckboxResult(!method.getType().equals("void")), null)));
-        methodRoot.addBranch(new RuleBranch("Void/Generics", weirdRulePt2, new Checkbox("Void/Generics", null, method -> new CheckboxResult(method.getType().equals("void")), null)));
+        methodRoot.addBranch(new RuleBranch("No Void/Generics", weirdRulePt1, new Checkbox("No Void/Generics",null, method -> new CheckboxResult(!method.getType().equals(IRFactory.IRType.TYPE_VOID)), null)));
+        methodRoot.addBranch(new RuleBranch("Void/Generics", weirdRulePt2, new Checkbox("Void/Generics", null, method -> new CheckboxResult(method.getType().equals(IRFactory.IRType.TYPE_VOID)), null)));
         weirdRulePt1.addBranch(new RuleBranch("Event Driven Code", pnmn, new Checkbox("Event Driven Code", null, method -> new CheckboxResult(method.performsEventDrivenFunctionality()), null)));
         weirdRulePt1.addBranch(new RuleBranch("Code contains Casting", pnmn, new Checkbox("Code contains Casting", null, method -> new CheckboxResult(method.performsConversion()), null)));
         weirdRulePt1.addBranch(new RuleBranch("Loop in body", vp, new Checkbox("Loop in body", null, null, null))); //todo:check for loops

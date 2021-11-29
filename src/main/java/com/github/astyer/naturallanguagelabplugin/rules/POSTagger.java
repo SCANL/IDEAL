@@ -32,7 +32,7 @@ public class POSTagger {
 
     public String tag(Identifier id){
         String name = id.getName();
-        String type = id.getType();
+        String type = id.getCanonicalType();
         String context = id.getContext();
         String key = getKey(name, type, context);
         if(cache.containsKey(key)){

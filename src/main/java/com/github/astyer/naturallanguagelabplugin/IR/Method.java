@@ -9,16 +9,18 @@ import java.util.List;
 import java.util.Optional;
 
 public class Method implements Identifier{
-    String name, type, pos;
+    String name, canonicalType, pos;
+    IRFactory.IRType type;
     boolean performsConversion, performsEventDrivenFunctionality;
     PsiElement element;
 
-    public Method(String name, String type, boolean performsConversion, boolean performsEventDrivenFunctionality, PsiElement element){
+    public Method(String name, String canonicalType, boolean performsConversion, boolean performsEventDrivenFunctionality, PsiElement element, IRFactory.IRType type){
         this.name = name;
         this.type = type;
         this.performsConversion = performsConversion;
         this.performsEventDrivenFunctionality = performsEventDrivenFunctionality;
         this.element = element;
+        this.canonicalType = canonicalType;
     }
 
     @Override
@@ -35,7 +37,7 @@ public class Method implements Identifier{
     }
 
     @Override
-    public String getType() {
+    public IRFactory.IRType getType() {
         return this.type;
     }
 
@@ -70,5 +72,10 @@ public class Method implements Identifier{
     @Override
     public String getContext() {
         return "FUNCTION";
+    }
+
+    @Override
+    public String getCanonicalType() {
+        return this.canonicalType;
     }
 }

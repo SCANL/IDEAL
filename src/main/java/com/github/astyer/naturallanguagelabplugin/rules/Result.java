@@ -4,6 +4,8 @@ public class Result{
     boolean pass;
     public String recommendation;
     public int priority;
+
+
     public Result(){
         pass = true;
     }
@@ -24,5 +26,4 @@ public class Result{
             return "FAIL" + "(" + recommendation + ") : " + priority;
         }
     }
-
 }

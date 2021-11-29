@@ -9,11 +9,12 @@ import java.util.Optional;
 
 public interface Identifier {
     String getName();
-    String getType();
+    IRFactory.IRType getType();
     PsiElement getPsiObject();
     Optional<Result> accept(RuleVisitor visitor);
     String getPOS();
     Identifier getParent();
     List<Identifier> getChildren();
     String getContext();
+    String getCanonicalType();
 }
