@@ -9,6 +9,27 @@ import java.util.*;
 
 public class IRFactory {
 
+    public enum IRType{
+        TYPE_VOID,
+        TYPE_BOOLEAN,
+        TYPE_COLLECTION,
+        TYPE_OTHER
+    }
+
+    public String IRTypeToString(IRType type, Identifier id){
+        switch (type){
+            case TYPE_BOOLEAN:
+                return "Boolean";
+            case TYPE_COLLECTION:
+                return "Array";
+            case TYPE_VOID:
+                return "Void";
+            case TYPE_OTHER:
+                return id.getCanonicalType();
+        }
+        return "UNKNOWN_TYPE";
+    }
+
     // maybe move these helper functions into a helper class
     /**
      * Checks if the PsiType is some kind of collection
@@ -33,13 +54,24 @@ public class IRFactory {
         return false;
     }
 
-    private static String typeToString(PsiType type, Project project){
+    private static IRType typeToType(PsiType type, Project project){
         if(type == null) {
-            return "null";
+            return IRType.TYPE_VOID;
         }
         if(isSomeCollection(type, project)) {
-            return "Array";
-        } else {
+            return IRType.TYPE_COLLECTION;
+        }
+        String cType = type.getCanonicalText();
+        if(cType.equals("boolean") || cType.equals("java.lang.Boolean")){
+            return IRType.TYPE_BOOLEAN;
+        }
+        return IRType.TYPE_OTHER;
+    }
+
+    private static String getCanonicalType(PsiType type){
+        if(type == null){
+            return "null";
+        }else{
             return type.getCanonicalText();
         }
     }
@@ -84,18 +116,20 @@ public class IRFactory {
     }
 
     public static Variable createVariable(PsiVariable psiVariable) {
-        String typeString = typeToString(psiVariable.getType(), psiVariable.getProject());
-        return new Variable(psiVariable.getName(), typeString, psiVariable);
+        IRType type = typeToType(psiVariable.getType(), psiVariable.getProject());
+        String canonicalType = getCanonicalType(psiVariable.getType());
+        return new Variable(psiVariable.getName(),canonicalType, psiVariable, type);
     }
 
     public static Method createMethod(PsiMethod psiMethod) {
-        String typeString = typeToString(psiMethod.getReturnType(), psiMethod.getProject());
+        IRType type = typeToType(psiMethod.getReturnType(), psiMethod.getProject());
+        String typeString = getCanonicalType(psiMethod.getReturnType());
 
         List<String> params = new ArrayList(); //add params to the name because the POS tagger expects it
         for(PsiParameter param : psiMethod.getParameterList().getParameters()){
-            params.add(typeToString(param.getType(), param.getProject()));
+            params.add(getCanonicalType(param.getType()));
         }
         String name = psiMethod.getName() + "("+ String.join(",", params) + ")";
-        return new Method(name, typeString, performsConversion(psiMethod), performsEventDrivenFunctionality(psiMethod), psiMethod);
+        return new Method(name, typeString, performsConversion(psiMethod), performsEventDrivenFunctionality(psiMethod), psiMethod, type);
     }
 }

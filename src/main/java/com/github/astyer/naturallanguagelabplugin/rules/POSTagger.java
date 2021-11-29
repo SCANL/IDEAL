@@ -32,7 +32,7 @@ public class POSTagger {
 
     public String tag(Identifier id){
         String name = id.getName();
-        String type = id.getType();
+        String type = id.getCanonicalType();
         String context = id.getContext();
         String key = getKey(name, type, context);
         if(cache.containsKey(key)){
@@ -59,7 +59,8 @@ public class POSTagger {
                 con.disconnect();
                 String result = Arrays.stream(content.toString().split(","))
                         .map(w -> w.split("\\|")[1])
-                        .collect(Collectors.joining(" "));
+                        .map(w -> w + "_")
+                        .collect(Collectors.joining(""));
 
                 System.out.println("final result of "+result);
                 cache.put(key, result);

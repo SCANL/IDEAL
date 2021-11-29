@@ -9,14 +9,15 @@ import java.util.List;
 import java.util.Optional;
 
 public class Variable implements Identifier{
-    String name, type, pos;
-    int lineNumber, colNumber;
+    String name, canonicalType, pos;
+    IRFactory.IRType type;
     PsiElement element;
 //    TODO: make type enum or class/enum
-    public Variable(String name, String type, PsiElement element){
+    public Variable(String name, String canonicalType, PsiElement element,IRFactory.IRType type){
         this.name = name;
-        this.type = type;
+        this.canonicalType = canonicalType;
         this.element = element;
+        this.type = type;
     }
 
     @Override
@@ -25,7 +26,7 @@ public class Variable implements Identifier{
     }
 
     @Override
-    public String getType() {
+    public IRFactory.IRType getType() {
         return this.type;
     }
 
@@ -60,5 +61,10 @@ public class Variable implements Identifier{
     @Override
     public String getContext() {
         return "DECLARATION";
+    }
+
+    @Override
+    public String getCanonicalType() {
+        return canonicalType;
     }
 }

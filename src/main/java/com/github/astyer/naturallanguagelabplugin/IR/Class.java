@@ -9,20 +9,19 @@ import java.util.List;
 import java.util.Optional;
 
 public class Class implements Identifier {
-
     private final String name;
-    private final String type;
+    private final String canonicalType;
     private final PsiElement psiObject;
     private String pos = null;
 
     public Class(String name, ClassType type, PsiElement psiObject){
         this.name = name;
-        this.type = type.toString();
+        this.canonicalType = name;
         this.psiObject = psiObject;
     }
 
-    public String getType() {
-        return type;
+    public IRFactory.IRType getType() {
+        return IRFactory.IRType.TYPE_OTHER;
     }
 
     @Override
@@ -67,6 +66,11 @@ public class Class implements Identifier {
     @Override
     public String getContext() {
         return "CLASS";
+    }
+
+    @Override
+    public String getCanonicalType() {
+        return this.canonicalType;
     }
 
 
