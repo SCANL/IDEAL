@@ -4,21 +4,21 @@ import com.kipust.regex.Dfa;
 
 public class NodeResult {
     Dfa.DFAResult regexResult;
-    String recommendation;
+    String name;
     int depth;
     String explanation;
     String example;
 
-    public NodeResult(Dfa.DFAResult regexResult, String recommendation, int depth, String explanation, String example){
+    public NodeResult(Dfa.DFAResult regexResult, String name, int depth, String explanation, String example){
         this.regexResult = regexResult;
-        this.recommendation = recommendation;
+        this.name = name;
         this.depth = depth;
         this.explanation = explanation;
         this.example = example;
     }
 
-    public String getRecommendation() {
-        return recommendation;
+    public String getName() {
+        return name;
     }
 
     public boolean isIdentifierMatchesRegex() {
