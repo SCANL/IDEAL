@@ -46,6 +46,6 @@ public class MyCaretListener implements CaretListener {
     private void populateToolWindow(PsiIdentifier identifier, Result result) {
         // might set this to one method in the future
         toolWindowContent.setIdentifierName(identifier.getText());
-        toolWindowContent.setRecommendedGenericPattern(result.recommendation);
+        toolWindowContent.setRecommendedGenericPattern(result.getTopRecommendation().getExample()); //todo: swap this with rule name
     }
 }

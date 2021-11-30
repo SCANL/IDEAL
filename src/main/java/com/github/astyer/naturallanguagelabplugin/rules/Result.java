@@ -41,7 +41,7 @@ public class Result{
         this.recommendations = recommendations;
     }
 
-    Recommendation getTopRecommendation(){
+    public Recommendation getTopRecommendation(){
         if(recommendations.size()>1) {
             return recommendations.get(0);
         }else{

@@ -9,7 +9,7 @@ import java.util.*;
 
 public class IRFactory {
 
-    public enum IRType{
+    public enum IRType {
         TYPE_VOID,
         TYPE_BOOLEAN,
         TYPE_COLLECTION,
@@ -54,7 +54,7 @@ public class IRFactory {
         return false;
     }
 
-    private static IRType typeToType(PsiType type, Project project){
+    private static IRType typeToIRType(PsiType type, Project project){
         if(type == null) {
             return IRType.TYPE_VOID;
         }
@@ -85,8 +85,6 @@ public class IRFactory {
     private static boolean performsConversion(PsiMethod psiMethod) {
         PsiTypeCastExpression castExpression = PsiTreeUtil.findChildOfType(psiMethod, PsiTypeCastExpression.class);
         if(castExpression != null) {
-            System.out.println("cast type: " + castExpression.getType());
-            System.out.println("operand expression: " + castExpression.getOperand().getText());
             return true;
         }
         return false;
@@ -116,13 +114,13 @@ public class IRFactory {
     }
 
     public static Variable createVariable(PsiVariable psiVariable) {
-        IRType type = typeToType(psiVariable.getType(), psiVariable.getProject());
+        IRType type = typeToIRType(psiVariable.getType(), psiVariable.getProject());
         String canonicalType = getCanonicalType(psiVariable.getType());
-        return new Variable(psiVariable.getName(),canonicalType, psiVariable, type);
+        return new Variable(psiVariable.getName(), canonicalType, psiVariable, type);
     }
 
     public static Method createMethod(PsiMethod psiMethod) {
-        IRType type = typeToType(psiMethod.getReturnType(), psiMethod.getProject());
+        IRType type = typeToIRType(psiMethod.getReturnType(), psiMethod.getProject());
         String typeString = getCanonicalType(psiMethod.getReturnType());
 
         List<String> params = new ArrayList(); //add params to the name because the POS tagger expects it

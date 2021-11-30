@@ -12,7 +12,7 @@ public class Variable implements Identifier{
     String name, canonicalType, pos;
     IRFactory.IRType type;
     PsiElement element;
-//    TODO: make type enum or class/enum
+
     public Variable(String name, String canonicalType, PsiElement element,IRFactory.IRType type){
         this.name = name;
         this.canonicalType = canonicalType;
