@@ -77,7 +77,7 @@ public class RuleForest {
             List<NodeResult> results = varTree.checkIdentifier(id, 0);
             System.out.println(id.getName() + ": " + id.getPOS());
             for (NodeResult nr : results) {
-                System.out.println(nr.getRecommendation() + ": " + nr.getDepth() + ": " + nr.isIdentifierMatchesRegex());
+                System.out.println(nr.getName() + ": " + nr.getDepth() + ": " + nr.isIdentifierMatchesRegex());
             }
             return results;
         }else if(id instanceof Method) {

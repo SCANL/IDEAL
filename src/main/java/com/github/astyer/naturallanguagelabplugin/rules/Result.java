@@ -10,12 +10,16 @@ public class Result{
         private List<String> nextPOSRecommendations;
         private String explanation;
         private String example;
-        public Recommendation(Boolean regexMatches, List<String> nextPOSRecommendations, String explanation, String example){
+        private String name;
+        public Recommendation(String name, Boolean regexMatches, List<String> nextPOSRecommendations, String explanation, String example){
             this.regexMatches = regexMatches;
             this.nextPOSRecommendations = nextPOSRecommendations;
             this.explanation = explanation;
             this.example = example;
+            this.name = name;
         }
+
+        public String getName(){return name;}
 
         public Boolean getRegexMatches() {
             return regexMatches;

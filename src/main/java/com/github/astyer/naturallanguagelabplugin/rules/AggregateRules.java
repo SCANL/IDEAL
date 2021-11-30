@@ -40,7 +40,7 @@ public class AggregateRules {
                         Dfa.TrashResult tr = (Dfa.TrashResult) nr.getRegexResult();
                         nextPosRec = Arrays.asList(tr.getAcceptableOptions());
                     }
-                    return new Result.Recommendation(nr.isIdentifierMatchesRegex(), nextPosRec, nr.getExplanation(), nr.getExample());
+                    return new Result.Recommendation(nr.getName(), nr.isIdentifierMatchesRegex(), nextPosRec, nr.getExplanation(), nr.getExample());
                 }).collect(Collectors.toList())
         );
     }
