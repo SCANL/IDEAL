@@ -39,7 +39,7 @@ public class IdentifierGrammarInspection extends AbstractBaseJavaLocalInspection
                 IdentifierSuggestionResults.put(variableIdentifier, result);
                 Result.Recommendation topRecommendation = result.getTopRecommendation();
                 if (topRecommendation != null && !topRecommendation.getRegexMatches()) {
-                    String description = "Variable name '" + variable.getName() + "' should use grammar pattern " + topRecommendation; //is the rule name in Recommendation?
+                    String description = "Variable name '" + variable.getName() + "' should use grammar pattern " + topRecommendation.getName(); //is the rule name in Recommendation?
                     holder.registerProblem(variableIdentifier, description, myQuickFix);
                 }
 //                System.out.println(variable.getName() + " finished parsing at: " + System.currentTimeMillis());
@@ -53,14 +53,15 @@ public class IdentifierGrammarInspection extends AbstractBaseJavaLocalInspection
 
             @Override
             public void visitMethod(PsiMethod method) {
-//                Method IRMethod = IRFactory.createMethod(method);
-//                Optional<Result> result = aggregateRules.runAll(IRMethod).stream().max(Comparator.comparingInt(a -> a.priority));
-//                if (result.isPresent()) {
-//                    PsiIdentifier methodIdentifier = method.getNameIdentifier();
-//                    IdentifierSuggestionResults.put(methodIdentifier, result.get());
-//                    String description = "Method name '" + method.getName() + "' should use grammar pattern " + result.get().recommendation;
-//                    holder.registerProblem(methodIdentifier, description, myQuickFix);
-//                }
+                Method IRMethod = IRFactory.createMethod(method);
+                Result result = aggregateRules.runAll(IRMethod);
+                PsiIdentifier methodIdentifier = method.getNameIdentifier();
+                IdentifierSuggestionResults.put(methodIdentifier, result);
+                Result.Recommendation topRecommendation = result.getTopRecommendation();
+                if (topRecommendation != null && !topRecommendation.getRegexMatches()) {
+                    String description = "Method name '" + method.getName() + "' should use grammar pattern " + topRecommendation.getName();
+                    holder.registerProblem(methodIdentifier, description, myQuickFix);
+                }
 //                System.out.println(method.getName() + " finished parsing at: " + System.currentTimeMillis());
             }
         };

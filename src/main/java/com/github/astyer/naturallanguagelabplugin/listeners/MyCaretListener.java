@@ -36,16 +36,10 @@ public class MyCaretListener implements CaretListener {
                     PsiIdentifier identifier = (PsiIdentifier) psiElement;
                     Result result = IdentifierSuggestionResults.get(identifier);
                     if (result != null) {
-                        populateToolWindow(identifier, result);
+                        toolWindowContent.setCurrentIdentifier(result);
                     }
                 }
             }
         }
-    }
-
-    private void populateToolWindow(PsiIdentifier identifier, Result result) {
-        // might set this to one method in the future
-        toolWindowContent.setIdentifierName(identifier.getText());
-        toolWindowContent.setRecommendedGenericPattern(result.getTopRecommendation().getExample()); //todo: swap this with rule name
     }
 }
