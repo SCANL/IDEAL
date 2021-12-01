@@ -26,7 +26,7 @@ public class AggregateRules {
                         return 0;
                     }
                 }else {
-                    return a.getDepth() - b.getDepth();
+                    return b.getDepth() - a.getDepth();
                 }
             }
         ).collect(Collectors.toList());

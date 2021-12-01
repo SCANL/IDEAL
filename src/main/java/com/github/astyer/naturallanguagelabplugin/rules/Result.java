@@ -46,7 +46,7 @@ public class Result{
     }
 
     public Recommendation getTopRecommendation(){
-        if(recommendations.size()>1) {
+        if(recommendations.size()>0) {
             return recommendations.get(0);
         }else{
             return null;
