@@ -1,17 +1,12 @@
 package com.github.astyer.naturallanguagelabplugin.ui;
 
-import com.github.astyer.naturallanguagelabplugin.IR.Identifier;
 import com.github.astyer.naturallanguagelabplugin.rules.Result;
 
 import javax.swing.*;
-import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.io.IOException;
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 public class IdentifierGrammarToolWindow {
 
@@ -41,7 +36,6 @@ public class IdentifierGrammarToolWindow {
     private JButton catalogueButton;
 
     private final JLabel[] titleLabels = {currentTitle, recommendedTitle, explanationTitle, othersTitle, knowMoreTitle};
-    private final JTable[] tables = {currentTable, recommendedTable, othersTable};
 
     String[] currentHeaders = {"Type", "Identifier", "Current Grammar Pattern" };
     String[] recommendedHeaders = {"Type", "Identifier", "Recommended", "Generic" };
@@ -50,14 +44,8 @@ public class IdentifierGrammarToolWindow {
     private String currentPattern;
     private String recommendedPattern;
     private String recommendedGenericPattern;
-    private String[][] otherRecommendationsData = {};
-
-    public static IdentifierGrammarToolWindow getInstance() {
-        if (instance == null) {
-            instance = new IdentifierGrammarToolWindow();
-        }
-        return instance;
-    }
+    private String example;
+    private String explanation;
 
     public IdentifierGrammarToolWindow() {
         setInitialTextAndStyling();
@@ -71,23 +59,18 @@ public class IdentifierGrammarToolWindow {
         });
     }
 
-    private void setInitialTextAndStyling() {
-        knowMoreValue.setText("<html><body style='width: 275px'>" + knowMoreText); //determines the min width of the tables unfortunately
-        for(JLabel titleLabel: titleLabels) {
-            titleLabel.setFont(titleFont);
+    public static IdentifierGrammarToolWindow getInstance() {
+        if (instance == null) {
+            instance = new IdentifierGrammarToolWindow();
         }
-        setInitialTableStyling();
+        return instance;
     }
 
-    private void setInitialTableStyling() {
-        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
-        centerRenderer.setHorizontalAlignment(JLabel.CENTER);
-        for(JTable table: tables) {
-            table.setEnabled(false);
-            table.getTableHeader().setReorderingAllowed(false);
-            table.getTableHeader().setResizingAllowed(true);
-            table.setDefaultRenderer(Object.class, centerRenderer);
+    private void setInitialTextAndStyling() {
+        for (JLabel titleLabel : titleLabels) {
+            titleLabel.setFont(titleFont);
         }
+        knowMoreValue.setText("<html><body style='width: 275px'>" + knowMoreText); //determines the min width of the tables unfortunately
     }
 
     private void updateTables() {
@@ -110,38 +93,17 @@ public class IdentifierGrammarToolWindow {
     }
     private void updateOthersTable() {
         othersTable.setModel(new DefaultTableModel(
-                otherRecommendationsData,
+                new String[][] {{"", "", "", ""}},
                 recommendedHeaders
         ));
-        Dimension preferredTableSize = new Dimension(150,otherRecommendationsData.length * 16);
-        othersTable.setPreferredSize(preferredTableSize);
-        othersTable.setPreferredScrollableViewportSize(preferredTableSize);
     }
 
     public void setCurrentIdentifier(Result result) {
-        Identifier id = result.getId();
-        type = id.getCanonicalType();
-        identifierName = id.getDisplayName();
         Result.Recommendation topRecommendation = result.getTopRecommendation();
         recommendedGenericPattern = (topRecommendation == null) ? "" : topRecommendation.getName();
-        currentPattern = id.getPOS().replace('_', ' ');
-        setOtherRecommendationsData(topRecommendation);
+        identifierName = result.getId().getName();
+        currentPattern = result.getId().getPOS().replace('_', ' ');
         updateTables();
-        explanationValue.setText(topRecommendation.getExplanation());
-        exampleValue.setText(topRecommendation.getExample());
-    }
-
-    private void setOtherRecommendationsData(Result.Recommendation topRecommendation) {
-//        System.out.println("all recommendations: " + result.getRecommendations());
-//        System.out.println("next recommendations: " + topRecommendation.getNextPOSRecommendations());
-        List<String> otherRecommendations = (topRecommendation == null) ? new ArrayList<>() : topRecommendation.getNextPOSRecommendations();
-        otherRecommendationsData = new String[otherRecommendations.size()][4];
-        for(int i = 0; i < otherRecommendations.size(); i++) {
-            otherRecommendationsData[i][0] = type;
-            otherRecommendationsData[i][1] = identifierName;
-            otherRecommendationsData[i][2] = ""; //recommended pattern
-            otherRecommendationsData[i][3] = otherRecommendations.get(i);
-        }
     }
 
     public JPanel getContent() {

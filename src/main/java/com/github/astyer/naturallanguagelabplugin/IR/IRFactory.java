@@ -116,20 +116,18 @@ public class IRFactory {
     public static Variable createVariable(PsiVariable psiVariable) {
         IRType type = typeToIRType(psiVariable.getType(), psiVariable.getProject());
         String canonicalType = getCanonicalType(psiVariable.getType());
-        String displayName = psiVariable.getName();
-        return new Variable(displayName, displayName, canonicalType, psiVariable, type);
+        return new Variable(psiVariable.getName(), canonicalType, psiVariable, type);
     }
 
     public static Method createMethod(PsiMethod psiMethod) {
         IRType type = typeToIRType(psiMethod.getReturnType(), psiMethod.getProject());
         String typeString = getCanonicalType(psiMethod.getReturnType());
 
-        String displayName = psiMethod.getName();
         List<String> params = new ArrayList(); //add params to the name because the POS tagger expects it
         for(PsiParameter param : psiMethod.getParameterList().getParameters()){
             params.add(getCanonicalType(param.getType()));
         }
-        String name = displayName + "("+ String.join(",", params) + ")";
-        return new Method(name, displayName, typeString, performsConversion(psiMethod), performsEventDrivenFunctionality(psiMethod), psiMethod, type);
+        String name = psiMethod.getName() + "("+ String.join(",", params) + ")";
+        return new Method(name, typeString, performsConversion(psiMethod), performsEventDrivenFunctionality(psiMethod), psiMethod, type);
     }
 }
