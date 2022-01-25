@@ -32,7 +32,7 @@ public class POSTagger {
 
     public String tag(Identifier id){
         String name = id.getName();
-        String type = id.getCanonicalType();
+        String type = id.getCanonicalType().toLowerCase(); //todo: remove before last .
         String context = id.getContext();
         String key = getKey(name, type, context);
         if(cache.containsKey(key)){
