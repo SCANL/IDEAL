@@ -9,13 +9,13 @@ import java.util.List;
 import java.util.Optional;
 
 public class Class implements Identifier {
-    private final String name;
-    private final String canonicalType;
+    String name, displayName, canonicalType;
     private final PsiElement psiObject;
     private String pos = null;
 
-    public Class(String name, ClassType type, PsiElement psiObject){
+    public Class(String name, String displayName, ClassType type, PsiElement psiObject){
         this.name = name;
+        this.displayName = displayName;
         this.canonicalType = name;
         this.psiObject = psiObject;
     }
@@ -29,8 +29,14 @@ public class Class implements Identifier {
         return psiObject;
     }
 
+    @Override
     public String getName() {
         return name;
+    }
+
+    @Override
+    public String getDisplayName() {
+        return displayName;
     }
 
     public enum ClassType{
