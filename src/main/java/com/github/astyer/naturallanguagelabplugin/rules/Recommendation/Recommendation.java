@@ -8,45 +8,97 @@ import java.util.stream.Collectors;
 
 public class Recommendation {
     static class Rec {
-        static class Change {
-            int start;
-            int end;
-            public Change(int start, int end){
-                this.start = start;
-                this.end = end;
+        interface Change {
+            String apply(String original);
+        }
+        static class Insert implements Rec.Change {
+            int index;
+            String change;
+
+            public Insert(int index, String change){
+                this.index = index;
+                this.change = change;
+            }
+
+            public String apply(String original){
+                return original.substring(0,index) + change + original.substring(index);
+            }
+        }
+        static class Remove implements Rec.Change {
+            int index;
+            int length;
+
+            public Remove(int index, int length){
+                this.index = index;
+                this.length = length;
+            }
+
+            public String apply(String original){
+                return original.substring(0, index) + original.substring(index+length);
             }
         }
 
-        private String recommendation;
-        private List<Change> changes;
-
-        public Rec(String recommendation, List<Change> changes){
-            this.changes = changes;
-            this.recommendation = recommendation;
+        public String debug(){
+            StringBuilder sb = new StringBuilder("Starting with \"");
+            sb.append(this.original).append("\"\n");
+            String current = this.original;
+            for(Change change: changes){
+                current = change.apply(current);
+                if(change instanceof Insert){
+                    Insert i = (Insert)change;
+                    sb.append("Inserting ").append(i.change).append(" at ").append(i.index);
+                }else if(change instanceof Remove){
+                    Remove r = (Remove)change;
+                    sb.append("Removing ").append(r.length).append(" chars at ").append(r.index);
+                }
+                sb.append(" resulting in \"").append(current).append("\"");
+                sb.append("\n");
+            }
+            sb.append("Ending up with ").append(current).append("\n");
+            return sb.toString();
         }
-        public Rec(Rec other, String newRec){
-            this.recommendation = newRec;
+
+        private final String original;
+        private final List<Change> changes;
+
+        public String getFinal(){
+            String result = original;
+            for(Change change: changes){
+                result = change.apply(result);
+            }
+            return result;
+        }
+
+        public Rec(String original, List<Change> changes){
+            this.changes = changes;
+            this.original = original;
+        }
+        public Rec(Rec other){
+            this.original = other.original;
             this.changes = new ArrayList(other.changes);
         }
 
-        public void addChange(int start, int end){
-            this.changes.add(new Change(start, end));
+        public void addInsert(int index, String change) {
+            this.changes.add(new Insert(index, change));
         }
-
-        public String getRecommendation() {
-            return recommendation;
+        public void addRemove(int index, int length) {
+            this.changes.add(new Remove(index, length));
         }
 
         public List<Change> getChanges() {
             return changes;
         }
 
+        public String getOriginal(){
+            return original;
+        }
+
         @Override
         public String toString() {
-            return recommendation;
+            return getFinal();
         }
     }
-
+    String original;
     Queue<Rec> toTry = new LinkedList<>();
     Pattern pattern;
     int timeout = 500;
@@ -56,67 +108,71 @@ public class Recommendation {
     }
 
     public Recommendation(Pattern pattern, String str){
+        this.original = str;
         toTry.add(new Rec(str, new ArrayList<>()));
         this.pattern = pattern;
 
     }
 
     public Rec getRecommendation(){
+        HashMap<String, Boolean> seen = new HashMap<>();
+//        List<Rec> works = new ArrayList<>();
         int tries = 0;
         while(!toTry.isEmpty()){
             tries++;
             if(tries > timeout){
+                System.out.println("timeout");
                 break;
             }
             Rec currentAttempt = toTry.remove();
+            String currentAttemptStr = currentAttempt.getFinal();
+            if(seen.containsKey(currentAttemptStr)){
+                continue;
+            }else{
+                seen.put(currentAttemptStr, true);
+            }
             System.out.println("trying: " + currentAttempt);
-            Dfa.DFAResult result = pattern.match(currentAttempt.getRecommendation());
+            Dfa.DFAResult result = pattern.match(currentAttemptStr);
             if(result.success()){
                 return currentAttempt;
             }else{
                 if(result instanceof Dfa.TrashResult){
                     Dfa.TrashResult tr = (Dfa.TrashResult) result;
+
+                    //remove
+                    Rec remove = new Rec(currentAttempt);
+                    remove.addRemove(tr.getIndex(), getSizeOfNextTok(currentAttemptStr, tr.getIndex()));
+                    toTry.add(remove);
+
+                    //inserts
                     List<String> options = Arrays.stream(tr.getAcceptableOptions()).map(option -> option.substring(1,option.length()-2) + "_").collect(Collectors.toList());
                     for (String option : options){
-                        for(int replaceIndex = 0; replaceIndex <= tr.getRemainingTokens().split("_").length; replaceIndex++){
-                            String preReplace = currentAttempt.getRecommendation().substring(0,tr.getIndex());
-                            int index = getActualIndex(currentAttempt.getRecommendation(), tr, replaceIndex);
-                            String postReplace = currentAttempt.getRecommendation().substring(index);
-                            Rec newAttempt = new Rec(currentAttempt, preReplace + option + postReplace);
-                            newAttempt.addChange(tr.getIndex(), index);
-                            toTry.add(newAttempt);
-                            System.out.println("adding " + newAttempt);
-                        }
+                        Rec add = new Rec(currentAttempt);
+                        add.addInsert(tr.getIndex(), option);
+                        toTry.add(add);
                     }
                 }
             }
         }
-        return new Rec("Unable to generate recommendation", new ArrayList<>());
+        return new Rec(this.original, new ArrayList<>());
     }
 
-    private int getActualIndex(String currentAttempt, Dfa.TrashResult tr, int replaceIndex) {
-        int index = tr.getIndex();
-        for(int n = 0; n < replaceIndex; index++){
-            if(currentAttempt.charAt(index) == '_'){
-                n++;
-            }
-        }
-        return index;
+    private int getSizeOfNextTok(String str, int index){
+        int i;
+        for(i = 0; i >= str.length() || str.charAt(index + i) != '_'; i++){}
+        return i+1;
     }
 
     public static void main(String[] args) {
+        //TODO: just additions and deletions then after calc mappings
+        final String ANSI_RED = "\u001B[31m";
+        final String ANSI_RESET = "\u001B[0m";
         Pattern p = Pattern.Compile("&(*('NM_'),'N_')");
-        String str = "NM_NM_V_N_V_";
+        String str = "NM_NM_NM_NPL_";
+        // (black)NM_NM_(green)NM_(black)N_
         Recommendation r = new Recommendation(p, str);
-        Rec rec = r.getRecommendation();
-        for(int i = 0; i<rec.recommendation.length(); i++){
-            int finalI = i;
-            if(rec.changes.stream().anyMatch(ch -> ch.start <= finalI && finalI <= ch.end)){
-                System.err.print(rec.recommendation.charAt(i));
-            }else{
-                System.out.print(rec.recommendation.charAt(i));
-            }
-        }
-        System.out.println();
+        Rec recs = r.getRecommendation();
+        System.out.println(recs.debug());
+        // TODO: give back rec with closest lenght
     }
 }
