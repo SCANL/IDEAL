@@ -280,7 +280,7 @@ public class Recommendation {
         Pattern p = Pattern.Compile("&('V_',&('P_',&(*('NM_'),'N_')))");
 //        String str = "P_NM_V_NM_N_";
         // (black)NM_NM_(green)NM_(black)N_
-        Variable v = new Variable("firstUserNameAdminAccount", null, null, IRFactory.IRType.TYPE_OTHER);
+        Variable v = new Variable("firstUserNameAdminAccount","display name", null, null, IRFactory.IRType.TYPE_OTHER);
         v.setPosResult(new POSTagger.POSResult("V_P_VM_V_", "a_b_c_d_"));
         Recommendation r = new Recommendation(p, v);
         Rec recs = r.getRecommendation();
