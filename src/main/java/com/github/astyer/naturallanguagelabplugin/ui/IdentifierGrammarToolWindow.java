@@ -164,7 +164,7 @@ public class IdentifierGrammarToolWindow {
         return recIdentifier.toString();
     }
 
-    // will break if current and rec patterns are different lengths
+    // will break if current and rec patterns are different lengths ex. method named car will have rec V N where only V should be green
     private String getRecommendedPattern(Identifier id, Result.Recommendation recommendation) {
         RecommendationAlg.Rec rec = recommendation.getRec();
         String[] splitIdPOS = id.getPOS().split("_");
@@ -172,7 +172,7 @@ public class IdentifierGrammarToolWindow {
         StringBuilder recPattern = new StringBuilder("<html>");
         for(int i = 0; i < recPatternSplit.length; i++) {
             String pos = recPatternSplit[i];
-            if (!recPatternSplit[i].equals(splitIdPOS[i])) {
+            if (i >= splitIdPOS.length || !recPatternSplit[i].equals(splitIdPOS[i])) {
                 pos = "<b><span style='color: green'>" + pos + "</span></b>";
             }
             recPattern.append(" ").append(pos);
