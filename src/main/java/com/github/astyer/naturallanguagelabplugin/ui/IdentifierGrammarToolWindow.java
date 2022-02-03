@@ -98,7 +98,11 @@ public class IdentifierGrammarToolWindow {
 
     private void updateCurrentTable() {
         currentTable.setModel(new DefaultTableModel(
-                new String[][] {{type, identifierName, currentPattern}},
+                new String[][] {{
+                    type,
+                    "<html><body style='background-color: white;'>" + identifierName + "</body></html>",
+                    currentPattern
+                }},
                 currentHeaders
         ));
     }

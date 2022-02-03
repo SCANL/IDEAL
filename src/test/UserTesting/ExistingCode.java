@@ -30,6 +30,7 @@ public class ExistingCode {
         List computed = sortedList(list1, list2);
         List expected = Arrays.asList(new int[]{1,2,3,4,5,8,9,10});
         Boolean error = false;
+        int a = 0;
         if(computed.size() == expected.size()){
             for(int index = 0; index < computed.size(); index++){
                 if(computed.get(index) != expected.get(index)){
