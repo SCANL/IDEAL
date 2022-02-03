@@ -9,15 +9,15 @@ import java.util.List;
 import java.util.Optional;
 
 public class Method implements Identifier{
-    String name;
-    String canonicalType;
+    String name, displayName, canonicalType;
     POSTagger.POSResult pos;
     IRFactory.IRType type;
     boolean performsConversion, performsEventDrivenFunctionality;
     PsiElement element;
 
-    public Method(String name, String canonicalType, boolean performsConversion, boolean performsEventDrivenFunctionality, PsiElement element, IRFactory.IRType type){
+    public Method(String name, String displayName, String canonicalType, boolean performsConversion, boolean performsEventDrivenFunctionality, PsiElement element, IRFactory.IRType type){
         this.name = name;
+        this.displayName = displayName;
         this.type = type;
         this.performsConversion = performsConversion;
         this.performsEventDrivenFunctionality = performsEventDrivenFunctionality;
@@ -28,6 +28,11 @@ public class Method implements Identifier{
     @Override
     public String getName() {
         return this.name;
+    }
+
+    @Override
+    public String getDisplayName() {
+        return this.displayName;
     }
 
     public boolean performsConversion() {

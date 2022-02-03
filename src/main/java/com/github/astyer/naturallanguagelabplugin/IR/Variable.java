@@ -9,14 +9,14 @@ import java.util.List;
 import java.util.Optional;
 
 public class Variable implements Identifier{
-    String name;
-    String canonicalType;
+    String name, displayName, canonicalType;
     POSTagger.POSResult pos;
     IRFactory.IRType type;
     PsiElement element;
 
-    public Variable(String name, String canonicalType, PsiElement element,IRFactory.IRType type){
+    public Variable(String name, String displayName, String canonicalType, PsiElement element, IRFactory.IRType type){
         this.name = name;
+        this.displayName = displayName;
         this.canonicalType = canonicalType;
         this.element = element;
         this.type = type;
@@ -25,6 +25,11 @@ public class Variable implements Identifier{
     @Override
     public String getName() {
         return this.name;
+    }
+
+    @Override
+    public String getDisplayName() {
+        return this.displayName;
     }
 
     @Override
