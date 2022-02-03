@@ -65,6 +65,9 @@ public class Variable implements Identifier{
 
     @Override
     public POSTagger.POSResult getPosResult() {
+        if(pos == null){
+            pos = POSTagger.getInstance().tag(this);
+        }
         return this.pos;
     }
 

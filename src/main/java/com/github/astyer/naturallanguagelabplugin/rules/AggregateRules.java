@@ -1,6 +1,7 @@
 package com.github.astyer.naturallanguagelabplugin.rules;
 
 import com.github.astyer.naturallanguagelabplugin.IR.Identifier;
+import com.github.astyer.naturallanguagelabplugin.rules.Recommendation.Recommendation;
 import com.github.astyer.naturallanguagelabplugin.rules.tree.NodeResult;
 import com.github.astyer.naturallanguagelabplugin.rules.tree.RuleForest;
 import com.kipust.regex.Dfa;
@@ -40,7 +41,7 @@ public class AggregateRules {
                         Dfa.TrashResult tr = (Dfa.TrashResult) nr.getRegexResult();
                         nextPosRec = Arrays.asList(tr.getAcceptableOptions());
                     }
-                    return new Result.Recommendation(nr.getName(), nr.isIdentifierMatchesRegex(), nextPosRec, nr.getExplanation(), nr.getExample());
+                    return new Result.Recommendation(nr.getName(), nr.isIdentifierMatchesRegex(), nextPosRec, nr.getExplanation(), nr.getExample(), nr.getRec());
                 }).collect(Collectors.toList())
         );
     }

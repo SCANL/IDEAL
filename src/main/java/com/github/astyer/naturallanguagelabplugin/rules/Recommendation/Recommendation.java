@@ -12,7 +12,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class Recommendation {
-    static class Rec {
+    public static class Rec {
         interface Change {
             String apply(String original);
             String applyId(String original);
