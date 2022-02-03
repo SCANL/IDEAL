@@ -1,7 +1,6 @@
 package com.github.astyer.naturallanguagelabplugin.rules;
 
 import com.github.astyer.naturallanguagelabplugin.IR.Identifier;
-import com.github.astyer.naturallanguagelabplugin.rules.Recommendation.Recommendation;
 import com.github.astyer.naturallanguagelabplugin.rules.tree.NodeResult;
 import com.github.astyer.naturallanguagelabplugin.rules.tree.RuleForest;
 import com.kipust.regex.Dfa;

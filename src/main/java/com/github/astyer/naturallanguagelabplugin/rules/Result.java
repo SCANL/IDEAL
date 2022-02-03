@@ -1,7 +1,7 @@
 package com.github.astyer.naturallanguagelabplugin.rules;
 
 import com.github.astyer.naturallanguagelabplugin.IR.Identifier;
-import com.github.astyer.naturallanguagelabplugin.rules.Recommendation.Recommendation;
+import com.github.astyer.naturallanguagelabplugin.rules.Recommendation.RecommendationAlg;
 
 import java.util.List;
 
@@ -12,9 +12,9 @@ public class Result{
         private String explanation;
         private String example;
         private String name;
-        private com.github.astyer.naturallanguagelabplugin.rules.Recommendation.Recommendation.Rec rec;
+        private RecommendationAlg.Rec rec;
 
-        public Recommendation(String name, Boolean regexMatches, List<String> nextPOSRecommendations, String explanation, String example, com.github.astyer.naturallanguagelabplugin.rules.Recommendation.Recommendation.Rec rec){
+        public Recommendation(String name, Boolean regexMatches, List<String> nextPOSRecommendations, String explanation, String example, RecommendationAlg.Rec rec){
             this.regexMatches = regexMatches;
             this.nextPOSRecommendations = nextPOSRecommendations;
             this.explanation = explanation;
@@ -39,6 +39,10 @@ public class Result{
 
         public String getExample() {
             return example;
+        }
+
+        public RecommendationAlg.Rec getRec() {
+            return rec;
         }
     }
     private final Identifier id;

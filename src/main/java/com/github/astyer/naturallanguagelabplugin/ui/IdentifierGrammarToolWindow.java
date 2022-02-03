@@ -1,6 +1,7 @@
 package com.github.astyer.naturallanguagelabplugin.ui;
 
 import com.github.astyer.naturallanguagelabplugin.IR.Identifier;
+import com.github.astyer.naturallanguagelabplugin.rules.Recommendation.RecommendationAlg;
 import com.github.astyer.naturallanguagelabplugin.rules.Result;
 
 import javax.swing.*;
@@ -10,7 +11,6 @@ import java.awt.*;
 import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class IdentifierGrammarToolWindow {
@@ -48,6 +48,7 @@ public class IdentifierGrammarToolWindow {
     private String type;
     private String identifierName;
     private String currentPattern;
+    private String recommendedIdentifier;
     private String recommendedPattern;
     private String recommendedGenericPattern;
     private String[][] otherRecommendationsData = {};
@@ -104,7 +105,7 @@ public class IdentifierGrammarToolWindow {
     }
     private void updateRecommendedTable() {
         recommendedTable.setModel(new DefaultTableModel(
-                new String[][] {{type, identifierName, recommendedPattern, recommendedGenericPattern}},
+                new String[][] {{type, recommendedIdentifier, recommendedPattern, recommendedGenericPattern}},
                 recommendedHeaders
         ));
     }
@@ -122,26 +123,59 @@ public class IdentifierGrammarToolWindow {
         Identifier id = result.getId();
         type = id.getCanonicalType();
         identifierName = id.getDisplayName();
-        Result.Recommendation topRecommendation = result.getTopRecommendation();
-        recommendedGenericPattern = (topRecommendation == null) ? "" : topRecommendation.getName();
         currentPattern = id.getPOS().replace('_', ' ');
-        setOtherRecommendationsData(topRecommendation);
+        Result.Recommendation topRecommendation = result.getTopRecommendation();
+        recommendedIdentifier = getRecommendedIdentifier(id, topRecommendation);
+        recommendedPattern = getRecommendedPattern(id, topRecommendation);
+        recommendedGenericPattern = topRecommendation.getName();
+        setOtherRecommendationsData(id, result.getRecommendations());
         updateTables();
         explanationValue.setText(topRecommendation.getExplanation());
         exampleValue.setText(topRecommendation.getExample());
     }
 
-    private void setOtherRecommendationsData(Result.Recommendation topRecommendation) {
-//        System.out.println("all recommendations: " + result.getRecommendations());
-//        System.out.println("next recommendations: " + topRecommendation.getNextPOSRecommendations());
-        List<String> otherRecommendations = (topRecommendation == null) ? new ArrayList<>() : topRecommendation.getNextPOSRecommendations();
-        otherRecommendationsData = new String[otherRecommendations.size()][4];
-        for(int i = 0; i < otherRecommendations.size(); i++) {
+    private void setOtherRecommendationsData(Identifier id, List<Result.Recommendation> otherRecommendations) {
+        List<Result.Recommendation> otherRecsWithoutFirst = new ArrayList<>(otherRecommendations);
+        otherRecsWithoutFirst.remove(0);
+        otherRecommendationsData = new String[otherRecsWithoutFirst.size()][4];
+        for(int i = 0; i < otherRecsWithoutFirst.size(); i++) {
+            Result.Recommendation otherRecommendation = otherRecsWithoutFirst.get(i);
             otherRecommendationsData[i][0] = type;
-            otherRecommendationsData[i][1] = identifierName;
-            otherRecommendationsData[i][2] = ""; //recommended pattern
-            otherRecommendationsData[i][3] = otherRecommendations.get(i);
+            otherRecommendationsData[i][1] = getRecommendedIdentifier(id, otherRecommendation);
+            otherRecommendationsData[i][2] = getRecommendedPattern(id, otherRecommendation);
+            otherRecommendationsData[i][3] = otherRecommendation.getName();
         }
+    }
+
+    private String getRecommendedIdentifier(Identifier id, Result.Recommendation recommendation) {
+        RecommendationAlg.Rec rec = recommendation.getRec();
+        String[] splitIdentifier = id.getIdentiferSplit().split("_");
+        List<Integer> correctWordIndexes = rec.getIndexesOfFinalId();
+        StringBuilder recIdentifier = new StringBuilder("<html>");
+        for(int i = 0; i < splitIdentifier.length; i++) {
+            String word = splitIdentifier[i];
+            if (!correctWordIndexes.contains(i)) {
+                word = "<b><span style='color: red'>" + word + "</span></b>";
+            }
+            recIdentifier.append(" ").append(word);
+        }
+        return recIdentifier.toString();
+    }
+
+    // will break if current and rec patterns are different lengths
+    private String getRecommendedPattern(Identifier id, Result.Recommendation recommendation) {
+        RecommendationAlg.Rec rec = recommendation.getRec();
+        String[] splitIdPOS = id.getPOS().split("_");
+        String[] recPatternSplit = rec.getFinal().split("_");
+        StringBuilder recPattern = new StringBuilder("<html>");
+        for(int i = 0; i < recPatternSplit.length; i++) {
+            String pos = recPatternSplit[i];
+            if (!recPatternSplit[i].equals(splitIdPOS[i])) {
+                pos = "<b><span style='color: green'>" + pos + "</span></b>";
+            }
+            recPattern.append(" ").append(pos);
+        }
+        return recPattern.toString();
     }
 
     public JPanel getContent() {

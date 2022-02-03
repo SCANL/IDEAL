@@ -5,7 +5,7 @@ import com.github.astyer.naturallanguagelabplugin.IR.Identifier;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import com.github.astyer.naturallanguagelabplugin.rules.Recommendation.Recommendation;
+import com.github.astyer.naturallanguagelabplugin.rules.Recommendation.RecommendationAlg;
 import com.kipust.regex.*;
 
 
@@ -35,7 +35,7 @@ public class RuleNode {
 
     public List<NodeResult> checkIdentifier(Identifier id, int depth){
         List<NodeResult> results = new ArrayList<>();
-        Recommendation rec = new Recommendation(regex, id);
+        RecommendationAlg rec = new RecommendationAlg(regex, id);
         results.add(new NodeResult(regex.match(id.getPOS()), getName.getResultAttr(), depth, getExplanation.getResultAttr(), getExample.getResultAttr(), rec.getRecommendation()));
         for(RuleBranch branch: branches){
             Optional<RuleNode> optRuleNode =  branch.checkBranch(id);

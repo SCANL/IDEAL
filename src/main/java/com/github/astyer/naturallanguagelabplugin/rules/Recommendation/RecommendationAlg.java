@@ -4,14 +4,13 @@ import com.github.astyer.naturallanguagelabplugin.IR.IRFactory;
 import com.github.astyer.naturallanguagelabplugin.IR.Identifier;
 import com.github.astyer.naturallanguagelabplugin.IR.Variable;
 import com.github.astyer.naturallanguagelabplugin.rules.POSTagger;
-import com.intellij.psi.impl.cache.impl.id.IdIndex;
 import com.kipust.regex.Dfa;
 import com.kipust.regex.Pattern;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class Recommendation {
+public class RecommendationAlg {
     public static class Rec {
         interface Change {
             String apply(String original);
@@ -119,6 +118,7 @@ public class Recommendation {
 
         public List<Integer> getIndexesOfFinalId(){
             return Arrays.stream(getFinalId().split("_"))
+                    .filter(word -> word.length() > 0)
                     .map(word -> word.substring(word.indexOf('.')+1))
                     .map(num -> Integer.parseInt(num))
                     .collect(Collectors.toList());
@@ -165,7 +165,7 @@ public class Recommendation {
         this.timeout = timeout;
     }
 
-    public Recommendation(Pattern pattern, Identifier id){
+    public RecommendationAlg(Pattern pattern, Identifier id){
         String labeledId = "";
         String unLabId = id.getPosResult().getId();
         int count = 0;
@@ -282,7 +282,7 @@ public class Recommendation {
         // (black)NM_NM_(green)NM_(black)N_
         Variable v = new Variable("firstUserNameAdminAccount","display name", null, null, IRFactory.IRType.TYPE_OTHER);
         v.setPosResult(new POSTagger.POSResult("V_P_VM_V_", "a_b_c_d_"));
-        Recommendation r = new Recommendation(p, v);
+        RecommendationAlg r = new RecommendationAlg(p, v);
         Rec recs = r.getRecommendation();
         System.out.println(recs.debug());
     }
