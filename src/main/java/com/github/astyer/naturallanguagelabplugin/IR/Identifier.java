@@ -1,5 +1,6 @@
 package com.github.astyer.naturallanguagelabplugin.IR;
 
+import com.github.astyer.naturallanguagelabplugin.rules.POSTagger;
 import com.github.astyer.naturallanguagelabplugin.rules.Result;
 import com.github.astyer.naturallanguagelabplugin.rules.RuleVisitor;
 import com.intellij.psi.PsiElement;
@@ -13,8 +14,10 @@ public interface Identifier {
     PsiElement getPsiObject();
     Optional<Result> accept(RuleVisitor visitor);
     String getPOS();
+    String getIdentiferSplit();
     Identifier getParent();
     List<Identifier> getChildren();
     String getContext();
     String getCanonicalType();
+    POSTagger.POSResult getPosResult();
 }

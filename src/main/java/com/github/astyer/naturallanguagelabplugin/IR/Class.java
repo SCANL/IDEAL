@@ -12,7 +12,7 @@ public class Class implements Identifier {
     private final String name;
     private final String canonicalType;
     private final PsiElement psiObject;
-    private String pos = null;
+    private POSTagger.POSResult pos = null;
 
     public Class(String name, ClassType type, PsiElement psiObject){
         this.name = name;
@@ -50,7 +50,15 @@ public class Class implements Identifier {
         if(pos == null){
             pos = POSTagger.getInstance().tag(this);
         }
-        return pos;
+        return pos.getPosTags();
+    }
+
+    @Override
+    public String getIdentiferSplit() {
+        if(pos == null){
+            pos = POSTagger.getInstance().tag(this);
+        }
+        return pos.getId();
     }
 
     @Override
@@ -71,6 +79,11 @@ public class Class implements Identifier {
     @Override
     public String getCanonicalType() {
         return this.canonicalType;
+    }
+
+    @Override
+    public POSTagger.POSResult getPosResult() {
+        return this.pos;
     }
 
 

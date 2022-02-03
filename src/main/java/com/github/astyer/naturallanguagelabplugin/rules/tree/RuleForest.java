@@ -55,6 +55,7 @@ public class RuleForest {
         RuleNode weirdRulePt1 = new RuleNode("V NM* N(PL)|V+ pt1 TODO: Update dynamically", Pattern.Compile("|(&('V_',&(*('NM_'),|('N_','NPL_'))),&('V_',*('V_')))"), "V NM* N(PL)|V+ pt1 Explanation TODO: update dynamically", "V NM* N(PL)|V+ pt1 Example TODO: update dynamically");//("(V (NM )*(N|NPL))|V+"));
         RuleNode weirdRulePt2 = new RuleNode("V NM* N(PL)|V+ pt2", Pattern.Compile("|(&('V_',&(*('NM_'),|('N_','NPL_'))),&('V_',*('V_')))"), "V NM* N(PL)|V+ pt2 Explanation TODO: update dynamically", "V NM* N(PL)|V+ pt2 Example TODO: update dynamically");//("(V (NM )*(N|NPL))|V+"));
         RuleNode pnmn = new RuleNode("P NM* N(PL)", Pattern.Compile("&('P_',&(*('NM_'),|('N_','NPL_'))))"), "P NM* N(PL) Explanation ", "P NM* N(PL) Example");//("P (NM )*(N|NPL)"));
+        //                     change to  V* DT NM* N(PL)
         RuleNode vp = new RuleNode("V P NM* N", Pattern.Compile("&('V_',&('P_',&(*('NM_'),'N_')))"), "V P NM* N Explanation", "V P NM* N Example");//("V P (NM )*N"));
 
         methodRoot.addBranch(new RuleBranch("No Void/Generics", weirdRulePt1, new Checkbox("No Void/Generics",null, method -> new CheckboxResult(!method.getType().equals(IRFactory.IRType.TYPE_VOID)), null)));

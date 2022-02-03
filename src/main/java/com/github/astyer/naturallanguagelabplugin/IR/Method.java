@@ -9,7 +9,9 @@ import java.util.List;
 import java.util.Optional;
 
 public class Method implements Identifier{
-    String name, canonicalType, pos;
+    String name;
+    String canonicalType;
+    POSTagger.POSResult pos;
     IRFactory.IRType type;
     boolean performsConversion, performsEventDrivenFunctionality;
     PsiElement element;
@@ -56,7 +58,20 @@ public class Method implements Identifier{
         if(pos == null){
             pos = POSTagger.getInstance().tag(this);
         }
-        return pos;
+        return pos.getPosTags();
+    }
+
+    @Override
+    public String getIdentiferSplit() {
+        if(pos == null){
+            pos = POSTagger.getInstance().tag(this);
+        }
+        return pos.getId();
+    }
+
+    @Override
+    public POSTagger.POSResult getPosResult() {
+        return this.pos;
     }
 
     @Override
