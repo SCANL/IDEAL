@@ -18,6 +18,7 @@ public class IdentifierGrammarToolWindow {
     final String catalogueURL = "https://github.com/SCANL/identifier_name_structure_catalogue";
     final String knowMoreText = "These recommendations are all part of a catalogue of grammar patterns. This catalogue documents the identifier naming styles and patterns that have been discovered by software researchers. You can access this catalogue via the button below.";
     final Font titleFont = new Font(null, Font.BOLD, 16);
+    final String maxTextWidthStyling = "<html><body style='width: 300px'>"; //determines the min width of the tables unfortunately
 
     private static IdentifierGrammarToolWindow instance = null;
 
@@ -72,7 +73,7 @@ public class IdentifierGrammarToolWindow {
     }
 
     private void setInitialTextAndStyling() {
-        knowMoreValue.setText("<html><body style='width: 275px'>" + knowMoreText); //determines the min width of the tables unfortunately
+        knowMoreValue.setText(maxTextWidthStyling + knowMoreText);
         for(JLabel titleLabel: titleLabels) {
             titleLabel.setFont(titleFont);
         }
@@ -125,22 +126,22 @@ public class IdentifierGrammarToolWindow {
         Result.Recommendation topRecommendation = result.getTopRecommendation();
         recommendedGenericPattern = (topRecommendation == null) ? "" : topRecommendation.getName();
         currentPattern = id.getPOS().replace('_', ' ');
-        setOtherRecommendationsData(topRecommendation);
+        setOtherRecommendationsData(result);
         updateTables();
-        explanationValue.setText(topRecommendation.getExplanation());
-        exampleValue.setText(topRecommendation.getExample());
+        explanationValue.setText(maxTextWidthStyling + topRecommendation.getExplanation());
+        exampleValue.setText(maxTextWidthStyling + "Example:<br/>" + topRecommendation.getExample());
     }
 
-    private void setOtherRecommendationsData(Result.Recommendation topRecommendation) {
-//        System.out.println("all recommendations: " + result.getRecommendations());
-//        System.out.println("next recommendations: " + topRecommendation.getNextPOSRecommendations());
-        List<String> otherRecommendations = (topRecommendation == null) ? new ArrayList<>() : topRecommendation.getNextPOSRecommendations();
-        otherRecommendationsData = new String[otherRecommendations.size()][4];
-        for(int i = 0; i < otherRecommendations.size(); i++) {
+    private void setOtherRecommendationsData(Result result) {
+        List<Result.Recommendation> otherRecommendations = result.getRecommendations();
+        List<Result.Recommendation> otherRecsWithoutFirst = new ArrayList<>(otherRecommendations);
+        otherRecsWithoutFirst.remove(0);
+        otherRecommendationsData = new String[otherRecsWithoutFirst.size()][4];
+        for(int i = 0; i < otherRecsWithoutFirst.size(); i++) {
             otherRecommendationsData[i][0] = type;
             otherRecommendationsData[i][1] = identifierName;
             otherRecommendationsData[i][2] = ""; //recommended pattern
-            otherRecommendationsData[i][3] = otherRecommendations.get(i);
+            otherRecommendationsData[i][3] = otherRecsWithoutFirst.get(i).getName();
         }
     }
 
