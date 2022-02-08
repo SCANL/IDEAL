@@ -41,7 +41,7 @@ public class AggregateRules {
                         nextPosRec = Arrays.asList(tr.getAcceptableOptions());
                     }
                     return new Result.Recommendation(nr.getName(), nr.isIdentifierMatchesRegex(), nextPosRec, nr.getExplanation(), nr.getExample(), nr.getRec());
-                }).collect(Collectors.toList())
+                }).filter(nr->!nr.getName().equals("empty")).collect(Collectors.toList())
         );
     }
 }
