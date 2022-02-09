@@ -20,6 +20,7 @@ public class IdentifierGrammarToolWindow {
     final String knowMoreText = "These recommendations are all part of a catalogue of grammar patterns. This catalogue documents the identifier naming styles and patterns that have been discovered by software researchers. You can access this catalogue via the button below.";
     final Font titleFont = new Font(null, Font.BOLD, 16);
     final String maxTextWidthStyling = "<html><body style='width: 300px'>"; //determines the min width of the tables unfortunately
+    final String noWrapStyling = "<html><body style='white-space: nowrap'>";
 
     private static IdentifierGrammarToolWindow instance = null;
 
@@ -47,12 +48,12 @@ public class IdentifierGrammarToolWindow {
 
     String[] currentHeaders = {"Type", "Identifier", "Current Grammar Pattern" };
     String[] recommendedHeaders = {"Type", "Identifier", "Recommended", "Generic" };
-    private String type;
-    private String identifierName;
-    private String currentPattern;
-    private String recommendedIdentifier;
-    private String recommendedPattern;
-    private String recommendedGenericPattern;
+    private String type = "";
+    private String identifierName = "";
+    private String currentPattern = "";
+    private String recommendedIdentifier = "";
+    private String recommendedPattern = "";
+    private String recommendedGenericPattern = "";
     private String[][] otherRecommendationsData = {};
 
     public static IdentifierGrammarToolWindow getInstance() {
@@ -131,8 +132,8 @@ public class IdentifierGrammarToolWindow {
         identifierName = id.getDisplayName();
         currentPattern = id.getPOS().replace('_', ' ');
         Result.Recommendation topRecommendation = result.getTopRecommendation();
-        recommendedIdentifier = getRecommendedIdentifier(id, topRecommendation);
-        recommendedPattern = getRecommendedPattern(id, topRecommendation);
+        recommendedIdentifier = getRecommendedIdentifier(id, topRecommendation, true);
+        recommendedPattern = getRecommendedPattern(id, topRecommendation, true);
         recommendedGenericPattern = topRecommendation.getName();
         setOtherRecommendationsData(id, result.getRecommendations());
         updateTables();
@@ -147,20 +148,20 @@ public class IdentifierGrammarToolWindow {
         for(int i = 0; i < otherRecsWithoutFirst.size(); i++) {
             Result.Recommendation otherRecommendation = otherRecsWithoutFirst.get(i);
             otherRecommendationsData[i][0] = type;
-            otherRecommendationsData[i][1] = getRecommendedIdentifier(id, otherRecommendation);
-            otherRecommendationsData[i][2] = getRecommendedPattern(id, otherRecommendation);
+            otherRecommendationsData[i][1] = getRecommendedIdentifier(id, otherRecommendation,false);
+            otherRecommendationsData[i][2] = getRecommendedPattern(id, otherRecommendation, false);
             otherRecommendationsData[i][3] = otherRecommendation.getName();
         }
     }
 
-    private String getRecommendedIdentifier(Identifier id, Result.Recommendation recommendation) {
+    private String getRecommendedIdentifier(Identifier id, Result.Recommendation recommendation, boolean addColoring) {
         RecommendationAlg.Rec rec = recommendation.getRec();
         String[] splitIdentifier = id.getIdentiferSplit().split("_");
-        List<Integer> correctWordIndexes = rec.getIndexesOfFinalId();
-        StringBuilder recIdentifier = new StringBuilder("<html>");
+        List<Integer> correctWordIndexes = rec != null ? rec.getIndexesOfFinalId() : new ArrayList<>();
+        StringBuilder recIdentifier = new StringBuilder(noWrapStyling);
         for(int i = 0; i < splitIdentifier.length; i++) {
             String word = splitIdentifier[i];
-            if (!correctWordIndexes.contains(i)) {
+            if (addColoring && !correctWordIndexes.contains(i)) {
                 word = "<b><span style='color: red'>" + word + "</span></b>";
             }
             recIdentifier.append(" ").append(word);
@@ -169,14 +170,14 @@ public class IdentifierGrammarToolWindow {
     }
 
     // will break if current and rec patterns are different lengths ex. method named car will have rec V N where only V should be green
-    private String getRecommendedPattern(Identifier id, Result.Recommendation recommendation) {
+    private String getRecommendedPattern(Identifier id, Result.Recommendation recommendation, boolean addColoring) {
         RecommendationAlg.Rec rec = recommendation.getRec();
         String[] splitIdPOS = id.getPOS().split("_");
         String[] recPatternSplit = rec.getFinal().split("_");
-        StringBuilder recPattern = new StringBuilder("<html>");
+        StringBuilder recPattern = new StringBuilder(noWrapStyling);
         for(int i = 0; i < recPatternSplit.length; i++) {
             String pos = recPatternSplit[i];
-            if (i >= splitIdPOS.length || !recPatternSplit[i].equals(splitIdPOS[i])) {
+            if (addColoring && (i >= splitIdPOS.length || !recPatternSplit[i].equals(splitIdPOS[i]))) {
                 pos = "<b><span style='color: green'>" + pos + "</span></b>";
             }
             recPattern.append(" ").append(pos);
