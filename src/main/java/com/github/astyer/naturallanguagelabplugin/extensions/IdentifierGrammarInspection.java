@@ -43,7 +43,7 @@ public class IdentifierGrammarInspection extends AbstractBaseJavaLocalInspection
                     String description = "Variable name '" + variable.getName() + "' should use grammar pattern " + topRecommendation.getName(); //is the rule name in Recommendation?
                     holder.registerProblem(variableIdentifier, description, myQuickFix);
                 }
-//                System.out.println(variable.getName() + " finished parsing at: " + System.currentTimeMillis());
+                System.out.println(variable.getName() + " finished parsing at: " + System.currentTimeMillis());
             }
 
 //            @Override
@@ -63,7 +63,7 @@ public class IdentifierGrammarInspection extends AbstractBaseJavaLocalInspection
                     String description = "Method name '" + method.getName() + "' should use grammar pattern " + topRecommendation.getName();
                     holder.registerProblem(methodIdentifier, description, myQuickFix);
                 }
-//                System.out.println(method.getName() + " finished parsing at: " + System.currentTimeMillis());
+                System.out.println(method.getName() + " finished parsing at: " + System.currentTimeMillis());
             }
         };
     }
