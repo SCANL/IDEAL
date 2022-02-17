@@ -77,16 +77,13 @@ class MetricsTest {
             Result r = aggregateRules.runAll(v);
             String expectedResult = expectedResults[i];
 
-            //assertEquals(r.getTopRecommendation().getName(), expectedResult);
-
             PrintStream ps =  expectedResult.equals(r.getTopRecommendation())? System.out : System.err;
-            ps.println("Metrics Testing");
-            ps.println("Test: " + i + " (" + (expectedResult.equals(r.getTopRecommendation().getName())?"Success":"Fail") + ")");
+            ps.println("Rule 1 Test: " + i + " (" + (expectedResult.equals(r.getTopRecommendation().getName())?"Success":"Fail") + ")");
             ps.println("Variable: \"" + v.getName() + "\"");
             ps.println("Canonical Type: \"" + v.getCanonicalType() + "\"");
             ps.println("Expected Recommendation: " + expectedResult);
             ps.println("Actual Recommendation: " + r.getTopRecommendation().getName());
-            //assertEquals(expectedResult, r.getTopRecommendation().getName());
+            assertEquals(expectedResult, r.getTopRecommendation().getName());
             System.out.println();
         }
     }
@@ -106,16 +103,13 @@ class MetricsTest {
             Result r = aggregateRules.runAll(v);
             String expectedResult = expectedResults[i];
 
-            //assertEquals(r.getTopRecommendation().getName(), expectedResult);
-
             PrintStream ps =  expectedResult.equals(r.getTopRecommendation())? System.out : System.err;
-            ps.println("Metrics Testing");
-            ps.println("Test: " + i + " (" + (expectedResult.equals(r.getTopRecommendation().getName())?"Success":"Fail") + ")");
+            ps.println("Rule 2 Test: " + i + " (" + (expectedResult.equals(r.getTopRecommendation().getName())?"Success":"Fail") + ")");
             ps.println("Variable: \"" + v.getName() + "\"");
             ps.println("Canonical Type: \"" + v.getCanonicalType() + "\"");
             ps.println("Expected Recommendation: " + expectedResult);
             ps.println("Actual Recommendation: " + r.getTopRecommendation().getName());
-            //assertEquals(expectedResult, r.getTopRecommendation().getName());
+            assertEquals(expectedResult, r.getTopRecommendation().getName());
             System.out.println();
         }
     }
@@ -133,16 +127,13 @@ class MetricsTest {
             Result r = aggregateRules.runAll(v);
             String expectedResult = expectedResults[i];
 
-            //assertEquals(r.getTopRecommendation().getName(), expectedResult);
-
             PrintStream ps =  expectedResult.equals(r.getTopRecommendation())? System.out : System.err;
-            ps.println("Metrics Testing");
-            ps.println("Test: " + i + " (" + (expectedResult.equals(r.getTopRecommendation().getName())?"Success":"Fail") + ")");
+            ps.println("Rule 2_1 Test: " + i + " (" + (expectedResult.equals(r.getTopRecommendation().getName())?"Success":"Fail") + ")");
             ps.println("Variable: \"" + v.getName() + "\"");
             ps.println("Canonical Type: \"" + v.getCanonicalType() + "\"");
             ps.println("Expected Recommendation: " + expectedResult);
             ps.println("Actual Recommendation: " + r.getTopRecommendation().getName());
-            //assertEquals(expectedResult, r.getTopRecommendation().getName());
+            assertEquals(expectedResult, r.getTopRecommendation().getName());
             System.out.println();
         }
     }
@@ -162,16 +153,13 @@ class MetricsTest {
             Result r = aggregateRules.runAll(v);
             String expectedResult = expectedResults[i];
 
-            //assertEquals(r.getTopRecommendation().getName(), expectedResult);
-
             PrintStream ps =  expectedResult.equals(r.getTopRecommendation())? System.out : System.err;
-            ps.println("Metrics Testing");
-            ps.println("Test: " + i + " (" + (expectedResult.equals(r.getTopRecommendation().getName())?"Success":"Fail") + ")");
+            ps.println("Rule 2_2 Test: " + i + " (" + (expectedResult.equals(r.getTopRecommendation().getName())?"Success":"Fail") + ")");
             ps.println("Variable: \"" + v.getName() + "\"");
             ps.println("Canonical Type: \"" + v.getCanonicalType() + "\"");
             ps.println("Expected Recommendation: " + expectedResult);
             ps.println("Actual Recommendation: " + r.getTopRecommendation().getName());
-            //assertEquals(expectedResult, r.getTopRecommendation().getName());
+            assertEquals(expectedResult, r.getTopRecommendation().getName());
             System.out.println();
         }
     }
@@ -194,16 +182,13 @@ class MetricsTest {
             Result r = aggregateRules.runAll(v);
             String expectedResult = expectedResults[i];
 
-            //assertEquals(r.getTopRecommendation().getName(), expectedResult);
-
             PrintStream ps =  expectedResult.equals(r.getTopRecommendation())? System.out : System.err;
-            ps.println("Metrics Testing");
-            ps.println("Test: " + i + " (" + (expectedResult.equals(r.getTopRecommendation().getName())?"Success":"Fail") + ")");
+            ps.println("Rule 3 Variable Test: " + i + " (" + (expectedResult.equals(r.getTopRecommendation().getName())?"Success":"Fail") + ")");
             ps.println("Variable: \"" + v.getName() + "\"");
             ps.println("Canonical Type: \"" + v.getCanonicalType() + "\"");
             ps.println("Expected Recommendation: " + expectedResult);
             ps.println("Actual Recommendation: " + r.getTopRecommendation().getName());
-            //assertEquals(expectedResult, r.getTopRecommendation().getName());
+            assertEquals(expectedResult, r.getTopRecommendation().getName());
             System.out.println();
         }
     }
@@ -221,16 +206,13 @@ class MetricsTest {
             Result r = aggregateRules.runAll(m);
             String expectedResult = expectedResults[i];
 
-            //assertEquals(r.getTopRecommendation().getName(), expectedResult);
-
             PrintStream ps =  expectedResult.equals(r.getTopRecommendation())? System.out : System.err;
-            ps.println("Metrics Testing");
-            ps.println("Test: " + i + " (" + (expectedResult.equals(r.getTopRecommendation().getName())?"Success":"Fail") + ")");
+            ps.println("Rule 3 Method Test: " + i + " (" + (expectedResult.equals(r.getTopRecommendation().getName())?"Success":"Fail") + ")");
             ps.println("Variable: \"" + m.getName() + "\"");
             ps.println("Canonical Type: \"" + m.getCanonicalType() + "\"");
             ps.println("Expected Recommendation: " + expectedResult);
             ps.println("Actual Recommendation: " + r.getTopRecommendation().getName());
-            //assertEquals(expectedResult, r.getTopRecommendation().getName());
+            assertEquals(expectedResult, r.getTopRecommendation().getName());
             System.out.println();
         }
     }
@@ -248,20 +230,18 @@ class MetricsTest {
             Result r = aggregateRules.runAll(m);
             String expectedResult = expectedResults[i];
 
-            //assertEquals(r.getTopRecommendation().getName(), expectedResult);
-
             PrintStream ps =  expectedResult.equals(r.getTopRecommendation())? System.out : System.err;
-            ps.println("Metrics Testing");
-            ps.println("Test: " + i + " (" + (expectedResult.equals(r.getTopRecommendation().getName())?"Success":"Fail") + ")");
+            ps.println("Rule 8 Test: " + i + " (" + (expectedResult.equals(r.getTopRecommendation().getName())?"Success":"Fail") + ")");
             ps.println("Variable: \"" + m.getName() + "\"");
             ps.println("Canonical Type: \"" + m.getCanonicalType() + "\"");
             ps.println("Expected Recommendation: " + expectedResult);
             ps.println("Actual Recommendation: " + r.getTopRecommendation().getName());
-            //assertEquals(expectedResult, r.getTopRecommendation().getName());
+            assertEquals(expectedResult, r.getTopRecommendation().getName());
             System.out.println();
         }
     }
 
+    /*
     @Test
     public void otherMethodTests() throws Exception {
         List<Method> meths = new ArrayList<Method>();
@@ -277,17 +257,16 @@ class MetricsTest {
             Result r = aggregateRules.runAll(m);
             String expectedResult = expectedResults[i];
 
-            //assertEquals(r.getTopRecommendation().getName(), expectedResult);
-
             PrintStream ps =  expectedResult.equals(r.getTopRecommendation())? System.out : System.err;
-            ps.println("Metrics Testing");
-            ps.println("Test: " + i + " (" + (expectedResult.equals(r.getTopRecommendation().getName())?"Success":"Fail") + ")");
+            ps.println("General Method Test: " + i + " (" + (expectedResult.equals(r.getTopRecommendation().getName())?"Success":"Fail") + ")");
             ps.println("Variable: \"" + m.getName() + "\"");
             ps.println("Canonical Type: \"" + m.getCanonicalType() + "\"");
             ps.println("Expected Recommendation: " + expectedResult);
             ps.println("Actual Recommendation: " + r.getTopRecommendation().getName());
-            //assertEquals(expectedResult, r.getTopRecommendation().getName());
+            assertEquals(expectedResult, r.getTopRecommendation().getName());
             System.out.println();
         }
     }
+
+     */
 }
