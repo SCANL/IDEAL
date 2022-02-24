@@ -24,7 +24,7 @@ public class RuleForest {
     private RuleForest(){
         //create var
         RuleNode nmn = new RuleNode("NM* N", Pattern.Compile("&(*('NM_'),'N_')"), ExplanationsAndExamples.getExplanation(Rule.NMN), ExplanationsAndExamples.getExample(Rule.NMN));
-        RuleNode vnmn = new RuleNode("V NM* N(PL)", Pattern.Compile("&('V_',&(*('NM_'),|('N_','NPL_')))"), ExplanationsAndExamples.getExplanation(Rule.VNMN), ExplanationsAndExamples.getExample(Rule.VNMN));//("V (NM )*(N|NPL)"));
+        RuleNode vnmn = new RuleNode("V NM* N|NPL", Pattern.Compile("&('V_',&(*('NM_'),|('N_','NPL_')))"), ExplanationsAndExamples.getExplanation(Rule.VNMN), ExplanationsAndExamples.getExample(Rule.VNMN));//("V (NM )*(N|NPL)"));
         RuleNode nmnpl = new RuleNode("NM* NPL", Pattern.Compile("&(*('NM_'),'NPL_')"), ExplanationsAndExamples.getExplanation(Rule.NMNPL), ExplanationsAndExamples.getExample(Rule.NMNPL));//("(NM )*NPL"));
 
         nmn.addBranch(new RuleBranch(
@@ -51,13 +51,13 @@ public class RuleForest {
         this.varTree = nmn;
 
         //class tree
-        this.classTree = new RuleNode("NM* N(PL)", Pattern.Compile("&(*('NM_'),|('N_','NPL_'))"), ExplanationsAndExamples.getExplanation(Rule.NMNNPL), ExplanationsAndExamples.getExample(Rule.NMNNPL));//("(NM )*(N|NPL)"));
+        this.classTree = new RuleNode("NM* N|NPL", Pattern.Compile("&(*('NM_'),|('N_','NPL_'))"), ExplanationsAndExamples.getExplanation(Rule.NMNNPL), ExplanationsAndExamples.getExample(Rule.NMNNPL));//("(NM )*(N|NPL)"));
 
         //method tree
         RuleNode methodRoot = new RuleNode("empty", Pattern.AcceptAny(), "", "");
-        RuleNode weirdRulePt1 = new RuleNode("V NM* N(PL)|V+ pt1 TODO: Update dynamically", Pattern.Compile("|(&('V_',&(*('NM_'),|('N_','NPL_'))),&('V_',*('V_')))"), ExplanationsAndExamples.getExplanation(Rule.VV1), ExplanationsAndExamples.getExample(Rule.VV1));//("(V (NM )*(N|NPL))|V+"));
-        RuleNode weirdRulePt2 = new RuleNode("V NM* N(PL)|V+ pt2", Pattern.Compile("|(&('V_',&(*('NM_'),|('N_','NPL_'))),&('V_',*('V_')))"), ExplanationsAndExamples.getExplanation(Rule.VV2), ExplanationsAndExamples.getExample(Rule.VV2));//("(V (NM )*(N|NPL))|V+"));
-        RuleNode pnmn = new RuleNode("P NM* N(PL)", Pattern.Compile("&('P_',&(*('NM_'),|('N_','NPL_'))))"), ExplanationsAndExamples.getExplanation(Rule.PNMN), ExplanationsAndExamples.getExample(Rule.PNMN));//("P (NM )*(N|NPL)"));
+        RuleNode weirdRulePt1 = new RuleNode("V NM* N|NPL | V+ pt1 TODO: Update dynamically", Pattern.Compile("|(&('V_',&(*('NM_'),|('N_','NPL_'))),&('V_',*('V_')))"), ExplanationsAndExamples.getExplanation(Rule.VV1), ExplanationsAndExamples.getExample(Rule.VV1));//("(V (NM )*(N|NPL))|V+"));
+        RuleNode weirdRulePt2 = new RuleNode("V NM* N|NPL | V+ pt2", Pattern.Compile("|(&('V_',&(*('NM_'),|('N_','NPL_'))),&('V_',*('V_')))"), ExplanationsAndExamples.getExplanation(Rule.VV2), ExplanationsAndExamples.getExample(Rule.VV2));//("(V (NM )*(N|NPL))|V+"));
+        RuleNode pnmn = new RuleNode("P NM* N|NPL", Pattern.Compile("&('P_',&(*('NM_'),|('N_','NPL_'))))"), ExplanationsAndExamples.getExplanation(Rule.PNMN), ExplanationsAndExamples.getExample(Rule.PNMN));//("P (NM )*(N|NPL)"));
         RuleNode vp = new RuleNode("V P NM* N", Pattern.Compile("&('V_',&('P_',&(*('NM_'),'N_')))"), ExplanationsAndExamples.getExplanation(Rule.VP), ExplanationsAndExamples.getExample(Rule.VP));//("V P (NM )*N"));
 
         methodRoot.addBranch(new RuleBranch("No Void/Generics", weirdRulePt1, new Checkbox("No Void/Generics",null, method -> new CheckboxResult(!method.getType().equals(IRFactory.IRType.TYPE_VOID)), null)));
