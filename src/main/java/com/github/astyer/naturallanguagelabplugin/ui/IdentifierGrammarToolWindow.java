@@ -32,19 +32,18 @@ public class IdentifierGrammarToolWindow {
     private JLabel recommendedTitle;
     private JTable recommendedTable;
 
-    private JLabel explanationTitle;
-    private JLabel explanationValue;
+    private JLabel exampleTitle;
     private JLabel exampleValue;
 
-    private JLabel othersTitle;
-    private JTable othersTable;
+    private JLabel explanationTitle;
+    private JLabel explanationValue;
 
     private JLabel knowMoreTitle;
     private JLabel knowMoreValue;
     private JButton catalogueButton;
 
-    private final JLabel[] titleLabels = {currentTitle, recommendedTitle, explanationTitle, othersTitle, knowMoreTitle};
-    private final JTable[] tables = {currentTable, recommendedTable, othersTable};
+    private final JLabel[] titleLabels = {currentTitle, recommendedTitle, exampleTitle, explanationTitle, knowMoreTitle};
+    private final JTable[] tables = {currentTable, recommendedTable};
 
     String[] currentHeaders = {"Type", "Identifier", "Current Grammar Pattern" };
     String[] recommendedHeaders = {"Type", "Identifier", "Recommended", "Generic" };
@@ -54,7 +53,6 @@ public class IdentifierGrammarToolWindow {
     private String recommendedIdentifier = "";
     private String recommendedPattern = "";
     private String recommendedGenericPattern = "";
-    private String[][] otherRecommendationsData = {};
 
     public static IdentifierGrammarToolWindow getInstance() {
         if (instance == null) {
@@ -97,7 +95,6 @@ public class IdentifierGrammarToolWindow {
     private void updateTables() {
         updateCurrentTable();
         updateRecommendedTable();
-        updateOthersTable();
     }
 
     private void updateCurrentTable() {
@@ -116,15 +113,6 @@ public class IdentifierGrammarToolWindow {
                 recommendedHeaders
         ));
     }
-    private void updateOthersTable() {
-        othersTable.setModel(new DefaultTableModel(
-                otherRecommendationsData,
-                recommendedHeaders
-        ));
-        Dimension preferredTableSize = new Dimension(150,otherRecommendationsData.length * 16);
-        othersTable.setPreferredSize(preferredTableSize);
-        othersTable.setPreferredScrollableViewportSize(preferredTableSize);
-    }
 
     public void setCurrentIdentifier(Result result) {
         Identifier id = result.getId();
@@ -132,36 +120,22 @@ public class IdentifierGrammarToolWindow {
         identifierName = id.getDisplayName();
         currentPattern = id.getPOS().replace('_', ' ');
         Result.Recommendation topRecommendation = result.getTopRecommendation();
-        recommendedIdentifier = getRecommendedIdentifier(id, topRecommendation, true);
-        recommendedPattern = getRecommendedPattern(id, topRecommendation, true);
+        recommendedIdentifier = getRecommendedIdentifier(id, topRecommendation);
+        recommendedPattern = getRecommendedPattern(id, topRecommendation);
         recommendedGenericPattern = topRecommendation.getName();
-        setOtherRecommendationsData(id, result.getRecommendations());
         updateTables();
         explanationValue.setText(maxTextWidthStyling + topRecommendation.getExplanation());
-        exampleValue.setText(maxTextWidthStyling + "Example:<br/>" + topRecommendation.getExample());
+        exampleValue.setText(maxTextWidthStyling + topRecommendation.getExample());
     }
 
-    private void setOtherRecommendationsData(Identifier id, List<Result.Recommendation> otherRecommendations) {
-        List<Result.Recommendation> otherRecsWithoutFirst = new ArrayList<>(otherRecommendations);
-        otherRecsWithoutFirst.remove(0);
-        otherRecommendationsData = new String[otherRecsWithoutFirst.size()][4];
-        for(int i = 0; i < otherRecsWithoutFirst.size(); i++) {
-            Result.Recommendation otherRecommendation = otherRecsWithoutFirst.get(i);
-            otherRecommendationsData[i][0] = type;
-            otherRecommendationsData[i][1] = getRecommendedIdentifier(id, otherRecommendation,false);
-            otherRecommendationsData[i][2] = getRecommendedPattern(id, otherRecommendation, false);
-            otherRecommendationsData[i][3] = otherRecommendation.getName();
-        }
-    }
-
-    private String getRecommendedIdentifier(Identifier id, Result.Recommendation recommendation, boolean addColoring) {
+    private String getRecommendedIdentifier(Identifier id, Result.Recommendation recommendation) {
         RecommendationAlg.Rec rec = recommendation.getRec();
         String[] splitIdentifier = id.getIdentiferSplit().split("_");
         List<Integer> correctWordIndexes = rec != null ? rec.getIndexesOfFinalId() : new ArrayList<>();
         StringBuilder recIdentifier = new StringBuilder(noWrapStyling);
         for(int i = 0; i < splitIdentifier.length; i++) {
             String word = splitIdentifier[i];
-            if (addColoring && !correctWordIndexes.contains(i)) {
+            if (!correctWordIndexes.contains(i)) {
                 word = "<b><span style='color: red'>" + word + "</span></b>";
             }
             recIdentifier.append(" ").append(word);
@@ -170,14 +144,14 @@ public class IdentifierGrammarToolWindow {
     }
 
     // will break if current and rec patterns are different lengths ex. method named car will have rec V N where only V should be green
-    private String getRecommendedPattern(Identifier id, Result.Recommendation recommendation, boolean addColoring) {
+    private String getRecommendedPattern(Identifier id, Result.Recommendation recommendation) {
         RecommendationAlg.Rec rec = recommendation.getRec();
         String[] splitIdPOS = id.getPOS().split("_");
         String[] recPatternSplit = rec != null ? rec.getFinal().split("_") : new String[]{};
         StringBuilder recPattern = new StringBuilder(noWrapStyling);
         for(int i = 0; i < recPatternSplit.length; i++) {
             String pos = recPatternSplit[i];
-            if (addColoring && (i >= splitIdPOS.length || !recPatternSplit[i].equals(splitIdPOS[i]))) {
+            if (i >= splitIdPOS.length || !recPatternSplit[i].equals(splitIdPOS[i])) {
                 pos = "<b><span style='color: green'>" + pos + "</span></b>";
             }
             recPattern.append(" ").append(pos);
