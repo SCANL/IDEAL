@@ -74,6 +74,8 @@ public class IdentifierGrammarToolWindow {
     }
 
     private void setInitialTextAndStyling() {
+        exampleValue.setText("");
+        explanationValue.setText("");
         knowMoreValue.setText(maxTextWidthStyling + knowMoreText);
         for(JLabel titleLabel: titleLabels) {
             titleLabel.setFont(titleFont);
