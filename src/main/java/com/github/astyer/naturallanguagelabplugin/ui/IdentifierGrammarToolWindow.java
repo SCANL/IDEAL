@@ -173,7 +173,7 @@ public class IdentifierGrammarToolWindow {
     private String getRecommendedPattern(Identifier id, Result.Recommendation recommendation, boolean addColoring) {
         RecommendationAlg.Rec rec = recommendation.getRec();
         String[] splitIdPOS = id.getPOS().split("_");
-        String[] recPatternSplit = rec.getFinal().split("_");
+        String[] recPatternSplit = rec != null ? rec.getFinal().split("_") : new String[]{};
         StringBuilder recPattern = new StringBuilder(noWrapStyling);
         for(int i = 0; i < recPatternSplit.length; i++) {
             String pos = recPatternSplit[i];
