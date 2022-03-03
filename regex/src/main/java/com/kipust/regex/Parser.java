@@ -59,6 +59,8 @@ class Parser {
             return new AST.Constant(((Token.TokConstant) t).value);
         }else if(t instanceof Token.TokRange){
             return new AST.Range(((Token.TokRange) t).start, ((Token.TokRange) t).end);
+        }else if(t instanceof Token.TokWildcard){
+            return new AST.Wildcard();
         } else {
             throw new Exception("parse error");
         }
