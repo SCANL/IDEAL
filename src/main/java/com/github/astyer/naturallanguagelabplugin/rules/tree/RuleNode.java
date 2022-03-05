@@ -23,10 +23,10 @@ public class RuleNode {
         this.getExample = getExample;
     }
     public RuleNode(String name, Pattern regex, String getExplanation, String getExample){
-        this.getName = ()->name;
+        this.getName = (x)->name;
         this.regex = regex;
-        this.getExplanation = ()->getExplanation;
-        this.getExample = ()->getExample;
+        this.getExplanation = (x)->getExplanation;
+        this.getExample = (x)->getExample;
     }
 
     public void addBranch(RuleBranch branch){
@@ -36,7 +36,7 @@ public class RuleNode {
     public List<NodeResult> checkIdentifier(Identifier id, int depth){
         List<NodeResult> results = new ArrayList<>();
         RecommendationAlg rec = new RecommendationAlg(regex, id);
-        results.add(new NodeResult(regex.match(id.getPOS()), getName.getResultAttr(), depth, getExplanation.getResultAttr(), getExample.getResultAttr(), rec.getRecommendation()));
+        results.add(new NodeResult(regex.match(id.getPOS()), getName.getResultAttr(id), depth, getExplanation.getResultAttr(id), getExample.getResultAttr(id), rec.getRecommendation()));
         for(RuleBranch branch: branches){
             Optional<RuleNode> optRuleNode =  branch.checkBranch(id);
             if(optRuleNode.isPresent()){
