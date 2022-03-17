@@ -1,38 +1,55 @@
-training_example int[] DECLARATION NM_N_
-training_examples int[] DECLARATION NM_NPL_
-database_connections int[] DECLARATION NM_NPL_
-databaseConnections int[] DECLARATION NM_NPL_
-primeNumber int[] DECLARATION NM_N_
-prime_number int[] DECLARATION NM_N_
-primeNumbers int[] DECLARATION NM_NPL_
-prime_numbers int[] DECLARATION NM_NPL_
-test_examples int[] DECLARATION NM_NPL_
-get_vars int[] DECLARATION NM_NPL_
-trainingExample int NM_N_
-userCount int NM_N_
-training_examples int DECLARATION NM_NPL_
-userCounts int DECLARATION NM_NPL_
-training_example int DECLARATION NM_N_
-training_examples int DECLARATION NM_NPL_
-training_example boolean DECLARATION NM_N_
-magicBoolean boolean DECLARATION NM_N_
-training_examples boolean DECLARATION NM_NPL_
-is_example boolean DECLARATION V_N_
-alive java.lang.boolean DECLARATION NM_
-isVariable java.lang.boolean DECLARATION V_N_
-hasChildren java.lang.boolean DECLARATION V_N_
-createChildren java.lang.boolean DECLARATION N_N_
-jumpAlive java.lang.boolean DECLARATION V_N_
-addChildren java.lang.boolean DECLARATION V_NPL_
-eatFood java.lang.boolean DECLARATION V_N_
-getUsers java.lang.String FUNCTION V_NPL_
-addUser java.lang.String FUNCTION V_N_
-user java.lang.String FUNCTION N_
-run void FUNCTION V_
-getAdmins void FUNCTION V_NPL_
-users void FUNCTION NPL_
-rule_2 void FUNCTION NM_N_
-rule_2_2 void FUNCTION NM_NM_N_
-rule2_1 void FUNCTION NM_NM_N_
-rule1 void FUNCTION NM_N_
-rule_3 void FUNCTION NM_N_
+----------
+rule 1
+----------
+training_example int[] DECLARATION NM_N_ training_example_
+training_examples int[] DECLARATION NM_NPL_ training_examples_
+database_connections int[] DECLARATION NM_NPL_ database_connections_
+databaseConnections int[] DECLARATION NM_NPL_ database_Connections_
+primeNumber int[] DECLARATION NM_N_ prime_Number_
+prime_number int[] DECLARATION NM_N_ prime_number_
+primeNumbers int[] DECLARATION NM_NPL_ prime_Numbers_
+prime_numbers int[] DECLARATION NM_NPL_ prime_numbers_
+test_examples int[] DECLARATION NM_NPL_ test_examples_
+get_vars int[] DECLARATION V_NPL_ get_vars_
+----------
+rule 2
+----------
+trainingExample int DECLARATION NM_N_ training_Example_
+userCount int DECLARATION NM_N_ user_Count_
+training_examples int DECLARATION NM_NPL_ training_examples_
+userCounts int DECLARATION NM_NPL_ user_Counts_
+----------
+rule 2_1
+----------
+training_example int DECLARATION NM_N_ training_example_
+training_examples int DECLARATION NM_NPL_ training_examples_
+----------
+rule 2_2
+----------
+training_example boolean DECLARATION NM_N_ training_example_
+magicBoolean boolean DECLARATION NM_N_ magic_Boolean_
+training_examples boolean DECLARATION NM_NPL_ training_examples_
+is_example boolean DECLARATION V_N_ is_example_
+----------
+rule 3 variables
+----------
+alive java.lang.boolean DECLARATION NM_ alive_
+isVariable java.lang.boolean DECLARATION V_N_ is_Variable_
+hasChildren java.lang.boolean DECLARATION V_N_ has_Children_
+createChildren java.lang.boolean DECLARATION N_N_ create_Children_
+jumpAlive java.lang.boolean DECLARATION V_NM_ jump_Alive_
+addChildren java.lang.boolean DECLARATION V_NPL_ add_Children_
+eatFood java.lang.boolean DECLARATION V_N_ eat_Food_
+----------
+rule 3 methods
+----------
+getUsers() java.lang.string FUNCTION V_NPL_ get_Users_
+addUser() java.lang.string FUNCTION V_N_ add_User_
+user() java.lang.string FUNCTION N_ user_
+with() java.lang.string FUNCTION P_ with_
+----------
+rule 8
+----------
+run() void FUNCTION V_ run_
+getAdmins() void FUNCTION V_NPL_ get_Admins_
+users() void FUNCTION NPL_ users_

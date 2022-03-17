@@ -28,32 +28,6 @@ class MetricsTest {
         assertEquals(r.getTopRecommendation(), null);
     }
 
-
-
-    @Test
-    public void variableTests() throws Exception {
-        List<Variable> vars = new ArrayList<Variable>();
-        String[] expectedResults = new String[]{"null", "null", "NM* N", "NM* N", "V NM* N(PL)", "V NM* N(PL)", "V NM* N(PL)", "null", "null", "NM* N", "NM* NPL", "null", "null", "null", "NM* NPL", "NM* NPL", "null", "null", "null", "NM* NPL", "V NM* N(PL)", "null", "null", "V NM* N(PL)", "V NM* N(PL)", "V NM* N(PL)", "V NM* N(PL)"};
-
-        for(int i = 0; i< vars.size(); i++){
-            Variable v = vars.get(i);
-            Result r = aggregateRules.runAll(v);
-            String expectedResult = expectedResults[i];
-
-            //assertEquals(r.getTopRecommendation().getName(), expectedResult);
-
-            PrintStream ps =  expectedResult.equals(r.getTopRecommendation())? System.out : System.err;
-            ps.println("Metrics Testing");
-            ps.println("Test: " + i + " (" + (expectedResult.equals(r.getTopRecommendation().getName())?"Success":"Fail") + ")");
-            ps.println("Variable: \"" + v.getName() + "\"");
-            ps.println("Canonical Type: \"" + v.getCanonicalType() + "\"");
-            ps.println("Expected Recommendation: " + expectedResult);
-            ps.println("Actual Recommendation: " + r.getTopRecommendation().getName());
-            //assertEquals(expectedResult, r.getTopRecommendation().getName());
-            System.out.println();
-        }
-    }
-
      */
 
     //Noun Phrase
@@ -77,14 +51,24 @@ class MetricsTest {
             Variable v = vars.get(i);
             Result r = aggregateRules.runAll(v);
             String expectedResult = expectedResults[i];
-
-            PrintStream ps =  expectedResult.equals(r.getTopRecommendation())? System.out : System.err;
-            ps.println("Rule 1 Test: " + i + " (" + (expectedResult.equals(r.getTopRecommendation().getName())?"Success":"Fail") + ")");
-            ps.println("Variable: \"" + v.getName() + "\"");
-            ps.println("Canonical Type: \"" + v.getCanonicalType() + "\"");
-            ps.println("Expected Recommendation: " + expectedResult);
-            ps.println("Actual Recommendation: " + r.getTopRecommendation().getName());
-            //assertEquals(expectedResult, r.getTopRecommendation().getName());
+            PrintStream ps;
+            if(r.getTopRecommendation().getRegexMatches()){
+                ps =  expectedResult.equals("null")? System.out : System.err;
+                ps.println("Rule 1 Test: " + i + " (" + (expectedResult.equals("null")?"Success":"Fail") + ")");
+                ps.println("Variable: \"" + v.getName() + "\"");
+                ps.println("Canonical Type: \"" + v.getCanonicalType() + "\"");
+                ps.println("Expected Match: " + expectedResult);
+                ps.println("Actual Match: " + "null");
+                assertEquals(expectedResult, "null");
+            } else {
+                ps =  expectedResult.equals(r.getTopRecommendation())? System.out : System.err;
+                ps.println("Rule 1 Test: " + i + " (" + (expectedResult.equals(r.getTopRecommendation().getName())?"Success":"Fail") + ")");
+                ps.println("Variable: \"" + v.getName() + "\"");
+                ps.println("Canonical Type: \"" + v.getCanonicalType() + "\"");
+                ps.println("Expected Recommendation: " + expectedResult);
+                ps.println("Actual Recommendation: " + r.getTopRecommendation().getName());
+                assertEquals(expectedResult, r.getTopRecommendation().getName());
+            }
             System.out.println();
         }
     }
@@ -104,14 +88,24 @@ class MetricsTest {
             Variable v = vars.get(i);
             Result r = aggregateRules.runAll(v);
             String expectedResult = expectedResults[i];
-
-            PrintStream ps =  expectedResult.equals(r.getTopRecommendation())? System.out : System.err;
-            ps.println("Rule 2 Test: " + i + " (" + (expectedResult.equals(r.getTopRecommendation().getName())?"Success":"Fail") + ")");
-            ps.println("Variable: \"" + v.getName() + "\"");
-            ps.println("Canonical Type: \"" + v.getCanonicalType() + "\"");
-            ps.println("Expected Recommendation: " + expectedResult);
-            ps.println("Actual Recommendation: " + r.getTopRecommendation().getName());
-            //assertEquals(expectedResult, r.getTopRecommendation().getName());
+            PrintStream ps;
+            if(r.getTopRecommendation().getRegexMatches()){
+                ps =  expectedResult.equals("null")? System.out : System.err;
+                ps.println("Rule 1 Test: " + i + " (" + (expectedResult.equals("null")?"Success":"Fail") + ")");
+                ps.println("Variable: \"" + v.getName() + "\"");
+                ps.println("Canonical Type: \"" + v.getCanonicalType() + "\"");
+                ps.println("Expected Match: " + expectedResult);
+                ps.println("Actual Match: " + "null");
+                assertEquals(expectedResult, "null");
+            } else {
+                ps =  expectedResult.equals(r.getTopRecommendation())? System.out : System.err;
+                ps.println("Rule 1 Test: " + i + " (" + (expectedResult.equals(r.getTopRecommendation().getName())?"Success":"Fail") + ")");
+                ps.println("Variable: \"" + v.getName() + "\"");
+                ps.println("Canonical Type: \"" + v.getCanonicalType() + "\"");
+                ps.println("Expected Recommendation: " + expectedResult);
+                ps.println("Actual Recommendation: " + r.getTopRecommendation().getName());
+                assertEquals(expectedResult, r.getTopRecommendation().getName());
+            }
             System.out.println();
         }
     }
@@ -128,14 +122,24 @@ class MetricsTest {
             Variable v = vars.get(i);
             Result r = aggregateRules.runAll(v);
             String expectedResult = expectedResults[i];
-
-            PrintStream ps =  expectedResult.equals(r.getTopRecommendation())? System.out : System.err;
-            ps.println("Rule 2_1 Test: " + i + " (" + (expectedResult.equals(r.getTopRecommendation().getName())?"Success":"Fail") + ")");
-            ps.println("Variable: \"" + v.getName() + "\"");
-            ps.println("Canonical Type: \"" + v.getCanonicalType() + "\"");
-            ps.println("Expected Recommendation: " + expectedResult);
-            ps.println("Actual Recommendation: " + r.getTopRecommendation().getName());
-            //assertEquals(expectedResult, r.getTopRecommendation().getName());
+            PrintStream ps;
+            if(r.getTopRecommendation().getRegexMatches()){
+                ps =  expectedResult.equals("null")? System.out : System.err;
+                ps.println("Rule 1 Test: " + i + " (" + (expectedResult.equals("null")?"Success":"Fail") + ")");
+                ps.println("Variable: \"" + v.getName() + "\"");
+                ps.println("Canonical Type: \"" + v.getCanonicalType() + "\"");
+                ps.println("Expected Match: " + expectedResult);
+                ps.println("Actual Match: " + "null");
+                assertEquals(expectedResult, "null");
+            } else {
+                ps =  expectedResult.equals(r.getTopRecommendation())? System.out : System.err;
+                ps.println("Rule 1 Test: " + i + " (" + (expectedResult.equals(r.getTopRecommendation().getName())?"Success":"Fail") + ")");
+                ps.println("Variable: \"" + v.getName() + "\"");
+                ps.println("Canonical Type: \"" + v.getCanonicalType() + "\"");
+                ps.println("Expected Recommendation: " + expectedResult);
+                ps.println("Actual Recommendation: " + r.getTopRecommendation().getName());
+                assertEquals(expectedResult, r.getTopRecommendation().getName());
+            }
             System.out.println();
         }
     }
@@ -148,20 +152,30 @@ class MetricsTest {
         vars.add(new Variable("magicBoolean", "magicBoolean", "boolean", null, TYPE_BOOLEAN));
         vars.add(new Variable("training_examples", "training_examples", "boolean", null, TYPE_BOOLEAN));
         vars.add(new Variable("is_example", "is_example", "boolean", null, TYPE_BOOLEAN));
-        String[] expectedResults = new String[]{"V NM* N(PL)", "V NM* N(PL)", "V NM* N(PL)", "null"};
+        String[] expectedResults = new String[]{"V NM* N|NPL", "V NM* N|NPL", "V NM* N|NPL", "null"};
 
         for(int i = 0; i< vars.size(); i++){
             Variable v = vars.get(i);
             Result r = aggregateRules.runAll(v);
             String expectedResult = expectedResults[i];
-
-            PrintStream ps =  expectedResult.equals(r.getTopRecommendation())? System.out : System.err;
-            ps.println("Rule 2_2 Test: " + i + " (" + (expectedResult.equals(r.getTopRecommendation().getName())?"Success":"Fail") + ")");
-            ps.println("Variable: \"" + v.getName() + "\"");
-            ps.println("Canonical Type: \"" + v.getCanonicalType() + "\"");
-            ps.println("Expected Recommendation: " + expectedResult);
-            ps.println("Actual Recommendation: " + r.getTopRecommendation().getName());
-            //assertEquals(expectedResult, r.getTopRecommendation().getName());
+            PrintStream ps;
+            if(r.getTopRecommendation().getRegexMatches()){
+                ps =  expectedResult.equals("null")? System.out : System.err;
+                ps.println("Rule 1 Test: " + i + " (" + (expectedResult.equals("null")?"Success":"Fail") + ")");
+                ps.println("Variable: \"" + v.getName() + "\"");
+                ps.println("Canonical Type: \"" + v.getCanonicalType() + "\"");
+                ps.println("Expected Match: " + expectedResult);
+                ps.println("Actual Match: " + "null");
+                assertEquals(expectedResult, "null");
+            } else {
+                ps =  expectedResult.equals(r.getTopRecommendation())? System.out : System.err;
+                ps.println("Rule 1 Test: " + i + " (" + (expectedResult.equals(r.getTopRecommendation().getName())?"Success":"Fail") + ")");
+                ps.println("Variable: \"" + v.getName() + "\"");
+                ps.println("Canonical Type: \"" + v.getCanonicalType() + "\"");
+                ps.println("Expected Recommendation: " + expectedResult);
+                ps.println("Actual Recommendation: " + r.getTopRecommendation().getName());
+                assertEquals(expectedResult, r.getTopRecommendation().getName());
+            }
             System.out.println();
         }
     }
@@ -178,20 +192,30 @@ class MetricsTest {
         vars.add(new Variable("jumpAlive", "jumpAlive", "java.lang.boolean", null, TYPE_BOOLEAN)); //fail
         vars.add(new Variable("addChildren", "addChildren", "java.lang.boolean", null, TYPE_BOOLEAN)); //fail
         vars.add(new Variable("eatFood", "eatFood", "java.lang.boolean", null, TYPE_BOOLEAN)); //fail
-        String[] expectedResults = new String[]{"V NM* N(PL)", "null", "null", "V NM* N(PL)", "V NM* N(PL)", "V NM* N(PL)", "V NM* N(PL)"};
+        String[] expectedResults = new String[]{"V NM* N|NPL", "null", "null", "V NM* N|NPL", "V NM* N|NPL", "null", "null"};
 
         for(int i = 0; i< vars.size(); i++){
             Variable v = vars.get(i);
             Result r = aggregateRules.runAll(v);
             String expectedResult = expectedResults[i];
-
-            PrintStream ps =  expectedResult.equals(r.getTopRecommendation())? System.out : System.err;
-            ps.println("Rule 3 Variable Test: " + i + " (" + (expectedResult.equals(r.getTopRecommendation().getName())?"Success":"Fail") + ")");
-            ps.println("Variable: \"" + v.getName() + "\"");
-            ps.println("Canonical Type: \"" + v.getCanonicalType() + "\"");
-            ps.println("Expected Recommendation: " + expectedResult);
-            ps.println("Actual Recommendation: " + r.getTopRecommendation().getName());
-            //assertEquals(expectedResult, r.getTopRecommendation().getName());
+            PrintStream ps;
+            if(r.getTopRecommendation().getRegexMatches()){
+                ps =  expectedResult.equals("null")? System.out : System.err;
+                ps.println("Rule 1 Test: " + i + " (" + (expectedResult.equals("null")?"Success":"Fail") + ")");
+                ps.println("Variable: \"" + v.getName() + "\"");
+                ps.println("Canonical Type: \"" + v.getCanonicalType() + "\"");
+                ps.println("Expected Match: " + expectedResult);
+                ps.println("Actual Match: " + "null");
+                assertEquals(expectedResult, "null");
+            } else {
+                ps =  expectedResult.equals(r.getTopRecommendation())? System.out : System.err;
+                ps.println("Rule 1 Test: " + i + " (" + (expectedResult.equals(r.getTopRecommendation().getName())?"Success":"Fail") + ")");
+                ps.println("Variable: \"" + v.getName() + "\"");
+                ps.println("Canonical Type: \"" + v.getCanonicalType() + "\"");
+                ps.println("Expected Recommendation: " + expectedResult);
+                ps.println("Actual Recommendation: " + r.getTopRecommendation().getName());
+                assertEquals(expectedResult, r.getTopRecommendation().getName());
+            }
             System.out.println();
         }
     }
@@ -201,23 +225,33 @@ class MetricsTest {
     public void rule3MethTests() throws Exception{
 
         List<Method> meths = new ArrayList<Method>();
-        meths.add(new Method("getUsers()", "getUsers", "java.lang.String", false, false, null, TYPE_OTHER)); //pass
-        meths.add(new Method("addUser()", "addUser", "java.lang.String", false, false, null, TYPE_OTHER)); //pass
-        meths.add(new Method("user()", "user", "java.lang.String", false, false, null, TYPE_OTHER)); //fail
+        meths.add(new Method("getUsers()", "getUsers", "java.lang.string", false, false, null, TYPE_OTHER)); //pass
+        meths.add(new Method("addUser()", "addUser", "java.lang.string", false, false, null, TYPE_OTHER)); //pass
+        meths.add(new Method("user()", "user", "java.lang.string", false, false, null, TYPE_OTHER)); //fail
         meths.add(new Method("with()", "with", "void", false, false, null, TYPE_OTHER)); //fail
-        String[] expectedResults = new String[]{"null", "null", "V NM* N(PL)|V+ pt1 TODO: Update dynamically", "V NM* N(PL)|V+ pt1 TODO: Update dynamically"};
+        String[] expectedResults = new String[]{"null", "null", "V NM* N|NPL | V+ pt1 TODO: Update dynamically", "V NM* N|NPL | V+ pt1 TODO: Update dynamically"};
         for(int i = 0; i< meths.size(); i++){
             Method m = meths.get(i);
             Result r = aggregateRules.runAll(m);
             String expectedResult = expectedResults[i];
-
-            PrintStream ps =  expectedResult.equals(r.getTopRecommendation())? System.out : System.err;
-            ps.println("Rule 3 Method Test: " + i + " (" + (expectedResult.equals(r.getTopRecommendation().getName())?"Success":"Fail") + ")");
-            ps.println("Variable: \"" + m.getName() + "\"");
-            ps.println("Canonical Type: \"" + m.getCanonicalType() + "\"");
-            ps.println("Expected Recommendation: " + expectedResult);
-            ps.println("Actual Recommendation: " + r.getTopRecommendation().getName());
-            //assertEquals(expectedResult, r.getTopRecommendation().getName());
+            PrintStream ps;
+            if(r.getTopRecommendation().getRegexMatches()){
+                ps =  expectedResult.equals("null")? System.out : System.err;
+                ps.println("Rule 1 Test: " + i + " (" + (expectedResult.equals("null")?"Success":"Fail") + ")");
+                ps.println("Variable: \"" + m.getName() + "\"");
+                ps.println("Canonical Type: \"" + m.getCanonicalType() + "\"");
+                ps.println("Expected Match: " + expectedResult);
+                ps.println("Actual Match: " + "null");
+                assertEquals(expectedResult, "null");
+            } else {
+                ps =  expectedResult.equals(r.getTopRecommendation())? System.out : System.err;
+                ps.println("Rule 1 Test: " + i + " (" + (expectedResult.equals(r.getTopRecommendation().getName())?"Success":"Fail") + ")");
+                ps.println("Variable: \"" + m.getName() + "\"");
+                ps.println("Canonical Type: \"" + m.getCanonicalType() + "\"");
+                ps.println("Expected Recommendation: " + expectedResult);
+                ps.println("Actual Recommendation: " + r.getTopRecommendation().getName());
+                assertEquals(expectedResult, r.getTopRecommendation().getName());
+            }
             System.out.println();
         }
     }
@@ -236,14 +270,24 @@ class MetricsTest {
             Variable v = vars.get(i);
             Result r = aggregateRules.runAll(v);
             String expectedResult = expectedResults[i];
-
-            PrintStream ps =  expectedResult.equals(r.getTopRecommendation())? System.out : System.err;
-            ps.println("Rule 4 Test: " + i + " (" + (expectedResult.equals(r.getTopRecommendation().getName())?"Success":"Fail") + ")");
-            ps.println("Variable: \"" + v.getName() + "\"");
-            ps.println("Canonical Type: \"" + v.getCanonicalType() + "\"");
-            ps.println("Expected Recommendation: " + expectedResult);
-            ps.println("Actual Recommendation: " + r.getTopRecommendation().getName());
-            assertEquals(expectedResult, r.getTopRecommendation().getName());
+            PrintStream ps;
+            if(r.getTopRecommendation().getRegexMatches()){
+                ps =  expectedResult.equals("null")? System.out : System.err;
+                ps.println("Rule 1 Test: " + i + " (" + (expectedResult.equals("null")?"Success":"Fail") + ")");
+                ps.println("Variable: \"" + v.getName() + "\"");
+                ps.println("Canonical Type: \"" + v.getCanonicalType() + "\"");
+                ps.println("Expected Match: " + expectedResult);
+                ps.println("Actual Match: " + "null");
+                assertEquals(expectedResult, "null");
+            } else {
+                ps =  expectedResult.equals(r.getTopRecommendation())? System.out : System.err;
+                ps.println("Rule 1 Test: " + i + " (" + (expectedResult.equals(r.getTopRecommendation().getName())?"Success":"Fail") + ")");
+                ps.println("Variable: \"" + v.getName() + "\"");
+                ps.println("Canonical Type: \"" + v.getCanonicalType() + "\"");
+                ps.println("Expected Recommendation: " + expectedResult);
+                ps.println("Actual Recommendation: " + r.getTopRecommendation().getName());
+                assertEquals(expectedResult, r.getTopRecommendation().getName());
+            }
             System.out.println();
         }
     }
@@ -261,14 +305,24 @@ class MetricsTest {
             Variable v = vars.get(i);
             Result r = aggregateRules.runAll(v);
             String expectedResult = expectedResults[i];
-
-            PrintStream ps =  expectedResult.equals(r.getTopRecommendation())? System.out : System.err;
-            ps.println("Rule 5 Test: " + i + " (" + (expectedResult.equals(r.getTopRecommendation().getName())?"Success":"Fail") + ")");
-            ps.println("Variable: \"" + v.getName() + "\"");
-            ps.println("Canonical Type: \"" + v.getCanonicalType() + "\"");
-            ps.println("Expected Recommendation: " + expectedResult);
-            ps.println("Actual Recommendation: " + r.getTopRecommendation().getName());
-            assertEquals(expectedResult, r.getTopRecommendation().getName());
+            PrintStream ps;
+            if(r.getTopRecommendation().getRegexMatches()){
+                ps =  expectedResult.equals("null")? System.out : System.err;
+                ps.println("Rule 1 Test: " + i + " (" + (expectedResult.equals("null")?"Success":"Fail") + ")");
+                ps.println("Variable: \"" + v.getName() + "\"");
+                ps.println("Canonical Type: \"" + v.getCanonicalType() + "\"");
+                ps.println("Expected Match: " + expectedResult);
+                ps.println("Actual Match: " + "null");
+                assertEquals(expectedResult, "null");
+            } else {
+                ps =  expectedResult.equals(r.getTopRecommendation())? System.out : System.err;
+                ps.println("Rule 1 Test: " + i + " (" + (expectedResult.equals(r.getTopRecommendation().getName())?"Success":"Fail") + ")");
+                ps.println("Variable: \"" + v.getName() + "\"");
+                ps.println("Canonical Type: \"" + v.getCanonicalType() + "\"");
+                ps.println("Expected Recommendation: " + expectedResult);
+                ps.println("Actual Recommendation: " + r.getTopRecommendation().getName());
+                assertEquals(expectedResult, r.getTopRecommendation().getName());
+            }
             System.out.println();
         }
     }
@@ -288,14 +342,24 @@ class MetricsTest {
             Variable v = vars.get(i);
             Result r = aggregateRules.runAll(v);
             String expectedResult = expectedResults[i];
-
-            PrintStream ps =  expectedResult.equals(r.getTopRecommendation())? System.out : System.err;
-            ps.println("Rule 6 Test: " + i + " (" + (expectedResult.equals(r.getTopRecommendation().getName())?"Success":"Fail") + ")");
-            ps.println("Variable: \"" + v.getName() + "\"");
-            ps.println("Canonical Type: \"" + v.getCanonicalType() + "\"");
-            ps.println("Expected Recommendation: " + expectedResult);
-            ps.println("Actual Recommendation: " + r.getTopRecommendation().getName());
-            assertEquals(expectedResult, r.getTopRecommendation().getName());
+            PrintStream ps;
+            if(r.getTopRecommendation().getRegexMatches()){
+                ps =  expectedResult.equals("null")? System.out : System.err;
+                ps.println("Rule 1 Test: " + i + " (" + (expectedResult.equals("null")?"Success":"Fail") + ")");
+                ps.println("Variable: \"" + v.getName() + "\"");
+                ps.println("Canonical Type: \"" + v.getCanonicalType() + "\"");
+                ps.println("Expected Match: " + expectedResult);
+                ps.println("Actual Match: " + "null");
+                assertEquals(expectedResult, "null");
+            } else {
+                ps =  expectedResult.equals(r.getTopRecommendation())? System.out : System.err;
+                ps.println("Rule 1 Test: " + i + " (" + (expectedResult.equals(r.getTopRecommendation().getName())?"Success":"Fail") + ")");
+                ps.println("Variable: \"" + v.getName() + "\"");
+                ps.println("Canonical Type: \"" + v.getCanonicalType() + "\"");
+                ps.println("Expected Recommendation: " + expectedResult);
+                ps.println("Actual Recommendation: " + r.getTopRecommendation().getName());
+                assertEquals(expectedResult, r.getTopRecommendation().getName());
+            }
             System.out.println();
         }
     }
@@ -306,7 +370,7 @@ class MetricsTest {
 
         List<Variable> vars = new ArrayList<Variable>();
         vars.add(new Variable("all_invocation_matchers", "all_invocation_matchers", "List<int>", null, TYPE_COLLECTION)); //pass
-        vars.add(new Variable("all_Open_Indices", "all_Open_Indices", "java.lang.String[]", null, TYPE_COLLECTION)); //pass
+        vars.add(new Variable("all_Open_Indices", "all_Open_Indices", "java.lang.string", null, TYPE_COLLECTION)); //pass
         vars.add(new Variable("is_a_empty", "is_a_empty", "int", null, TYPE_OTHER)); //pass
         vars.add(new Variable("matches_any_parent_categories()", "matches_any_parent_categories", "boolean", null, TYPE_BOOLEAN)); //pass
         String[] expectedResults = new String[]{"null", "null", "null", "null"};
@@ -315,14 +379,24 @@ class MetricsTest {
             Variable v = vars.get(i);
             Result r = aggregateRules.runAll(v);
             String expectedResult = expectedResults[i];
-
-            PrintStream ps =  expectedResult.equals(r.getTopRecommendation())? System.out : System.err;
-            ps.println("Rule 7 Test: " + i + " (" + (expectedResult.equals(r.getTopRecommendation().getName())?"Success":"Fail") + ")");
-            ps.println("Variable: \"" + v.getName() + "\"");
-            ps.println("Canonical Type: \"" + v.getCanonicalType() + "\"");
-            ps.println("Expected Recommendation: " + expectedResult);
-            ps.println("Actual Recommendation: " + r.getTopRecommendation().getName());
-            assertEquals(expectedResult, r.getTopRecommendation().getName());
+            PrintStream ps;
+            if(r.getTopRecommendation().getRegexMatches()){
+                ps =  expectedResult.equals("null")? System.out : System.err;
+                ps.println("Rule 1 Test: " + i + " (" + (expectedResult.equals("null")?"Success":"Fail") + ")");
+                ps.println("Variable: \"" + v.getName() + "\"");
+                ps.println("Canonical Type: \"" + v.getCanonicalType() + "\"");
+                ps.println("Expected Match: " + expectedResult);
+                ps.println("Actual Match: " + "null");
+                assertEquals(expectedResult, "null");
+            } else {
+                ps =  expectedResult.equals(r.getTopRecommendation())? System.out : System.err;
+                ps.println("Rule 1 Test: " + i + " (" + (expectedResult.equals(r.getTopRecommendation().getName())?"Success":"Fail") + ")");
+                ps.println("Variable: \"" + v.getName() + "\"");
+                ps.println("Canonical Type: \"" + v.getCanonicalType() + "\"");
+                ps.println("Expected Recommendation: " + expectedResult);
+                ps.println("Actual Recommendation: " + r.getTopRecommendation().getName());
+                assertEquals(expectedResult, r.getTopRecommendation().getName());
+            }
             System.out.println();
         }
     }
@@ -337,49 +411,30 @@ class MetricsTest {
         meths.add(new Method("getAdmins()", "getAdmins", "void", false, false, null, TYPE_OTHER)); //pass
         meths.add(new Method("users()", "users", "void", false, false, null, TYPE_OTHER)); //fail
         meths.add(new Method("with()", "with", "void", false, false, null, TYPE_OTHER)); //fail
-        String[] expectedResults = new String[]{"null", "null", "V NM* N(PL)|V+ pt1 TODO: Update dynamically", "V NM* N(PL)|V+ pt1 TODO: Update dynamically"};
+        String[] expectedResults = new String[]{"null", "null", "V NM* N|NPL | V+ pt1 TODO: Update dynamically", "V NM* N|NPL | V+ pt1 TODO: Update dynamically"};
         for(int i = 0; i< meths.size(); i++){
             Method m = meths.get(i);
             Result r = aggregateRules.runAll(m);
             String expectedResult = expectedResults[i];
-
-            PrintStream ps =  expectedResult.equals(r.getTopRecommendation())? System.out : System.err;
-            ps.println("Rule 8 Test: " + i + " (" + (expectedResult.equals(r.getTopRecommendation().getName())?"Success":"Fail") + ")");
-            ps.println("Variable: \"" + m.getName() + "\"");
-            ps.println("Canonical Type: \"" + m.getCanonicalType() + "\"");
-            ps.println("Expected Recommendation: " + expectedResult);
-            ps.println("Actual Recommendation: " + r.getTopRecommendation().getName());
-            //assertEquals(expectedResult, r.getTopRecommendation().getName());
+            PrintStream ps;
+            if(r.getTopRecommendation().getRegexMatches()){
+                ps =  expectedResult.equals("null")? System.out : System.err;
+                ps.println("Rule 1 Test: " + i + " (" + (expectedResult.equals("null")?"Success":"Fail") + ")");
+                ps.println("Variable: \"" + m.getName() + "\"");
+                ps.println("Canonical Type: \"" + m.getCanonicalType() + "\"");
+                ps.println("Expected Match: " + expectedResult);
+                ps.println("Actual Match: " + "null");
+                assertEquals(expectedResult, "null");
+            } else {
+                ps =  expectedResult.equals(r.getTopRecommendation())? System.out : System.err;
+                ps.println("Rule 1 Test: " + i + " (" + (expectedResult.equals(r.getTopRecommendation().getName())?"Success":"Fail") + ")");
+                ps.println("Variable: \"" + m.getName() + "\"");
+                ps.println("Canonical Type: \"" + m.getCanonicalType() + "\"");
+                ps.println("Expected Recommendation: " + expectedResult);
+                ps.println("Actual Recommendation: " + r.getTopRecommendation().getName());
+                assertEquals(expectedResult, r.getTopRecommendation().getName());
+            }
             System.out.println();
         }
     }
-
-    /*
-    @Test
-    public void otherMethodTests() throws Exception {
-        List<Method> meths = new ArrayList<Method>();
-        meths.add(new Method("rule_2()", "rule_2", "void", false, false, null, TYPE_OTHER));
-        meths.add(new Method("rule_2_2()", "rule_2_2", "void", false, false, null, TYPE_OTHER));
-        meths.add(new Method("rule2_1()", "rule2_1", "void", false, false, null, TYPE_OTHER));
-        meths.add(new Method("rule1()", "rule1", "void", false, false, null, TYPE_OTHER));
-        meths.add(new Method("rule3()", "rule_3", "void", false, false, null, TYPE_OTHER));
-        String[] expectedResults = new String[]{"V NM* N(PL)|V+ pt1 TODO: Update dynamically", "V NM* N(PL)|V+ pt1 TODO: Update dynamically", "V NM* N(PL)|V+ pt1 TODO: Update dynamically", "V NM* N(PL)|V+ pt1 TODO: Update dynamically", "null", "null", "V NM* N(PL)|V+ pt1 TODO: Update dynamically", "V NM* N(PL)|V+ pt1 TODO: Update dynamically", "null", "null", "V NM* N(PL)|V+ pt1 TODO: Update dynamically"};
-
-        for(int i = 0; i< meths.size(); i++){
-            Method m = meths.get(i);
-            Result r = aggregateRules.runAll(m);
-            String expectedResult = expectedResults[i];
-
-            PrintStream ps =  expectedResult.equals(r.getTopRecommendation())? System.out : System.err;
-            ps.println("General Method Test: " + i + " (" + (expectedResult.equals(r.getTopRecommendation().getName())?"Success":"Fail") + ")");
-            ps.println("Variable: \"" + m.getName() + "\"");
-            ps.println("Canonical Type: \"" + m.getCanonicalType() + "\"");
-            ps.println("Expected Recommendation: " + expectedResult);
-            ps.println("Actual Recommendation: " + r.getTopRecommendation().getName());
-            assertEquals(expectedResult, r.getTopRecommendation().getName());
-            System.out.println();
-        }
-    }
-
-     */
 }

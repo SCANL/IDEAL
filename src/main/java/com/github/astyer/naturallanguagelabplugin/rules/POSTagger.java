@@ -3,13 +3,8 @@ package com.github.astyer.naturallanguagelabplugin.rules;
 import com.github.astyer.naturallanguagelabplugin.IR.Identifier;
 
 import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.stream.Collectors;
 import java.io.*;
 
 public class POSTagger {
@@ -59,28 +54,22 @@ public class POSTagger {
             BufferedReader in = new BufferedReader(new FileReader(file));
             String inputLine;
             StringBuilder content = new StringBuilder();
-            String pos = null;
+            String posTags = "";
+            String finalId = "";
             while ((inputLine = in.readLine()) != null) {
                 String line[] = inputLine.split(" ");
                 if(line[0].equals(name) && line[1].equals(type) && line[2].equals(context)){
-                    pos = line[3];
+                    posTags = line[3];
+                    finalId = line[4];
                     break;
                 }
             }
-            System.out.println("received content of "+content);
             in.close();
-            String posTags = Arrays.stream(content.toString().split(","))
-                    .map(w -> w.split("\\|")[1])
-                    .map(w -> w + "_")
-                    .collect(Collectors.joining(""));
-            String finalId = Arrays.stream(content.toString().split(","))
-                    .map(w -> w.split("\\|")[0])
-                    .map(w -> w + "_")
-                    .collect(Collectors.joining(""));
-
-            System.out.println("final result of "+posTags);
+            System.out.println(finalId + " tagged as " + posTags);
             POSResult result = new POSResult(posTags, finalId);
-            cache.put(key, result);
+            if(!posTags.equals("") || !finalId.equals("")){
+                cache.put(key, result);
+            }
             return result;
         }catch (Exception ex){
             System.err.println("Unable to retrieve POS tags for " + name);
