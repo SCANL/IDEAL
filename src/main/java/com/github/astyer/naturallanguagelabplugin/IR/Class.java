@@ -10,14 +10,16 @@ import java.util.Optional;
 
 public class Class implements Identifier {
     String name, displayName, canonicalType;
-    private final PsiElement psiObject;
+    PsiElement element;
+    ClassType type;
     private POSTagger.POSResult pos = null;
 
-    public Class(String name, String displayName, ClassType type, PsiElement psiObject){
+    public Class(String name, String displayName, PsiElement element, ClassType type){
         this.name = name;
         this.displayName = displayName;
         this.canonicalType = name;
-        this.psiObject = psiObject;
+        this.element = element;
+        this.type = type;
     }
 
     public IRFactory.IRType getType() {
@@ -26,7 +28,7 @@ public class Class implements Identifier {
 
     @Override
     public PsiElement getPsiObject() {
-        return psiObject;
+        return this.element;
     }
 
     @Override
@@ -60,7 +62,7 @@ public class Class implements Identifier {
     }
 
     @Override
-    public String getIdentiferSplit() {
+    public String getIdentifierSplit() {
         if(pos == null){
             pos = POSTagger.getInstance().tag(this);
         }

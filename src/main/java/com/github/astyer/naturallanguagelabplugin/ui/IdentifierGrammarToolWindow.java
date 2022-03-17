@@ -132,7 +132,7 @@ public class IdentifierGrammarToolWindow {
 
     private String getRecommendedIdentifier(Identifier id, Result.Recommendation recommendation) {
         RecommendationAlg.Rec rec = recommendation.getRec();
-        String[] splitIdentifier = id.getIdentiferSplit().split("_");
+        String[] splitIdentifier = id.getIdentifierSplit().split("_");
         List<Integer> correctWordIndexes = rec != null ? rec.getIndexesOfFinalId() : new ArrayList<>();
         StringBuilder recIdentifier = new StringBuilder(noWrapStyling);
         for(int i = 0; i < splitIdentifier.length; i++) {

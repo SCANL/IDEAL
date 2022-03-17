@@ -67,7 +67,7 @@ public class Method implements Identifier{
     }
 
     @Override
-    public String getIdentiferSplit() {
+    public String getIdentifierSplit() {
         if(pos == null){
             pos = POSTagger.getInstance().tag(this);
         }
