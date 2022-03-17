@@ -9,7 +9,8 @@ import java.util.List;
 import java.util.Optional;
 
 public class Variable implements Identifier{
-    String name, displayName, canonicalType, pos;
+    String name, displayName, canonicalType;
+    POSTagger.POSResult pos;
     IRFactory.IRType type;
     PsiElement element;
 
@@ -51,7 +52,27 @@ public class Variable implements Identifier{
         if(pos == null){
             pos = POSTagger.getInstance().tag(this);
         }
-        return pos;
+        return pos.getPosTags();
+    }
+
+    @Override
+    public String getIdentiferSplit() {
+        if(pos == null){
+            pos = POSTagger.getInstance().tag(this);
+        }
+        return pos.getId();
+    }
+
+    @Override
+    public POSTagger.POSResult getPosResult() {
+        if(pos == null){
+            pos = POSTagger.getInstance().tag(this);
+        }
+        return this.pos;
+    }
+
+    public void setPosResult(POSTagger.POSResult pos){
+        this.pos = pos;
     }
 
     @Override

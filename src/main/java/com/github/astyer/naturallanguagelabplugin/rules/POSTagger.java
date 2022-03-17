@@ -12,8 +12,22 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public class POSTagger {
+    public static class POSResult{
+        String posTags;
+        String Id;
+        public POSResult(String posTags, String Id){
+            this.posTags = posTags;
+            this.Id = Id;
+        }
+        public String getPosTags(){
+            return posTags;
+        }
+        public String getId(){
+            return Id;
+        }
+    }
     static POSTagger instance;
-    Map<String, String> cache;
+    Map<String, POSResult> cache;
 
     public static POSTagger getInstance(){
         if(instance == null){
@@ -30,7 +44,7 @@ public class POSTagger {
         return name  + "|" + type +"|"+context;
     }
 
-    public String tag(Identifier id){
+    public POSResult tag(Identifier id){
         String name = id.getName();
         String type = id.getCanonicalType().toLowerCase(); //todo: remove before last .
         String context = id.getContext();
@@ -57,14 +71,19 @@ public class POSTagger {
                 System.out.println("received content of "+content);
                 in.close();
                 con.disconnect();
-                String result = Arrays.stream(content.toString().split(","))
+                String posTags = Arrays.stream(content.toString().split(","))
                         .map(w -> w.split("\\|")[1])
                         .map(w -> w + "_")
                         .collect(Collectors.joining(""));
+                String finalId = Arrays.stream(content.toString().split(","))
+                        .map(w -> w.split("\\|")[0])
+                        .map(w -> w + "_")
+                        .collect(Collectors.joining(""));
 
-                System.out.println("final result of "+result);
+                System.out.println("final result of "+posTags);
+                POSResult result = new POSResult(posTags, finalId);
                 cache.put(key, result);
-                return result.toString();
+                return result;
             }
             else {
                 System.err.println("Error while making connection to " + urlStr);
@@ -74,6 +93,6 @@ public class POSTagger {
             System.err.println("Unable to retrieve POS tags for " + name);
             System.err.println(ex.getMessage());
         }
-        return "";
+        return new POSResult("", "");
     }
 }
