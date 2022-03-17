@@ -21,7 +21,7 @@ public interface Identifier {
     PsiElement getPsiObject();
     Optional<Result> accept(RuleVisitor visitor);
     String getPOS();
-    String getIdentiferSplit();
+    String getIdentifierSplit();
     Identifier getParent();
     List<Identifier> getChildren();
     String getContext();

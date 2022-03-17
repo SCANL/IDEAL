@@ -1,5 +1,6 @@
 package com.github.astyer.naturallanguagelabplugin.IR;
 
+import com.intellij.lang.jvm.JvmClassKind;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.*;
 import com.intellij.psi.util.PsiTreeUtil;
@@ -131,5 +132,11 @@ public class IRFactory {
         }
         String name = displayName + "("+ String.join(",", params) + ")";
         return new Method(name, displayName, typeString, performsConversion(psiMethod), performsEventDrivenFunctionality(psiMethod), psiMethod, type);
+    }
+
+    public static Class createClass(PsiClass psiClass) {
+        Class.ClassType type = Class.ClassType.Class; // could use psiClass.getClassKind() if we care about distinguishing between types of classes
+        String displayName = psiClass.getName();
+        return new Class(displayName, displayName, psiClass, type);
     }
 }

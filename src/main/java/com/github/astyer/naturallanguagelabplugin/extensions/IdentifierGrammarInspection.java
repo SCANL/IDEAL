@@ -1,5 +1,6 @@
 package com.github.astyer.naturallanguagelabplugin.extensions;
 
+import com.github.astyer.naturallanguagelabplugin.IR.Class;
 import com.github.astyer.naturallanguagelabplugin.IR.IRFactory;
 import com.github.astyer.naturallanguagelabplugin.IR.Method;
 import com.github.astyer.naturallanguagelabplugin.IR.Variable;
@@ -46,12 +47,6 @@ public class IdentifierGrammarInspection extends AbstractBaseJavaLocalInspection
                 System.out.println(variable.getName() + " finished parsing at: " + System.currentTimeMillis());
             }
 
-//            @Override
-//            public void visitClass(PsiClass aClass) {
-//                PsiIdentifier className = aClass.getNameIdentifier();
-//                holder.registerProblem(className, "Class name '" + className.getText() + "' may use the wrong grammar pattern", myQuickFix);
-//            }
-
             @Override
             public void visitMethod(PsiMethod method) {
                 Method IRMethod = IRFactory.createMethod(method);
@@ -64,6 +59,20 @@ public class IdentifierGrammarInspection extends AbstractBaseJavaLocalInspection
                     holder.registerProblem(methodIdentifier, description, myQuickFix);
                 }
                 System.out.println(method.getName() + " finished parsing at: " + System.currentTimeMillis());
+            }
+
+            @Override
+            public void visitClass(PsiClass aClass) {
+                Class IRClass = IRFactory.createClass(aClass);
+                Result result = aggregateRules.runAll(IRClass);
+                PsiIdentifier classIdentifier = aClass.getNameIdentifier();
+                IdentifierSuggestionResults.put(classIdentifier, result);
+                Result.Recommendation topRecommendation = result.getTopRecommendation();
+                if (topRecommendation != null && !topRecommendation.getRegexMatches()) {
+                    String description = "Class name '" + aClass.getName() + "' should use grammar pattern " + topRecommendation.getName();
+                    holder.registerProblem(classIdentifier, description, myQuickFix);
+                }
+//                System.out.println(aClass.getName() + " finished parsing at: " + System.currentTimeMillis());
             }
         };
     }
