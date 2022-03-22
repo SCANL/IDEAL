@@ -12,17 +12,18 @@ public class Method implements Identifier{
     String name, displayName, canonicalType;
     POSTagger.POSResult pos;
     IRFactory.IRType type;
-    boolean performsConversion, performsEventDrivenFunctionality;
+    boolean performsConversion, performsEventDrivenFunctionality, usesGenerics;
     PsiElement element;
 
-    public Method(String name, String displayName, String canonicalType, boolean performsConversion, boolean performsEventDrivenFunctionality, PsiElement element, IRFactory.IRType type){
+    public Method(String name, String displayName, String canonicalType, PsiElement element, IRFactory.IRType type, boolean performsConversion, boolean performsEventDrivenFunctionality, boolean usesGenerics){
         this.name = name;
         this.displayName = displayName;
+        this.canonicalType = canonicalType;
+        this.element = element;
         this.type = type;
         this.performsConversion = performsConversion;
         this.performsEventDrivenFunctionality = performsEventDrivenFunctionality;
-        this.element = element;
-        this.canonicalType = canonicalType;
+        this.usesGenerics = usesGenerics;
     }
 
     @Override
@@ -41,6 +42,10 @@ public class Method implements Identifier{
 
     public boolean performsEventDrivenFunctionality() {
         return performsEventDrivenFunctionality;
+    }
+
+    public boolean usesGenerics() {
+        return usesGenerics;
     }
 
     @Override

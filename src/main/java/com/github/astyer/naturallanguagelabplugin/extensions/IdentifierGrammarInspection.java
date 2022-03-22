@@ -50,6 +50,7 @@ public class IdentifierGrammarInspection extends AbstractBaseJavaLocalInspection
             @Override
             public void visitMethod(PsiMethod method) {
                 Method IRMethod = IRFactory.createMethod(method);
+                System.out.println(IRMethod.getDisplayName() + ": " + IRMethod.usesGenerics());
                 Result result = aggregateRules.runAll(IRMethod);
                 PsiIdentifier methodIdentifier = method.getNameIdentifier();
                 IdentifierSuggestionResults.put(methodIdentifier, result);
