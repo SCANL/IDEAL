@@ -39,7 +39,7 @@ public class Dfa {
     }
 
     List<DfaNode> allNodes = new ArrayList<>();
-    Set<String> allConsts;
+    Set<Const> allConsts;
     DfaNode root;
     String finalStr;
     Boolean anyDfa = false;
@@ -64,7 +64,7 @@ public class Dfa {
 
     public class DfaNode{
         AST regex;
-        Map<String, DfaNode> transitions = new HashMap<>();
+        Map<Const, DfaNode> transitions = new HashMap<>();
         Boolean accepting = false;
         Boolean trash = false;
 
@@ -78,7 +78,7 @@ public class Dfa {
             if(transitions.size() != 0 || this.trash){
                 return;
             }
-            for(String cons: allConsts){
+            for(Const cons: allConsts){
                 AST derivative = regex.derivative(cons);
                 DfaNode otherNode = null;
                 for(DfaNode node: allNodes){
@@ -106,11 +106,19 @@ public class Dfa {
             if(str.length() == 0){
                 return accepting ? new AcceptingResult() : new NonAcceptingResult();
             }
-            for(String key: transitions.keySet()){
-                if(str.startsWith(key)){
+            for(Const key: transitions.keySet()){
+                if(key instanceof Const.Value) {
+                    String keyVal = ((Const.Value) key).value;
+                    if (str.startsWith(keyVal)) {
+                        DfaNode next = transitions.get(key);
+                        if (!next.trash) {
+                            return next.run(str.replaceFirst(keyVal, ""), index + keyVal.length());
+                        }
+                    }
+                }else{
                     DfaNode next = transitions.get(key);
-                    if(!next.trash) {
-                        return next.run(str.replaceFirst(key, ""), index + key.length());
+                    if(!next.trash){
+                        return next.run(str.substring(1), index + 1);
                     }
                 }
             }

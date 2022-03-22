@@ -7,4 +7,5 @@ interface Visitor {
     void visitConstant(AST.Constant ast);
     void visitEmptySet(AST.EmptySet ast);
     void visitRange(AST.Range ast);
+    void visitWildcard(AST.Wildcard ast);
 }

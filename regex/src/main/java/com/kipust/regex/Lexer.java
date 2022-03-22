@@ -32,6 +32,8 @@ class Lexer {
                 return lexComma();
             case '[':
                 return lexRange();
+            case '.':
+                return lexWildcard();
             default:
                 throw new Exception("invalid symbol (" + source.charAt(index) +") at "+index);
         }
@@ -93,5 +95,10 @@ class Lexer {
     private Token lexAsterisk() {
         index++;
         return new Token.TokAsterisk();
+    }
+
+    private Token lexWildcard() {
+        index++;
+        return new Token.TokWildcard();
     }
 }

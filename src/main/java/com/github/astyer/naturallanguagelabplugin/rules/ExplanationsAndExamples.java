@@ -16,7 +16,8 @@ public class ExplanationsAndExamples {
             entry(Rule.VV1, "V NM* N(PL)|V+ pt1 Explanation TODO: update dynamically"),
             entry(Rule.VV2, "V NM* N(PL)|V+ pt2 Explanation TODO: update dynamically"),
             entry(Rule.PNMN, "P NM* N(PL) is a prepositional phrase, consisting of a preposition followed by a noun phrase. The preposition in a prepositional phrase typically explains how the entity (or entities) represented by the accompanying noun or verb-phrase are related in terms of order, space, time (e.g., on_enter), ownership, causality, or representation (e.g., to_string). In the case of this specific grammar pattern, there is oftentimes an un-specified verb on the left-hand-side of the preposition. The un-specified verb is usually an action such as the following: GET, CONVERT (e.g., to string), EXECUTE (e.g., on enter) or some other action. Developers understand the implied action because of experience or domain knowledge, for example, understanding event-driven functions beginning with the preposition 'on'."),
-            entry(Rule.VP, "V P NM* N Explanation"),
+//            entry(Rule.VP, "V P NM* N Explanation"),
+            entry(Rule.VDT, "V* DT NM* N(PL) explanation"),
             // class rules
             entry(Rule.NMNNPL, "NM* N(PL) is a noun phrase, consisting of zero or more noun modifiers followed by a head noun. This is the most common naming pattern for classes as they typically represent some entity. It is good practice to be careful in the choice, and number, of noun modifiers to use before the head noun. A good identifier will include only enough noun modifiers to concisely define the concept represented by the head noun.")
     ));
@@ -30,7 +31,8 @@ public class ExplanationsAndExamples {
             entry(Rule.VV1, "V NM* N(PL)|V+ pt1 Example TODO: update dynamically"),
             entry(Rule.VV2, "V NM* N(PL)|V+ pt2 Example TODO: update dynamically"),
             entry(Rule.PNMN, "<code> String toString() {<br/><span>&nbsp;&nbsp;</span>. . .<br/>}</code><br/> The identifier \"toString\" has grammar pattern P N, where the preposition 'to' implies some kind of conversion."),
-            entry(Rule.VP, "V P NM* N Example"),
+//            entry(Rule.VP, "V P NM* N Example"),
+            entry(Rule.VDT, "V* DT NM* N(PL) example"),
             // class rules
             entry(Rule.NMNNPL, "<code>public class dynamicTable {<br/><span>&nbsp;&nbsp;</span>. . .<br/>}</code><br/>The identifier \"dynamicTable\" has grammar pattern NM N, following the noun phrase pattern because it is a standard class.")
     ));
