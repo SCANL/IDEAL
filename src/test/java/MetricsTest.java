@@ -256,15 +256,52 @@ class MetricsTest {
         }
     }
 
-    /*
-    //Prepositional Phrase Patter
+    //Prepositional Phrase Pattern (methods)
     @Test
-    public void rule4Tests() throws Exception{
+    public void rule4VarTests() throws Exception{
+
+        List<Method> meths = new ArrayList<Method>();
+        meths.add(new Method("inOldBatch()", "inOldBatch", "void", false, false, null, TYPE_OTHER)); //pass
+        meths.add(new Method("to_string()", "to_string", "java.lang.string", false, false, null, TYPE_OTHER)); //pass
+        meths.add(new Method("will_run()", "will_run", "void", false, false, null, TYPE_OTHER)); //fail
+        String[] expectedResults = new String[]{"null", "null", "P NM* N|NPL"};
+
+        for(int i = 0; i< meths.size(); i++){
+            Method m = meths.get(i);
+            Result r = aggregateRules.runAll(m);
+            String expectedResult = expectedResults[i];
+            PrintStream ps;
+            if(r.getTopRecommendation().getRegexMatches()){
+                ps =  expectedResult.equals("null")? System.out : System.err;
+                ps.println("Rule 1 Test: " + i + " (" + (expectedResult.equals("null")?"Success":"Fail") + ")");
+                ps.println("Variable: \"" + m.getName() + "\"");
+                ps.println("Canonical Type: \"" + m.getCanonicalType() + "\"");
+                ps.println("Expected Match: " + expectedResult);
+                ps.println("Actual Match: " + "null");
+                assertEquals(expectedResult, "null");
+            } else {
+                ps =  expectedResult.equals(r.getTopRecommendation())? System.out : System.err;
+                ps.println("Rule 1 Test: " + i + " (" + (expectedResult.equals(r.getTopRecommendation().getName())?"Success":"Fail") + ")");
+                ps.println("Variable: \"" + m.getName() + "\"");
+                ps.println("Canonical Type: \"" + m.getCanonicalType() + "\"");
+                ps.println("Expected Recommendation: " + expectedResult);
+                ps.println("Actual Recommendation: " + r.getTopRecommendation().getName());
+                assertEquals(expectedResult, r.getTopRecommendation().getName());
+            }
+            System.out.println();
+        }
+    }
+
+
+    //Prepositional Phrase Pattern (variables)
+    @Test
+    public void rule4MethTests() throws Exception{
 
         List<Variable> vars = new ArrayList<Variable>();
-        vars.add(new Variable("training_example", "training_example", "int", null, TYPE_OTHER));
-        vars.add(new Variable("training_examples", "training_examples", "int", null, TYPE_OTHER));
-        String[] expectedResults = new String[]{"null", "NM* N"};
+        vars.add(new Variable("from_database", "from_database", "boolean", null, TYPE_BOOLEAN));
+        vars.add(new Variable("inCorrectOrder", "inCorrectOrder", "boolean", null, TYPE_BOOLEAN));
+        vars.add(new Variable("fromHere", "fromHere", "int", null, TYPE_OTHER));
+        String[] expectedResults = new String[]{"null", "null", "P NM* N|NPL"};
 
         for(int i = 0; i< vars.size(); i++){
             Variable v = vars.get(i);
@@ -297,8 +334,8 @@ class MetricsTest {
     public void rule5Tests() throws Exception{
 
         List<Variable> vars = new ArrayList<Variable>();
-        vars.add(new Variable("training_example", "training_example", "int", null, TYPE_OTHER));
-        vars.add(new Variable("training_examples", "training_examples", "int", null, TYPE_OTHER));
+        vars.add(new Variable("timeout_in_milliseconds", "timeout_in_milliseconds", "long", null, TYPE_OTHER));
+        vars.add(new Variable("generatedTokenOnCreation", "generatedTokenOnCreation", "java.lang.string", null, TYPE_OTHER));
         String[] expectedResults = new String[]{"null", "NM* N"};
 
         for(int i = 0; i< vars.size(); i++){
@@ -366,7 +403,7 @@ class MetricsTest {
 
     //Noun Phrase With Leading Determiner
     @Test
-    public void rule7Tests() throws Exception{
+    public void rule7Tests() throws Exception {
 
         List<Variable> vars = new ArrayList<Variable>();
         vars.add(new Variable("all_invocation_matchers", "all_invocation_matchers", "List<int>", null, TYPE_COLLECTION)); //pass
@@ -375,22 +412,22 @@ class MetricsTest {
         vars.add(new Variable("matches_any_parent_categories()", "matches_any_parent_categories", "boolean", null, TYPE_BOOLEAN)); //pass
         String[] expectedResults = new String[]{"null", "null", "null", "null"};
 
-        for(int i = 0; i< vars.size(); i++){
+        for (int i = 0; i < vars.size(); i++) {
             Variable v = vars.get(i);
             Result r = aggregateRules.runAll(v);
             String expectedResult = expectedResults[i];
             PrintStream ps;
-            if(r.getTopRecommendation().getRegexMatches()){
-                ps =  expectedResult.equals("null")? System.out : System.err;
-                ps.println("Rule 1 Test: " + i + " (" + (expectedResult.equals("null")?"Success":"Fail") + ")");
+            if (r.getTopRecommendation().getRegexMatches()) {
+                ps = expectedResult.equals("null") ? System.out : System.err;
+                ps.println("Rule 1 Test: " + i + " (" + (expectedResult.equals("null") ? "Success" : "Fail") + ")");
                 ps.println("Variable: \"" + v.getName() + "\"");
                 ps.println("Canonical Type: \"" + v.getCanonicalType() + "\"");
                 ps.println("Expected Match: " + expectedResult);
                 ps.println("Actual Match: " + "null");
                 assertEquals(expectedResult, "null");
             } else {
-                ps =  expectedResult.equals(r.getTopRecommendation())? System.out : System.err;
-                ps.println("Rule 1 Test: " + i + " (" + (expectedResult.equals(r.getTopRecommendation().getName())?"Success":"Fail") + ")");
+                ps = expectedResult.equals(r.getTopRecommendation()) ? System.out : System.err;
+                ps.println("Rule 1 Test: " + i + " (" + (expectedResult.equals(r.getTopRecommendation().getName()) ? "Success" : "Fail") + ")");
                 ps.println("Variable: \"" + v.getName() + "\"");
                 ps.println("Canonical Type: \"" + v.getCanonicalType() + "\"");
                 ps.println("Expected Recommendation: " + expectedResult);
@@ -400,7 +437,6 @@ class MetricsTest {
             System.out.println();
         }
     }
-    */
 
     //Verb Pattern
     @Test
