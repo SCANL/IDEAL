@@ -225,10 +225,10 @@ class MetricsTest {
     public void rule3MethTests() throws Exception{
 
         List<Method> meths = new ArrayList<Method>();
-        meths.add(new Method("getUsers()", "getUsers", "java.lang.string", false, false, null, TYPE_OTHER)); //pass
-        meths.add(new Method("addUser()", "addUser", "java.lang.string", false, false, null, TYPE_OTHER)); //pass
-        meths.add(new Method("user()", "user", "java.lang.string", false, false, null, TYPE_OTHER)); //fail
-        meths.add(new Method("with()", "with", "void", false, false, null, TYPE_OTHER)); //fail
+        meths.add(new Method("getUsers()", "getUsers", "java.lang.string", null, TYPE_OTHER, false, false, false)); //pass
+        meths.add(new Method("addUser()", "addUser", "java.lang.string", null, TYPE_OTHER, false, false, false)); //pass
+        meths.add(new Method("user()", "user", "java.lang.string", null, TYPE_OTHER, false, false, false)); //fail
+        meths.add(new Method("with()", "with", "void", null, TYPE_OTHER, false, false, false)); //fail
         String[] expectedResults = new String[]{"null", "null", "V NM* N|NPL | V+ pt1 TODO: Update dynamically", "V NM* N|NPL | V+ pt1 TODO: Update dynamically"};
         for(int i = 0; i< meths.size(); i++){
             Method m = meths.get(i);
@@ -258,12 +258,12 @@ class MetricsTest {
 
     //Prepositional Phrase Pattern (methods)
     @Test
-    public void rule4VarTests() throws Exception{
+    public void rule4MethTests() throws Exception{
 
         List<Method> meths = new ArrayList<Method>();
-        meths.add(new Method("inOldBatch()", "inOldBatch", "void", false, false, null, TYPE_OTHER)); //pass
-        meths.add(new Method("to_string()", "to_string", "java.lang.string", false, false, null, TYPE_OTHER)); //pass
-        meths.add(new Method("will_run()", "will_run", "void", false, false, null, TYPE_OTHER)); //fail
+        meths.add(new Method("inOldBatch()", "inOldBatch", "void", null, TYPE_OTHER, false, false, false)); //pass
+        meths.add(new Method("to_string()", "to_string", "java.lang.string", null, TYPE_OTHER, false, false, false)); //pass
+        meths.add(new Method("will_run()", "will_run", "void", null, TYPE_OTHER, false, false, false)); //fail
         String[] expectedResults = new String[]{"null", "null", "P NM* N|NPL"};
 
         for(int i = 0; i< meths.size(); i++){
@@ -295,7 +295,7 @@ class MetricsTest {
 
     //Prepositional Phrase Pattern (variables)
     @Test
-    public void rule4MethTests() throws Exception{
+    public void rule4VarTests() throws Exception{
 
         List<Variable> vars = new ArrayList<Variable>();
         vars.add(new Variable("from_database", "from_database", "boolean", null, TYPE_BOOLEAN));
@@ -401,15 +401,14 @@ class MetricsTest {
         }
     }
 
-    //Noun Phrase With Leading Determiner
+    //Noun Phrase With Leading Determiner (variables)
     @Test
-    public void rule7Tests() throws Exception {
+    public void rule7VarTests() throws Exception {
 
         List<Variable> vars = new ArrayList<Variable>();
         vars.add(new Variable("all_invocation_matchers", "all_invocation_matchers", "List<int>", null, TYPE_COLLECTION)); //pass
         vars.add(new Variable("all_Open_Indices", "all_Open_Indices", "java.lang.string", null, TYPE_COLLECTION)); //pass
         vars.add(new Variable("is_a_empty", "is_a_empty", "int", null, TYPE_OTHER)); //pass
-        vars.add(new Variable("matches_any_parent_categories()", "matches_any_parent_categories", "boolean", null, TYPE_BOOLEAN)); //pass
         String[] expectedResults = new String[]{"null", "null", "null", "null"};
 
         for (int i = 0; i < vars.size(); i++) {
@@ -438,15 +437,50 @@ class MetricsTest {
         }
     }
 
+    //Noun Phrase With Leading Determiner (methods)
+    @Test
+    public void rule7MethTests() throws Exception{
+
+        List<Method> meths = new ArrayList<Method>();
+        meths.add(new Method("matches_any_parent_categories()", "matches_any_parent_categories", "boolean", null, TYPE_BOOLEAN, false, false, false)); //pass
+        meths.add(new Method("matches_any_parent_categories()", "matches_any_parent_categories", "boolean", null, TYPE_BOOLEAN, false, false, false)); //pass
+        String[] expectedResults = new String[]{"null", "null", "P NM* N|NPL"};
+
+        for(int i = 0; i< meths.size(); i++){
+            Method m = meths.get(i);
+            Result r = aggregateRules.runAll(m);
+            String expectedResult = expectedResults[i];
+            PrintStream ps;
+            if(r.getTopRecommendation().getRegexMatches()){
+                ps =  expectedResult.equals("null")? System.out : System.err;
+                ps.println("Rule 1 Test: " + i + " (" + (expectedResult.equals("null")?"Success":"Fail") + ")");
+                ps.println("Variable: \"" + m.getName() + "\"");
+                ps.println("Canonical Type: \"" + m.getCanonicalType() + "\"");
+                ps.println("Expected Match: " + expectedResult);
+                ps.println("Actual Match: " + "null");
+                assertEquals(expectedResult, "null");
+            } else {
+                ps =  expectedResult.equals(r.getTopRecommendation())? System.out : System.err;
+                ps.println("Rule 1 Test: " + i + " (" + (expectedResult.equals(r.getTopRecommendation().getName())?"Success":"Fail") + ")");
+                ps.println("Variable: \"" + m.getName() + "\"");
+                ps.println("Canonical Type: \"" + m.getCanonicalType() + "\"");
+                ps.println("Expected Recommendation: " + expectedResult);
+                ps.println("Actual Recommendation: " + r.getTopRecommendation().getName());
+                assertEquals(expectedResult, r.getTopRecommendation().getName());
+            }
+            System.out.println();
+        }
+    }
+
     //Verb Pattern
     @Test
     public void rule8Tests() throws Exception{
 
         List<Method> meths = new ArrayList<Method>();
-        meths.add(new Method("run()", "run", "void", false, false, null, TYPE_OTHER)); //pass
-        meths.add(new Method("getAdmins()", "getAdmins", "void", false, false, null, TYPE_OTHER)); //pass
-        meths.add(new Method("users()", "users", "void", false, false, null, TYPE_OTHER)); //fail
-        meths.add(new Method("with()", "with", "void", false, false, null, TYPE_OTHER)); //fail
+        meths.add(new Method("run()", "run", "void", null, TYPE_OTHER, false, false, false)); //pass
+        meths.add(new Method("getAdmins()", "getAdmins", "void", null, TYPE_OTHER, false, false, false)); //pass
+        meths.add(new Method("users()", "users", "void", null, TYPE_OTHER, false, false, false)); //fail
+        meths.add(new Method("with()", "with", "void", null, TYPE_OTHER, false, false, false)); //fail
         String[] expectedResults = new String[]{"null", "null", "V NM* N|NPL | V+ pt1 TODO: Update dynamically", "V NM* N|NPL | V+ pt1 TODO: Update dynamically"};
         for(int i = 0; i< meths.size(); i++){
             Method m = meths.get(i);
