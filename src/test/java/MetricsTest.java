@@ -336,7 +336,7 @@ class MetricsTest {
         List<Variable> vars = new ArrayList<Variable>();
         vars.add(new Variable("timeout_in_milliseconds", "timeout_in_milliseconds", "long", null, TYPE_OTHER));
         vars.add(new Variable("generatedTokenOnCreation", "generatedTokenOnCreation", "java.lang.string", null, TYPE_OTHER));
-        String[] expectedResults = new String[]{"null", "NM* N"};
+        String[] expectedResults = new String[]{"null", "null"};
 
         for(int i = 0; i< vars.size(); i++){
             Variable v = vars.get(i);
@@ -371,9 +371,7 @@ class MetricsTest {
         List<Variable> vars = new ArrayList<Variable>();
         vars.add(new Variable("destroy_with_parent", "destroy_with_parent", "boolean", null, TYPE_BOOLEAN));
         vars.add(new Variable("convert_to_php_namespace", "convert_to_php_namespace", "java.lang.String", null, TYPE_OTHER));
-        vars.add(new Variable("tessellate_To_Mesh()", "tessellate_To_Mesh", "void", null, TYPE_OTHER));
-        vars.add(new Variable("save_As_Quadratic_Png()", "save_As_Quadratic_Png", "void", null, TYPE_OTHER));
-        String[] expectedResults = new String[]{"null", "NM* N"};
+        String[] expectedResults = new String[]{"null", "null"};
 
         for(int i = 0; i< vars.size(); i++){
             Variable v = vars.get(i);
@@ -401,6 +399,40 @@ class MetricsTest {
         }
     }
 
+    @Test
+    public void rule6MethTests() throws Exception{
+
+        List<Method> meths = new ArrayList<Method>();
+        meths.add(new Method("save_As_Quadratic_Png()", "save_As_Quadratic_Png", "void", null, TYPE_OTHER, false, false, false)); //pass
+        meths.add(new Method("tessellate_To_Mesh()", "tessellate_To_Mesh", "void", null, TYPE_OTHER, false, false, false)); //pass
+        String[] expectedResults = new String[]{"null", "null"};
+
+        for(int i = 0; i< meths.size(); i++){
+            Method m = meths.get(i);
+            Result r = aggregateRules.runAll(m);
+            String expectedResult = expectedResults[i];
+            PrintStream ps;
+            if(r.getTopRecommendation().getRegexMatches()){
+                ps =  expectedResult.equals("null")? System.out : System.err;
+                ps.println("Rule 1 Test: " + i + " (" + (expectedResult.equals("null")?"Success":"Fail") + ")");
+                ps.println("Variable: \"" + m.getName() + "\"");
+                ps.println("Canonical Type: \"" + m.getCanonicalType() + "\"");
+                ps.println("Expected Match: " + expectedResult);
+                ps.println("Actual Match: " + "null");
+                assertEquals(expectedResult, "null");
+            } else {
+                ps =  expectedResult.equals(r.getTopRecommendation())? System.out : System.err;
+                ps.println("Rule 1 Test: " + i + " (" + (expectedResult.equals(r.getTopRecommendation().getName())?"Success":"Fail") + ")");
+                ps.println("Variable: \"" + m.getName() + "\"");
+                ps.println("Canonical Type: \"" + m.getCanonicalType() + "\"");
+                ps.println("Expected Recommendation: " + expectedResult);
+                ps.println("Actual Recommendation: " + r.getTopRecommendation().getName());
+                assertEquals(expectedResult, r.getTopRecommendation().getName());
+            }
+            System.out.println();
+        }
+    }
+
     //Noun Phrase With Leading Determiner (variables)
     @Test
     public void rule7VarTests() throws Exception {
@@ -409,7 +441,7 @@ class MetricsTest {
         vars.add(new Variable("all_invocation_matchers", "all_invocation_matchers", "List<int>", null, TYPE_COLLECTION)); //pass
         vars.add(new Variable("all_Open_Indices", "all_Open_Indices", "java.lang.string", null, TYPE_COLLECTION)); //pass
         vars.add(new Variable("is_a_empty", "is_a_empty", "int", null, TYPE_OTHER)); //pass
-        String[] expectedResults = new String[]{"null", "null", "null", "null"};
+        String[] expectedResults = new String[]{"null", "null", "null"};
 
         for (int i = 0; i < vars.size(); i++) {
             Variable v = vars.get(i);
@@ -442,9 +474,9 @@ class MetricsTest {
     public void rule7MethTests() throws Exception{
 
         List<Method> meths = new ArrayList<Method>();
-        meths.add(new Method("matches_any_parent_categories()", "matches_any_parent_categories", "boolean", null, TYPE_BOOLEAN, false, false, false)); //pass
-        meths.add(new Method("matches_any_parent_categories()", "matches_any_parent_categories", "boolean", null, TYPE_BOOLEAN, false, false, false)); //pass
-        String[] expectedResults = new String[]{"null", "null", "P NM* N|NPL"};
+        meths.add(new Method("matches_any_parent_categories()", "matches_any_parent_categories", "boolean", null, TYPE_OTHER, false, false, false)); //pass
+        //meths.add(new Method("matches_any_parent_categories()", "matches_any_parent_categories", "boolean", null, TYPE_BOOLEAN, false, false, false)); //pass
+        String[] expectedResults = new String[]{"null"};
 
         for(int i = 0; i< meths.size(); i++){
             Method m = meths.get(i);

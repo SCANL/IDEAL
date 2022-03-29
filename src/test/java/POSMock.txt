@@ -48,6 +48,42 @@ addUser() java.lang.string FUNCTION V_N_ add_User_
 user() java.lang.string FUNCTION N_ user_
 with() java.lang.string FUNCTION P_ with_
 ----------
+rule 4 variables
+----------
+from_database boolean DECLARATION P_N_ from_database_
+inCorrectOrder boolean DECLARATION P_NM_N_ in_Correct_Order_
+fromHere int DECLARATION P_NM_ from_Here_
+----------
+rule 4 methods
+----------
+inOldBatch() void FUNCTION P_NM_N_ in_Old_Batch_
+to_string() null FUNCTION P_N_ to_string_
+will_run() void FUNCTION P_V_ will_run_
+----------
+rule 5
+----------
+timeout_in_milliseconds long DECLARATION timeout_in_milliseconds_
+generatedTokenOnCreation java.lang.string DECLARATION V_N_P_N_ generated_Token_On_Creation_
+----------
+rule 6 variables
+----------
+destroy_with_parent boolean DECLARATION V_P_N_ destroy_with_parent_
+convert_to_php_namespace java.lang.String DECLARATION  V_P_NM_N_ convert_to_php_namespace_
+----------
+rule 6 methods
+----------
+tessellate_To_Mesh() void FUNCTION V_P_N_ tessellate_To_Mesh_
+----------
+rule 7 variables
+----------
+all_invocation_matchers List<int> DECLARATION DT_NM_NPL_ all_invocation_matchers_
+all_Open_Indices java.lang.string DECLARATION DT_NM_NPL_ all_Open_Indices_
+is_a_empty int DECLARATION V_DT_N_ is_a_empty_
+----------
+rule 7 methods
+----------
+matches_any_parent_categories() boolean FUNCTION V_DT_NM_NPL_ matches_any_parent_categories_
+----------
 rule 8
 ----------
 run() void FUNCTION V_ run_
