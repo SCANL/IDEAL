@@ -1,0 +1,91 @@
+----------
+rule 1
+----------
+training_example int[] DECLARATION NM_N_ training_example_
+training_examples int[] DECLARATION NM_NPL_ training_examples_
+database_connections int[] DECLARATION NM_NPL_ database_connections_
+databaseConnections int[] DECLARATION NM_NPL_ database_Connections_
+primeNumber int[] DECLARATION NM_N_ prime_Number_
+prime_number int[] DECLARATION NM_N_ prime_number_
+primeNumbers int[] DECLARATION NM_NPL_ prime_Numbers_
+prime_numbers int[] DECLARATION NM_NPL_ prime_numbers_
+test_examples int[] DECLARATION NM_NPL_ test_examples_
+get_vars int[] DECLARATION V_NPL_ get_vars_
+----------
+rule 2
+----------
+trainingExample int DECLARATION NM_N_ training_Example_
+userCount int DECLARATION NM_N_ user_Count_
+training_examples int DECLARATION NM_NPL_ training_examples_
+userCounts int DECLARATION NM_NPL_ user_Counts_
+----------
+rule 2_1
+----------
+training_example int DECLARATION NM_N_ training_example_
+training_examples int DECLARATION NM_NPL_ training_examples_
+----------
+rule 2_2
+----------
+training_example boolean DECLARATION NM_N_ training_example_
+magicBoolean boolean DECLARATION NM_N_ magic_Boolean_
+training_examples boolean DECLARATION NM_NPL_ training_examples_
+is_example boolean DECLARATION V_N_ is_example_
+----------
+rule 3 variables
+----------
+alive java.lang.boolean DECLARATION NM_ alive_
+isVariable java.lang.boolean DECLARATION V_N_ is_Variable_
+hasChildren java.lang.boolean DECLARATION V_N_ has_Children_
+createChildren java.lang.boolean DECLARATION N_N_ create_Children_
+jumpAlive java.lang.boolean DECLARATION V_NM_ jump_Alive_
+addChildren java.lang.boolean DECLARATION V_NPL_ add_Children_
+eatFood java.lang.boolean DECLARATION V_N_ eat_Food_
+----------
+rule 3 methods
+----------
+getUsers() java.lang.string FUNCTION V_NPL_ get_Users_
+addUser() java.lang.string FUNCTION V_N_ add_User_
+user() java.lang.string FUNCTION N_ user_
+with() java.lang.string FUNCTION P_ with_
+----------
+rule 4 variables
+----------
+from_database boolean DECLARATION P_N_ from_database_
+inCorrectOrder boolean DECLARATION P_NM_N_ in_Correct_Order_
+fromHere int DECLARATION P_NM_ from_Here_
+----------
+rule 4 methods
+----------
+inOldBatch() void FUNCTION P_NM_N_ in_Old_Batch_
+to_string() null FUNCTION P_N_ to_string_
+will_run() void FUNCTION P_V_ will_run_
+----------
+rule 5
+----------
+timeout_in_milliseconds long DECLARATION timeout_in_milliseconds_
+generatedTokenOnCreation java.lang.string DECLARATION V_N_P_N_ generated_Token_On_Creation_
+----------
+rule 6 variables
+----------
+destroy_with_parent boolean DECLARATION V_P_N_ destroy_with_parent_
+convert_to_php_namespace java.lang.String DECLARATION  V_P_NM_N_ convert_to_php_namespace_
+----------
+rule 6 methods
+----------
+tessellate_To_Mesh() void FUNCTION V_P_N_ tessellate_To_Mesh_
+----------
+rule 7 variables
+----------
+all_invocation_matchers List<int> DECLARATION DT_NM_NPL_ all_invocation_matchers_
+all_Open_Indices java.lang.string DECLARATION DT_NM_NPL_ all_Open_Indices_
+is_a_empty int DECLARATION V_DT_N_ is_a_empty_
+----------
+rule 7 methods
+----------
+matches_any_parent_categories() boolean FUNCTION V_DT_NM_NPL_ matches_any_parent_categories_
+----------
+rule 8
+----------
+run() void FUNCTION V_ run_
+getAdmins() void FUNCTION V_NPL_ get_Admins_
+users() void FUNCTION NPL_ users_
