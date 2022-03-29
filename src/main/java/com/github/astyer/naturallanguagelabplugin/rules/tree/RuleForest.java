@@ -26,6 +26,8 @@ public class RuleForest {
         RuleNode nmn = new RuleNode("NM* N", Pattern.Compile("&(*('NM_'),'N_')"), ExplanationsAndExamples.getExplanation(Rule.NMN), ExplanationsAndExamples.getExample(Rule.NMN));
         RuleNode vnmn = new RuleNode("V NM* N|NPL", Pattern.Compile("&('V_',&(*('NM_'),|('N_','NPL_')))"), ExplanationsAndExamples.getExplanation(Rule.VNMN), ExplanationsAndExamples.getExample(Rule.VNMN));//("V (NM )*(N|NPL)"));
         RuleNode nmnpl = new RuleNode("NM* NPL", Pattern.Compile("&(*('NM_'),'NPL_')"), ExplanationsAndExamples.getExplanation(Rule.NMNPL), ExplanationsAndExamples.getExample(Rule.NMNPL));//("(NM )*NPL"));
+        RuleNode dtnps = new RuleNode("DT NM* N|NPL", Pattern.Compile("&('DT_', &(*('NM_'), |('N_','NPL_')))"), "TODO", "TODO");
+        RuleNode dtnp = new RuleNode("DT NM* NPL", Pattern.Compile("&('DT_', &(*('NM_'), 'NPL_'))"), "TODO", "TODO");
 
         nmn.addBranch(new RuleBranch(
                 "Type of Bool",
@@ -48,6 +50,23 @@ public class RuleForest {
                         variable -> new CheckboxResult(variable.getType().equals(IRFactory.IRType.TYPE_COLLECTION))
                 )
         ));
+
+        nmn.addBranch(new RuleBranch(
+                "Is assigned to fn with Finds or contains",
+                dtnps,
+                new Checkbox("Is assigned to fn with Finds or contains",
+                        null,
+                        null,
+                        variable -> new CheckboxResult(variable.getIsLoopResult()))));
+        dtnps.addBranch(new RuleBranch(
+                "Is collection type",
+                dtnp,
+                new Checkbox("Is collection type",
+                        null,
+                        null,
+                        variable -> new CheckboxResult(variable.getType().equals(IRFactory.IRType.TYPE_COLLECTION))
+            )));
+
         this.varTree = nmn;
 
         //class tree
@@ -103,7 +122,7 @@ public class RuleForest {
         weirdRulePt1.addBranch(new RuleBranch("Event Driven Code | Code Contains Casting", prepNounPhrase, new Checkbox("Event | Casting", null, method -> new CheckboxResult(method.performsEventDrivenFunctionality() | method.performsConversion()), null)));
 //        weirdRulePt1.addBranch(new RuleBranch("Event Driven Code", pnmn, new Checkbox("Event Driven Code", null, method -> new CheckboxResult(method.performsEventDrivenFunctionality()), null)));
 //        weirdRulePt1.addBranch(new RuleBranch("Code contains Casting", pnmn, new Checkbox("Code contains Casting", null, method -> new CheckboxResult(method.performsConversion()), null)));
-        weirdRulePt1.addBranch(new RuleBranch("Loop in body", VDT, new Checkbox("Loop in body", null, null, null))); //todo:check for loops
+        weirdRulePt1.addBranch(new RuleBranch("Loop in body", VDT, new Checkbox("Loop in body", null, method -> new CheckboxResult(method.performsLooping()), null)));
         this.methodTree = methodRoot;
 
     }
