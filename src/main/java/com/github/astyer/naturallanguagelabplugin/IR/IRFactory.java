@@ -1,6 +1,5 @@
 package com.github.astyer.naturallanguagelabplugin.IR;
 
-import com.intellij.lang.jvm.JvmClassKind;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.*;
 import com.intellij.psi.util.PsiTreeUtil;
@@ -114,6 +113,25 @@ public class IRFactory {
         return false;
     }
 
+    /**
+     * Check if psiMethod is a generic method, i.e. one of its parameters resolve to a generic type
+     * @param psiMethod
+     * @return if psiMethod uses generics
+     */
+    private static boolean usesGenerics(PsiMethod psiMethod) {
+        for(PsiParameter param: psiMethod.getParameterList().getParameters()) {
+            PsiType type = param.getType().getDeepComponentType(); //handles the case of generic arrays
+            if(type instanceof PsiClassType) {
+                PsiClassType classType = (PsiClassType) type;
+                PsiClassType.ClassResolveResult result = classType.resolveGenerics();
+                if(result.getElement() instanceof PsiTypeParameter) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     public static Variable createVariable(PsiVariable psiVariable) {
         IRType type = typeToIRType(psiVariable.getType(), psiVariable.getProject());
         String canonicalType = getCanonicalType(psiVariable.getType());
@@ -131,11 +149,11 @@ public class IRFactory {
             params.add(getCanonicalType(param.getType()));
         }
         String name = displayName + "("+ String.join(",", params) + ")";
-        return new Method(name, displayName, typeString, performsConversion(psiMethod), performsEventDrivenFunctionality(psiMethod), psiMethod, type);
+        return new Method(name, displayName, typeString, psiMethod, type, performsConversion(psiMethod), performsEventDrivenFunctionality(psiMethod), usesGenerics(psiMethod));
     }
 
     public static Class createClass(PsiClass psiClass) {
-        Class.ClassType type = Class.ClassType.Class; // could use psiClass.getClassKind() if we care about distinguishing between types of classes
+        Class.ClassType type = Class.ClassType.Class; // always Class type for now as we have no rules that need further specification
         String displayName = psiClass.getName();
         return new Class(displayName, displayName, psiClass, type);
     }

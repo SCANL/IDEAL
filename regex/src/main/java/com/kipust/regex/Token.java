@@ -61,6 +61,12 @@ abstract class Token {
             return ",";
         }
     }
+    public static class TokWildcard extends Token{
+        @Override
+        public String toString() {
+            return ".";
+        }
+    }
     public static class TokEOF extends Token{
         @Override
         public String toString() {

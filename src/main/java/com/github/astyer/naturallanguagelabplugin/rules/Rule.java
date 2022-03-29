@@ -9,7 +9,8 @@ public enum Rule {
     VV1,
     VV2,
     PNMN,
-    VP,
+    VDT,
+//    VP,
     // class rules
     NMNNPL
 }

@@ -15,7 +15,7 @@ abstract class AST {
     }
     public abstract boolean acceptsEmpty();
     public abstract void accept(Visitor visitor);
-    public abstract AST derivative(String withRespectTo);
+    public abstract AST derivative(Const withRespectTo);
 
     private static AST createAnd(AST left, AST right){
         if(left instanceof Constant){
@@ -68,7 +68,7 @@ abstract class AST {
         }
 
         @Override
-        public AST derivative(String withRespectTo) {
+        public AST derivative(Const withRespectTo) {
             return createAnd(child.derivative(withRespectTo), new ZeroOrMore(child));
         }
 
@@ -112,7 +112,7 @@ abstract class AST {
         }
 
         @Override
-        public AST derivative(String withRespectTo) {
+        public AST derivative(Const withRespectTo) {
             AST dLeft = left.derivative(withRespectTo);
             AST dRight = right.derivative(withRespectTo);
 
@@ -160,7 +160,7 @@ abstract class AST {
         }
 
         @Override
-        public AST derivative(String withRespectTo) {
+        public AST derivative(Const withRespectTo) {
             AST l = left.derivative(withRespectTo);
             if(left.acceptsEmpty()){
                 return createOr(createAnd(l, right), right.derivative(withRespectTo));
@@ -204,9 +204,14 @@ abstract class AST {
         }
 
         @Override
-        public AST derivative(String withRespectTo) {
-            if(withRespectTo.equals(value) && !"".equals(value)){
-                return new Constant(value.replaceFirst(withRespectTo, ""));
+        public AST derivative(Const withRespectTo) {
+            if(withRespectTo instanceof Const.Value) {
+                String withRespectToValue = ((Const.Value) withRespectTo).value;
+                if(withRespectToValue.equals(value) && !"".equals(value)){
+                    return new Constant(value.replaceFirst(withRespectToValue, ""));
+                }else{
+                    return new EmptySet();
+                }
             }else{
                 return new EmptySet();
             }
@@ -254,10 +259,15 @@ abstract class AST {
         }
 
         @Override
-        public AST derivative(String withRespectTo) {
-            Character withRespectToStart = withRespectTo.charAt(0);
-            if(matchesChar(withRespectToStart)){
-                return new Constant("");
+        public AST derivative(Const withRespectTo) {
+            if(withRespectTo instanceof Const.Value) {
+                String withRespectToVal = ((Const.Value) withRespectTo).value;
+                Character withRespectToStart = withRespectToVal.charAt(0);
+                if (matchesChar(withRespectToStart)) {
+                    return new Constant("");
+                } else {
+                    return new EmptySet();
+                }
             }else{
                 return new EmptySet();
             }
@@ -290,7 +300,7 @@ abstract class AST {
         }
 
         @Override
-        public AST derivative(String withRespectTo) {
+        public AST derivative(Const withRespectTo) {
             return new EmptySet();
         }
 
@@ -310,6 +320,32 @@ abstract class AST {
         @Override
         public int hashCode() {
             return Objects.hash(type);
+        }
+    }
+
+    public static class Wildcard extends AST {
+
+        @Override
+        public String toString() {
+            return ".";
+        }
+
+        @Override
+        public boolean acceptsEmpty() {
+            return false;
+        }
+
+        @Override
+        public void accept(Visitor visitor) {
+            visitor.visitWildcard(this);
+        }
+
+        @Override
+        public AST derivative(Const withRespectTo) {
+            if(withRespectTo instanceof Const.Value && "".equals(((Const.Value) withRespectTo).value)){
+                return new EmptySet();
+            }
+            return new Constant("");
         }
     }
 }

@@ -4,7 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 class FindConstantsVisitor implements Visitor {
-    Set<String> constants = new HashSet<>();
+    Set<Const> constants = new HashSet<>();
 
     public FindConstantsVisitor(){
 
@@ -29,7 +29,7 @@ class FindConstantsVisitor implements Visitor {
 
     @Override
     public void visitConstant(AST.Constant ast) {
-        constants.add(ast.value);
+        constants.add(new Const.Value(ast.value));
     }
 
     @Override
@@ -40,7 +40,12 @@ class FindConstantsVisitor implements Visitor {
     @Override
     public void visitRange(AST.Range ast) {
         for(int i = ast.start; i <=ast.end; i++){
-            constants.add(Character.toString((char)i));
+            constants.add(new Const.Value(Character.toString((char)i)));
         }
+    }
+
+    @Override
+    public void visitWildcard(AST.Wildcard ast) {
+        constants.add(new Const.Wildcard());
     }
 }

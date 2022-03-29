@@ -9,17 +9,18 @@ import static org.junit.jupiter.api.Assertions.*;
 class MainTest {
     @Test
     public void debugTest() throws Exception {
-        String regex = "&(*('NM_'),'N_')";
-        String str = "NM_N_V_";
+        String regex = "|('P',&('P',*(.)))";
+        String str = "PJ";
         Pattern p = Pattern.Compile(regex);
         Dfa.DFAResult result = p.match(str);
+        System.out.println(result.success() ? "Success" : "Fail");
     }
 
     @Test
     public void mainTest() throws Exception {
-        String[] regexs = new String[]{             "&(*('NM '),'N')",  "&(*('NM '),'N')",  "&(*('NM '),'NPL')",   "&(*('NM '),'NPL')",    "&('V ',&(*('NM '),|('N','NPL')))",    "&('V ',&(*('NM '),|('N','NPL')))",   "&('V ',&(*('NM '), |('N','NPL')))"};
-        String[] strs = new String[]{               "NM NM N",          "NM NM V N",        "NM NM NPL",           "NM NM N",              "V NM NM NPL",                         "V N",                                "NM NPL"};
-        Boolean[] expectedResults = new Boolean[]{  true,               false,              true,                  false,                  true,                                  true,                                 false};
+        String[] regexs = new String[]{             "."};
+        String[] strs = new String[]{               "A"};
+        Boolean[] expectedResults = new Boolean[]{  true  };
 
         for(int i = 0; i< regexs.length; i++){
             String regex = regexs[i];
