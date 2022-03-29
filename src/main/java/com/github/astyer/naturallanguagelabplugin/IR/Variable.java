@@ -13,13 +13,15 @@ public class Variable implements Identifier{
     POSTagger.POSResult pos;
     IRFactory.IRType type;
     PsiElement element;
+    boolean isLoopResult;
 
-    public Variable(String name, String displayName, String canonicalType, PsiElement element, IRFactory.IRType type){
+    public Variable(String name, String displayName, String canonicalType, PsiElement element, IRFactory.IRType type, boolean isLoopResult){
         this.name = name;
         this.displayName = displayName;
         this.canonicalType = canonicalType;
         this.element = element;
         this.type = type;
+        this.isLoopResult = isLoopResult;
     }
 
     @Override
@@ -30,6 +32,10 @@ public class Variable implements Identifier{
     @Override
     public String getDisplayName() {
         return this.displayName;
+    }
+
+    public boolean getIsLoopResult() {
+        return isLoopResult;
     }
 
     @Override

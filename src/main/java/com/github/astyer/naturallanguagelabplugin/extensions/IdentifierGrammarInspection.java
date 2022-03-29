@@ -33,6 +33,7 @@ public class IdentifierGrammarInspection extends AbstractBaseJavaLocalInspection
     @Override
     public @NotNull PsiElementVisitor buildVisitor(@NotNull ProblemsHolder holder, boolean isOnTheFly) {
         return new JavaElementVisitor() {
+            
             @Override
             public void visitVariable(PsiVariable variable) {
                 Variable IRVariable = IRFactory.createVariable(variable);

@@ -30,7 +30,6 @@ public class IRFactory {
         return "UNKNOWN_TYPE";
     }
 
-    // maybe move these helper functions into a helper class
     /**
      * Checks if the PsiType is some kind of collection
      * Currently checks for standard arrays and anything that is a Collection or Map
@@ -132,11 +131,48 @@ public class IRFactory {
         return false;
     }
 
+    /**
+     * Check if psiVariable is the result of some method that performs looping.
+     * Specifically, if the method name contains the word "contains" or the word "find".
+     * @param psiVariable
+     * @return if psiVariable is a loop result
+     */
+    private static boolean isLoopResult(PsiVariable psiVariable) {
+        PsiMethodCallExpression methodCallExp = PsiTreeUtil.findChildOfType(psiVariable, PsiMethodCallExpression.class);
+        if(methodCallExp != null) {
+            String methodName = methodCallExp.getMethodExpression().getReferenceName().toLowerCase();
+            if(methodName.contains("contains") || methodName.contains("find")) {
+                System.out.println("variable \"" + psiVariable.getName() + "\" is a loop result from method call \"" + methodName + "\"");
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Check if psiMethod performs any looping by meeting either of two conditions.
+     * 1. If it calls a method with a name that contains the word "contains" or the word "find".
+     * 2. If the method uses some loop, including for, for each, while, do while, etc.
+     * @param psiMethod
+     * @return if psiMethod performs looping
+     */
+    private static boolean performsLooping(PsiMethod psiMethod) {
+        PsiMethodCallExpression methodCallExp = PsiTreeUtil.findChildOfType(psiMethod, PsiMethodCallExpression.class);
+        if(methodCallExp != null) {
+            String methodName = methodCallExp.getMethodExpression().getReferenceName().toLowerCase();
+            if(methodName.contains("contains") || methodName.contains("find")) {
+                return true;
+            }
+        }
+        PsiStatement loopStatement = PsiTreeUtil.findChildOfType(psiMethod, PsiLoopStatement.class);
+        return loopStatement != null;
+    }
+
     public static Variable createVariable(PsiVariable psiVariable) {
         IRType type = typeToIRType(psiVariable.getType(), psiVariable.getProject());
         String canonicalType = getCanonicalType(psiVariable.getType());
         String displayName = psiVariable.getName();
-        return new Variable(displayName, displayName, canonicalType, psiVariable, type);
+        return new Variable(displayName, displayName, canonicalType, psiVariable, type, isLoopResult(psiVariable));
     }
 
     public static Method createMethod(PsiMethod psiMethod) {
@@ -149,11 +185,11 @@ public class IRFactory {
             params.add(getCanonicalType(param.getType()));
         }
         String name = displayName + "("+ String.join(",", params) + ")";
-        return new Method(name, displayName, typeString, psiMethod, type, performsConversion(psiMethod), performsEventDrivenFunctionality(psiMethod), usesGenerics(psiMethod));
+        return new Method(name, displayName, typeString, psiMethod, type, performsConversion(psiMethod), performsEventDrivenFunctionality(psiMethod), usesGenerics(psiMethod), performsLooping(psiMethod));
     }
 
     public static Class createClass(PsiClass psiClass) {
-        Class.ClassType type = Class.ClassType.Class; // always Class type for now as we have no rules that need further specification
+        Class.ClassType type = Class.ClassType.Class; //always Class type for now as we have no rules that need further specification
         String displayName = psiClass.getName();
         return new Class(displayName, displayName, psiClass, type);
     }
