@@ -72,6 +72,7 @@ convert_to_php_namespace java.lang.String DECLARATION  V_P_NM_N_ convert_to_php_
 ----------
 rule 6 methods
 ----------
+save_As_Quadratic_Png() void FUNCTION V_P_NM_N_ save_As_Quadratic_Png_
 tessellate_To_Mesh() void FUNCTION V_P_N_ tessellate_To_Mesh_
 ----------
 rule 7 variables

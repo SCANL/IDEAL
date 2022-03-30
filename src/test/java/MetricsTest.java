@@ -364,9 +364,9 @@ class MetricsTest {
         }
     }
 
-    //Prep Phrase With Leading Verb
+    //Prep Phrase With Leading Verb (variables)
     @Test
-    public void rule6Tests() throws Exception{
+    public void rule6VarTests() throws Exception{
 
         List<Variable> vars = new ArrayList<Variable>();
         vars.add(new Variable("destroy_with_parent", "destroy_with_parent", "boolean", null, TYPE_BOOLEAN, false));
@@ -399,6 +399,7 @@ class MetricsTest {
         }
     }
 
+    //Prep Phrase With Leading Verb (methods)
     @Test
     public void rule6MethTests() throws Exception{
 
