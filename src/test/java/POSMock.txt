@@ -65,13 +65,10 @@ rule 5
 timeout_in_milliseconds long DECLARATION timeout_in_milliseconds_
 generatedTokenOnCreation java.lang.string DECLARATION V_N_P_N_ generated_Token_On_Creation_
 ----------
-rule 6 variables
+rule 6
 ----------
-destroy_with_parent boolean DECLARATION V_P_N_ destroy_with_parent_
-convert_to_php_namespace java.lang.String DECLARATION  V_P_NM_N_ convert_to_php_namespace_
-----------
-rule 6 methods
-----------
+destroy_with_parent() boolean FUNCTION V_P_N_ destroy_with_parent_
+convert_to_php_namespace() java.lang.string FUNCTION  V_P_NM_N_ convert_to_php_namespace_
 save_As_Quadratic_Png() void FUNCTION V_P_NM_N_ save_As_Quadratic_Png_
 tessellate_To_Mesh() void FUNCTION V_P_N_ tessellate_To_Mesh_
 ----------

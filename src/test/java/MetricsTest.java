@@ -364,46 +364,13 @@ class MetricsTest {
         }
     }
 
-    //Prep Phrase With Leading Verb (variables)
+    //Prep Phrase With Leading Verb
     @Test
-    public void rule6VarTests() throws Exception{
-
-        List<Variable> vars = new ArrayList<Variable>();
-        vars.add(new Variable("destroy_with_parent", "destroy_with_parent", "boolean", null, TYPE_BOOLEAN, false));
-        vars.add(new Variable("convert_to_php_namespace", "convert_to_php_namespace", "java.lang.String", null, TYPE_OTHER, false));
-        String[] expectedResults = new String[]{"null", "null"};
-
-        for(int i = 0; i< vars.size(); i++){
-            Variable v = vars.get(i);
-            Result r = aggregateRules.runAll(v);
-            String expectedResult = expectedResults[i];
-            PrintStream ps;
-            if(r.getTopRecommendation().getRegexMatches()){
-                ps =  expectedResult.equals("null")? System.out : System.err;
-                ps.println("Rule 1 Test: " + i + " (" + (expectedResult.equals("null")?"Success":"Fail") + ")");
-                ps.println("Variable: \"" + v.getName() + "\"");
-                ps.println("Canonical Type: \"" + v.getCanonicalType() + "\"");
-                ps.println("Expected Match: " + expectedResult);
-                ps.println("Actual Match: " + "null");
-                assertEquals(expectedResult, "null");
-            } else {
-                ps =  expectedResult.equals(r.getTopRecommendation())? System.out : System.err;
-                ps.println("Rule 1 Test: " + i + " (" + (expectedResult.equals(r.getTopRecommendation().getName())?"Success":"Fail") + ")");
-                ps.println("Variable: \"" + v.getName() + "\"");
-                ps.println("Canonical Type: \"" + v.getCanonicalType() + "\"");
-                ps.println("Expected Recommendation: " + expectedResult);
-                ps.println("Actual Recommendation: " + r.getTopRecommendation().getName());
-                assertEquals(expectedResult, r.getTopRecommendation().getName());
-            }
-            System.out.println();
-        }
-    }
-
-    //Prep Phrase With Leading Verb (methods)
-    @Test
-    public void rule6MethTests() throws Exception{
+    public void rule6Tests() throws Exception{
 
         List<Method> meths = new ArrayList<Method>();
+        meths.add(new Method("destroy_with_parent()", "destroy_with_parent", "void", null, TYPE_OTHER, true, true, false, false));
+        meths.add(new Method("convert_to_php_namespace()", "convert_to_php_namespace", "java.lang.string", null, TYPE_OTHER, true, true, false, false));
         meths.add(new Method("save_As_Quadratic_Png()", "save_As_Quadratic_Png", "void", null, TYPE_OTHER, false, false, false, false)); //pass
         meths.add(new Method("tessellate_To_Mesh()", "tessellate_To_Mesh", "void", null, TYPE_OTHER, false, false, false, false)); //pass
         String[] expectedResults = new String[]{"null", "null"};
