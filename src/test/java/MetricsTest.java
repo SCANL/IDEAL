@@ -143,46 +143,6 @@ class MetricsTest {
         }
     }
 
-    //Verb Phrase (variables)
-//    @Test
-//    public void rule3VarTests() throws Exception{
-//
-//        List<Variable> vars = new ArrayList<Variable>();
-//        vars.add(new Variable("alive", "alive", "java.lang.boolean", null, TYPE_BOOLEAN, false)); //fail
-//        vars.add(new Variable("isVariable", "isVariable", "java.lang.boolean", null, TYPE_BOOLEAN, false)); //pass
-//        vars.add(new Variable("hasChildren", "hasChildren", "java.lang.boolean", null, TYPE_BOOLEAN, false)); //pass
-//        vars.add(new Variable("createChildren", "createChildren", "java.lang.boolean", null, TYPE_BOOLEAN, false)); //fail
-//        vars.add(new Variable("jumpAlive", "jumpAlive", "java.lang.boolean", null, TYPE_BOOLEAN, false)); //fail
-//        vars.add(new Variable("addChildren", "addChildren", "java.lang.boolean", null, TYPE_BOOLEAN, false)); //fail
-//        vars.add(new Variable("eatFood", "eatFood", "java.lang.boolean", null, TYPE_BOOLEAN, false)); //fail
-//        String[] expectedResults = new String[]{"V NM* N|NPL", "null", "null", "V NM* N|NPL", "V NM* N|NPL", "null", "null"};
-//
-//        for(int i = 0; i< vars.size(); i++){
-//            Variable v = vars.get(i);
-//            Result r = aggregateRules.runAll(v);
-//            String expectedResult = expectedResults[i];
-//            PrintStream ps;
-//            if(r.getTopRecommendation().getRegexMatches()){
-//                ps =  expectedResult.equals("null")? System.out : System.err;
-//                ps.println("Rule 1 Test: " + i + " (" + (expectedResult.equals("null")?"Success":"Fail") + ")");
-//                ps.println("Variable: \"" + v.getName() + "\"");
-//                ps.println("Canonical Type: \"" + v.getCanonicalType() + "\"");
-//                ps.println("Expected Match: " + expectedResult);
-//                ps.println("Actual Match: " + "null");
-//                assertEquals(expectedResult, "null");
-//            } else {
-//                ps =  expectedResult.equals(r.getTopRecommendation())? System.out : System.err;
-//                ps.println("Rule 1 Test: " + i + " (" + (expectedResult.equals(r.getTopRecommendation().getName())?"Success":"Fail") + ")");
-//                ps.println("Variable: \"" + v.getName() + "\"");
-//                ps.println("Canonical Type: \"" + v.getCanonicalType() + "\"");
-//                ps.println("Expected Recommendation: " + expectedResult);
-//                ps.println("Actual Recommendation: " + r.getTopRecommendation().getName());
-//                assertEquals(expectedResult, r.getTopRecommendation().getName());
-//            }
-//            System.out.println();
-//        }
-//    }
-
     //Verb Phrase (methods)
     @Test
     public void method_noVoidGenerics() throws Exception{
@@ -259,78 +219,6 @@ class MetricsTest {
             System.out.println();
         }
     }
-
-    //Prep Phrase With Leading Noun
-//    @Test
-//    public void rule5Tests() throws Exception{
-//
-//        List<Method> vars = new ArrayList<Method>();
-//        vars.add(new Method("query_timeout_in_milliseconds", "query_timeout_in_milliseconds", "long", null, TYPE_OTHER, false));
-//        vars.add(new Method("generatedTokenOnCreation", "generatedTokenOnCreation", "java.lang.string", null, TYPE_OTHER, false));
-//        String[] expectedResults = new String[]{"null", "null"};
-//
-//        for(int i = 0; i< vars.size(); i++){
-//            Variable v = vars.get(i);
-//            Result r = aggregateRules.runAll(v);
-//            String expectedResult = expectedResults[i];
-//            PrintStream ps;
-//            if(r.getTopRecommendation().getRegexMatches()){
-//                ps =  expectedResult.equals("null")? System.out : System.err;
-//                ps.println("Rule 1 Test: " + i + " (" + (expectedResult.equals("null")?"Success":"Fail") + ")");
-//                ps.println("Variable: \"" + v.getName() + "\"");
-//                ps.println("Canonical Type: \"" + v.getCanonicalType() + "\"");
-//                ps.println("Expected Match: " + expectedResult);
-//                ps.println("Actual Match: " + "null");
-//                assertEquals(expectedResult, "null");
-//            } else {
-//                ps =  expectedResult.equals(r.getTopRecommendation())? System.out : System.err;
-//                ps.println("Rule 1 Test: " + i + " (" + (expectedResult.equals(r.getTopRecommendation().getName())?"Success":"Fail") + ")");
-//                ps.println("Variable: \"" + v.getName() + "\"");
-//                ps.println("Canonical Type: \"" + v.getCanonicalType() + "\"");
-//                ps.println("Expected Recommendation: " + expectedResult);
-//                ps.println("Actual Recommendation: " + r.getTopRecommendation().getName());
-//                assertEquals(expectedResult, r.getTopRecommendation().getName());
-//            }
-//            System.out.println();
-//        }
-//    }
-
-    //Prep Phrase With Leading Verb
-//    @Test
-//    public void rule6Tests() throws Exception{
-//
-//        List<Method> meths = new ArrayList<Method>();
-//        meths.add(new Method("destroy_with_parent()", "destroy_with_parent", "void", null, TYPE_OTHER, true, false, false, false));
-//        meths.add(new Method("convert_to_php_namespace()", "convert_to_php_namespace", "java.lang.string", null, TYPE_OTHER, true, false, false, false));
-//        meths.add(new Method("save_As_Quadratic_Png()", "save_As_Quadratic_Png", "void", null, TYPE_OTHER, false, true, false, false)); //pass
-//        meths.add(new Method("tessellate_To_Mesh()", "tessellate_To_Mesh", "void", null, TYPE_OTHER, false, true, false, false)); //pass
-//        String[] expectedResults = new String[]{"null", "null"};
-//
-//        for(int i = 0; i< meths.size(); i++){
-//            Method m = meths.get(i);
-//            Result r = aggregateRules.runAll(m);
-//            String expectedResult = expectedResults[i];
-//            PrintStream ps;
-//            if(r.getTopRecommendation().getRegexMatches()){
-//                ps =  expectedResult.equals("null")? System.out : System.err;
-//                ps.println("Rule 1 Test: " + i + " (" + (expectedResult.equals("null")?"Success":"Fail") + ")");
-//                ps.println("Variable: \"" + m.getName() + "\"");
-//                ps.println("Canonical Type: \"" + m.getCanonicalType() + "\"");
-//                ps.println("Expected Match: " + expectedResult);
-//                ps.println("Actual Match: " + "null");
-//                assertEquals(expectedResult, "null");
-//            } else {
-//                ps =  expectedResult.equals(r.getTopRecommendation())? System.out : System.err;
-//                ps.println("Rule 1 Test: " + i + " (" + (expectedResult.equals(r.getTopRecommendation().getName())?"Success":"Fail") + ")");
-//                ps.println("Variable: \"" + m.getName() + "\"");
-//                ps.println("Canonical Type: \"" + m.getCanonicalType() + "\"");
-//                ps.println("Expected Recommendation: " + expectedResult);
-//                ps.println("Actual Recommendation: " + r.getTopRecommendation().getName());
-//                assertEquals(expectedResult, r.getTopRecommendation().getName());
-//            }
-//            System.out.println();
-//        }
-//    }
 
     //Noun Phrase With Leading Determiner (variables)
     @Test
