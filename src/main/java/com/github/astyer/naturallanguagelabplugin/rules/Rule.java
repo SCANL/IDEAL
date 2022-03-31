@@ -5,12 +5,13 @@ public enum Rule {
     NMN,
     VNMN,
     NMNPL,
+    DT,
+    DTPL,
     // method rules
     VV1,
     VV2,
     PNMN,
     VDT,
-//    VP,
     // class rules
     NMNNPL
 }

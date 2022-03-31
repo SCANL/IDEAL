@@ -26,8 +26,8 @@ public class RuleForest {
         RuleNode nmn = new RuleNode("NM* N", Pattern.Compile("&(*('NM_'),'N_')"), ExplanationsAndExamples.getExplanation(Rule.NMN), ExplanationsAndExamples.getExample(Rule.NMN));
         RuleNode vnmn = new RuleNode("V NM* N|NPL", Pattern.Compile("&('V_',&(*('NM_'),|('N_','NPL_')))"), ExplanationsAndExamples.getExplanation(Rule.VNMN), ExplanationsAndExamples.getExample(Rule.VNMN));//("V (NM )*(N|NPL)"));
         RuleNode nmnpl = new RuleNode("NM* NPL", Pattern.Compile("&(*('NM_'),'NPL_')"), ExplanationsAndExamples.getExplanation(Rule.NMNPL), ExplanationsAndExamples.getExample(Rule.NMNPL));//("(NM )*NPL"));
-        RuleNode dtnps = new RuleNode("DT NM* N|NPL", Pattern.Compile("&('DT_', &(*('NM_'), |('N_','NPL_')))"), "TODO", "TODO");
-        RuleNode dtnp = new RuleNode("DT NM* NPL", Pattern.Compile("&('DT_', &(*('NM_'), 'NPL_'))"), "TODO", "TODO");
+        RuleNode dt = new RuleNode("DT NM* N|NPL", Pattern.Compile("&('DT_', &(*('NM_'), |('N_','NPL_')))"), ExplanationsAndExamples.getExplanation(Rule.VDT), ExplanationsAndExamples.getExample(Rule.DT));
+        RuleNode dtpl = new RuleNode("DT NM* NPL", Pattern.Compile("&('DT_', &(*('NM_'), 'NPL_'))"), ExplanationsAndExamples.getExplanation(Rule.VDT), ExplanationsAndExamples.getExample(Rule.DTPL));
 
         nmn.addBranch(new RuleBranch(
                 "Type of Bool",
@@ -53,14 +53,14 @@ public class RuleForest {
 
         nmn.addBranch(new RuleBranch(
                 "Is assigned to fn with Finds or contains",
-                dtnps,
+                dt,
                 new Checkbox("Is assigned to fn with Finds or contains",
                         null,
                         null,
                         variable -> new CheckboxResult(variable.getIsLoopResult()))));
-        dtnps.addBranch(new RuleBranch(
+        dt.addBranch(new RuleBranch(
                 "Is collection type",
-                dtnp,
+                dtpl,
                 new Checkbox("Is collection type",
                         null,
                         null,

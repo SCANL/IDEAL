@@ -103,7 +103,7 @@ public class IdentifierGrammarToolWindow {
         currentTable.setModel(new DefaultTableModel(
                 new String[][] {{
                     type,
-                    "<html><body style='background-color: white;'>" + identifierName + "</body></html>",
+                    identifierName,
                     currentPattern
                 }},
                 currentHeaders
