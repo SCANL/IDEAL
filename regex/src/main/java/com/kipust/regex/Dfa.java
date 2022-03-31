@@ -1,6 +1,7 @@
 package com.kipust.regex;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class Dfa {
     public abstract class DFAResult{
@@ -106,20 +107,19 @@ public class Dfa {
             if(str.length() == 0){
                 return accepting ? new AcceptingResult() : new NonAcceptingResult();
             }
-            for(Const key: transitions.keySet()){
-                if(key instanceof Const.Value) {
-                    String keyVal = ((Const.Value) key).value;
-                    if (str.startsWith(keyVal)) {
-                        DfaNode next = transitions.get(key);
-                        if (!next.trash) {
-                            return next.run(str.replaceFirst(keyVal, ""), index + keyVal.length());
-                        }
-                    }
-                }else{
+            for(Const key: transitions.keySet().stream().filter(t-> t instanceof Const.Value).collect(Collectors.toList())) {
+                String keyVal = ((Const.Value) key).value;
+                if (str.startsWith(keyVal)) {
                     DfaNode next = transitions.get(key);
-                    if(!next.trash){
-                        return next.run(str.substring(1), index + 1);
+                    if (!next.trash) {
+                        return next.run(str.replaceFirst(keyVal, ""), index + keyVal.length());
                     }
+                }
+            }
+            for(Const key: transitions.keySet().stream().filter(t-> t instanceof Const.Wildcard).collect(Collectors.toList())) {
+                DfaNode next = transitions.get(key);
+                if(!next.trash){
+                    return next.run(str.substring(1), index + 1);
                 }
             }
             return new TrashResult(str, index, transitions.keySet().stream().filter(key -> !transitions.get(key).trash).map(key -> "\"" + key + "\"").toArray(String[] ::new));
