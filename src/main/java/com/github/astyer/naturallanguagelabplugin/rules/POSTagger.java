@@ -3,9 +3,13 @@ package com.github.astyer.naturallanguagelabplugin.rules;
 import com.github.astyer.naturallanguagelabplugin.IR.Identifier;
 
 import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-import java.io.*;
+import java.util.stream.Collectors;
 
 public class POSTagger {
     public static class POSResult{
@@ -50,27 +54,41 @@ public class POSTagger {
             return cache.get(key);
         }
         try {
-            File file = new File("src/test/java/POSMock.txt");
-            BufferedReader in = new BufferedReader(new FileReader(file));
-            String inputLine;
-            StringBuilder content = new StringBuilder();
-            String posTags = "";
-            String finalId = "";
-            while ((inputLine = in.readLine()) != null) {
-                String line[] = inputLine.split(" ");
-                if(line[0].equals(name) && line[1].equals(type) && line[2].equals(context)){
-                    posTags = line[3];
-                    finalId = line[4];
-                    break;
+            String urlStr = String.format("http://127.0.0.1:5000/%s/%s/%s", type, name, context);
+            System.out.println("Tagging "+urlStr);
+            URL url = new URL(urlStr);
+            HttpURLConnection con = (HttpURLConnection) url.openConnection();
+            con.setRequestMethod("GET");
+            int status = con.getResponseCode();
+            System.out.println("got response code of "+status);
+            if(status == 200) {
+                BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+                String inputLine;
+                StringBuilder content = new StringBuilder();
+                while ((inputLine = in.readLine()) != null) {
+                    content.append(inputLine);
                 }
-            }
-            in.close();
-            System.out.println(finalId + " tagged as " + posTags);
-            POSResult result = new POSResult(posTags, finalId);
-            if(!posTags.equals("") || !finalId.equals("")){
+                System.out.println("received content of "+content);
+                in.close();
+                con.disconnect();
+                String posTags = Arrays.stream(content.toString().split(","))
+                        .map(w -> w.split("\\|")[1])
+                        .map(w -> w + "_")
+                        .collect(Collectors.joining(""));
+                String finalId = Arrays.stream(content.toString().split(","))
+                        .map(w -> w.split("\\|")[0])
+                        .map(w -> w + "_")
+                        .collect(Collectors.joining(""));
+
+                System.out.println("final result of "+posTags);
+                POSResult result = new POSResult(posTags, finalId);
                 cache.put(key, result);
+                return result;
             }
-            return result;
+            else {
+                System.err.println("Error while making connection to " + urlStr);
+                System.err.println("Received status code of " + status);
+            }
         }catch (Exception ex){
             System.err.println("Unable to retrieve POS tags for " + name);
             System.err.println(ex.getMessage());
