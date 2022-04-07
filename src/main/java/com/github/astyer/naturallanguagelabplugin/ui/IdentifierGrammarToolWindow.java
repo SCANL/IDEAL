@@ -132,33 +132,38 @@ public class IdentifierGrammarToolWindow {
 
     private String getRecommendedIdentifier(Identifier id, Result.Recommendation recommendation) {
         RecommendationAlg.Rec rec = recommendation.getRec();
-        String[] splitIdentifier = id.getIdentifierSplit().split("_");
-        List<Integer> correctWordIndexes = rec != null ? rec.getIndexesOfFinalId() : new ArrayList<>();
-        StringBuilder recIdentifier = new StringBuilder(noWrapStyling);
-        for(int i = 0; i < splitIdentifier.length; i++) {
-            String word = splitIdentifier[i];
-            if (!correctWordIndexes.contains(i)) {
-                word = "<b><span style='color: red'>" + word + "</span></b>";
+        String currentID = rec.getOriginal().getId();
+        int offset = 0;
+        for (RecommendationAlg.Rec.Change change : rec.getChanges()) {
+            if (change instanceof RecommendationAlg.Rec.Remove) {
+                RecommendationAlg.Rec.Remove remove = (RecommendationAlg.Rec.Remove) change;
+                String ch = "<b><span style='color: red'>" + currentID.substring((remove.idIndex + offset), (remove.idIndex + offset) + remove.idLength) + "</span></b>";
+                int tempOffset = offset + (ch).length();
+                currentID = currentID.substring(0, remove.idIndex + offset) + ch + currentID.substring((remove.idIndex + offset) + remove.idLength);
+                offset = tempOffset;
+            } else if (change instanceof RecommendationAlg.Rec.Insert) {
+                RecommendationAlg.Rec.Insert insert = (RecommendationAlg.Rec.Insert) change;
+                currentID = currentID.substring(0, insert.idIndex) + "_" + currentID.substring(insert.idIndex);
             }
-            recIdentifier.append(" ").append(word);
         }
-        return recIdentifier.toString();
+        return noWrapStyling + currentID.replaceAll("\\.\\d*_", " ").replaceAll("_", "");
     }
 
-    // will break if current and rec patterns are different lengths ex. method named car will have rec V N where only V should be green
     private String getRecommendedPattern(Identifier id, Result.Recommendation recommendation) {
         RecommendationAlg.Rec rec = recommendation.getRec();
-        String[] splitIdPOS = id.getPOS().split("_");
-        String[] recPatternSplit = rec != null ? rec.getFinal().split("_") : new String[]{};
-        StringBuilder recPattern = new StringBuilder(noWrapStyling);
-        for(int i = 0; i < recPatternSplit.length; i++) {
-            String pos = recPatternSplit[i];
-            if (i >= splitIdPOS.length || !recPatternSplit[i].equals(splitIdPOS[i])) {
-                pos = "<b><span style='color: green'>" + pos + "</span></b>";
+        String currentPOS = rec.getOriginal().getPosTags();
+        int offset = 0;
+        for(RecommendationAlg.Rec.Change change: rec.getChanges()){
+            if(change instanceof RecommendationAlg.Rec.Insert){
+                RecommendationAlg.Rec.Insert insert = (RecommendationAlg.Rec.Insert) change;
+                currentPOS = currentPOS.substring(0, insert.index +offset) + "<b><span style='color: green'>" + insert.change + "</span></b>" + currentPOS.substring(insert.index+offset);
+                offset += ("<b><span style='color: green'>" + "</span></b>").length();
+            }else if(change instanceof RecommendationAlg.Rec.Remove) {
+                RecommendationAlg.Rec.Remove remove = (RecommendationAlg.Rec.Remove) change;
+                currentPOS = currentPOS.substring(0, remove.index + offset) + currentPOS.substring(remove.index + offset + remove.length);
             }
-            recPattern.append(" ").append(pos);
         }
-        return recPattern.toString();
+        return noWrapStyling + currentPOS.replaceAll("_", " ");
     }
 
     public JPanel getContent() {

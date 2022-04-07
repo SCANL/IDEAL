@@ -12,14 +12,14 @@ import java.util.stream.Collectors;
 
 public class RecommendationAlg {
     public static class Rec {
-        interface Change {
+        public interface Change {
             String apply(String original);
             String applyId(String original);
         }
-        static class Insert implements Rec.Change {
-            int index;
-            String change;
-            int idIndex;
+        public static class Insert implements Rec.Change {
+            public int index;
+            public String change;
+            public int idIndex;
 
             public Insert(int index, String change, int idIndex){
                 this.index = index;
@@ -36,11 +36,11 @@ public class RecommendationAlg {
                 return original.substring(0,idIndex) + "_" + original.substring(idIndex);
             }
         }
-        static class Remove implements Rec.Change {
-            int index;
-            int length;
-            int idIndex;
-            int idLength;
+        public static class Remove implements Rec.Change {
+            public int index;
+            public int length;
+            public int idIndex;
+            public int idLength;
 
             public Remove(int index, int length, int idIndex, int idLength){
                 this.index = index;
@@ -139,14 +139,13 @@ public class RecommendationAlg {
         }
         public void addRemove(int index, int length, int idIndex, int idLength) {
             this.changes.add(new Remove(index, length, idIndex, idLength));
-//            this.wordsRemoved.add(wordsRemovedIndex);
         }
 
         public List<Change> getChanges() {
             return changes;
         }
 
-        private POSTagger.POSResult getOriginal(){
+        public POSTagger.POSResult getOriginal(){
             return original;
         }
 
@@ -155,6 +154,7 @@ public class RecommendationAlg {
             return getFinal();
         }
     }
+
     String original;
     Queue<Rec> toTry = new LinkedList<>();
     Pattern pattern;
@@ -269,7 +269,7 @@ public class RecommendationAlg {
 
     private int getSizeOfNextTok(String str, int index){
         int i;
-        for(i = 0; i >= str.length() || str.charAt(index + i) != '_'; i++){}
+        for(i = 0; i >= str.length() || (str.charAt(index + i) != '.' && str.charAt(index + i) != '_'); i++){}
         return i+1;
     }
 

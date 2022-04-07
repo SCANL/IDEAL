@@ -26,8 +26,8 @@ public class RuleForest {
         RuleNode nmn = new RuleNode("NM* N", Pattern.Compile("&(*('NM_'),'N_')"), ExplanationsAndExamples.getExplanation(Rule.NMN), ExplanationsAndExamples.getExample(Rule.NMN));
         RuleNode vnmn = new RuleNode("V NM* N|NPL", Pattern.Compile("&('V_',&(*('NM_'),|('N_','NPL_')))"), ExplanationsAndExamples.getExplanation(Rule.VNMN), ExplanationsAndExamples.getExample(Rule.VNMN));//("V (NM )*(N|NPL)"));
         RuleNode nmnpl = new RuleNode("NM* NPL", Pattern.Compile("&(*('NM_'),'NPL_')"), ExplanationsAndExamples.getExplanation(Rule.NMNPL), ExplanationsAndExamples.getExample(Rule.NMNPL));//("(NM )*NPL"));
-        RuleNode dt = new RuleNode("DT NM* N|NPL", Pattern.Compile("&('DT_', &(*('NM_'), |('N_','NPL_')))"), ExplanationsAndExamples.getExplanation(Rule.VDT), ExplanationsAndExamples.getExample(Rule.DT));
-        RuleNode dtpl = new RuleNode("DT NM* NPL", Pattern.Compile("&('DT_', &(*('NM_'), 'NPL_'))"), ExplanationsAndExamples.getExplanation(Rule.VDT), ExplanationsAndExamples.getExample(Rule.DTPL));
+        RuleNode dt = new RuleNode("V* DT NM* N|NPL", Pattern.Compile("&(*('V_'),&('DT_', &(*('NM_'), |('N_','NPL_'))))"), ExplanationsAndExamples.getExplanation(Rule.VDT), ExplanationsAndExamples.getExample(Rule.DT));
+        RuleNode dtpl = new RuleNode("V* DT NM* NPL", Pattern.Compile("&(*('V_'),&('DT_', &(*('NM_'), 'NPL_')))"), ExplanationsAndExamples.getExplanation(Rule.VDT), ExplanationsAndExamples.getExample(Rule.DTPL));
 
         nmn.addBranch(new RuleBranch(
                 "Type of Bool",
@@ -75,6 +75,7 @@ public class RuleForest {
         //method tree
         RuleNode methodRoot = new RuleNode("empty", Pattern.AcceptAny(), "", "");
         Pattern vplusPattern = Pattern.Compile("&('V_',*('V_'))");
+        Pattern VNMPattern = Pattern.Compile("&('V_',&(*('NM_'),|('N_','NPL_')))");
         RuleNode weirdRulePt1 = new RuleNode(
                 (Identifier id)->{
                     if(vplusPattern.match(id.getPOS()).success()){
@@ -83,8 +84,14 @@ public class RuleForest {
                         return "V NM* N|NPL";
                     }
                 },
-//                "V NM* N|NPL | V+ pt1 TODO: Update dynamically",
                 Pattern.Compile("|(&('V_',&(*('NM_'),|('N_','NPL_'))),&('V_',*('V_')))"),
+                (Identifier id) -> {
+                    if(vplusPattern.match(id.getPOS()).success()){
+                        return vplusPattern;
+                    }else{
+                        return VNMPattern;
+                    }
+                },
                 (Identifier id) ->{
                     if(vplusPattern.match(id.getPOS()).success()){
                         return "MINOR ALERT A " + ExplanationsAndExamples.getExplanation(Rule.VV1);
@@ -98,12 +105,19 @@ public class RuleForest {
         RuleNode weirdRulePt2 = new RuleNode(
             (Identifier id) -> {
                 if(vnpPattern.match(id.getPOS()).success()){
-                    return "V NM* N(PL)";
+                    return "V NM* N|NPL";
                 }else{
                     return "V+";
                 }
             },
             Pattern.Compile("|(&('V_',&(*('NM_'),|('N_','NPL_'))),&('V_',*('V_')))"),
+            (Identifier id) -> {
+                if(vplusPattern.match(id.getPOS()).success()){
+                    return VNMPattern;
+                }else{
+                    return vplusPattern;
+                }
+            },
             (Identifier id) -> {
                 if(vnpPattern.match(id.getPOS()).success()){
                     return "MINOR ALERT B " + ExplanationsAndExamples.getExplanation(Rule.VV2);

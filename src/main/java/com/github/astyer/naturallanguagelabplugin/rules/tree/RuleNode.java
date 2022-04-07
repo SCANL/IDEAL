@@ -15,18 +15,21 @@ public class RuleNode {
     private GetResultAttr getName;
     private GetResultAttr getExplanation;
     private GetResultAttr getExample;
+    private GetDynamicPattern getRecRegex;
     private List<RuleBranch> branches = new ArrayList<>();
-    public RuleNode(GetResultAttr getName, Pattern regex, GetResultAttr getExplanation, GetResultAttr getExample){
+    public RuleNode(GetResultAttr getName, Pattern regex, GetDynamicPattern getRecRegex, GetResultAttr getExplanation, GetResultAttr getExample){
         this.getName = getName;
         this.regex = regex;
         this.getExplanation = getExplanation;
         this.getExample = getExample;
+        this.getRecRegex = getRecRegex;
     }
     public RuleNode(String name, Pattern regex, String getExplanation, String getExample){
         this.getName = (x)->name;
         this.regex = regex;
         this.getExplanation = (x)->getExplanation;
         this.getExample = (x)->getExample;
+        this.getRecRegex = (x)->regex;
     }
 
     public void addBranch(RuleBranch branch){
@@ -35,7 +38,7 @@ public class RuleNode {
 
     public List<NodeResult> checkIdentifier(Identifier id, int depth){
         List<NodeResult> results = new ArrayList<>();
-        RecommendationAlg rec = new RecommendationAlg(regex, id);
+        RecommendationAlg rec = new RecommendationAlg(this.getRecRegex.getDynamicPattern(id), id);
         results.add(new NodeResult(regex.match(id.getPOS()), getName.getResultAttr(id), depth, getExplanation.getResultAttr(id), getExample.getResultAttr(id), rec.getRecommendation()));
         for(RuleBranch branch: branches){
             Optional<RuleNode> optRuleNode =  branch.checkBranch(id);

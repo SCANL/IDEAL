@@ -6,11 +6,20 @@ public class Const {
         public Value(String value){
             this.value = value;
         }
+
+        @Override
+        public String toString() {
+            return  value;
+        }
     }
 
     public static class Wildcard extends Const{
         public Wildcard(){
 
+        }
+        @Override
+        public String toString(){
+            return ".";
         }
     }
 }
