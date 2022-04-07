@@ -132,6 +132,9 @@ public class IdentifierGrammarToolWindow {
 
     private String getRecommendedIdentifier(Identifier id, Result.Recommendation recommendation) {
         RecommendationAlg.Rec rec = recommendation.getRec();
+        if (rec == null){
+            return "";
+        }
         String currentID = rec.getOriginal().getId();
         int offset = 0;
         for (RecommendationAlg.Rec.Change change : rec.getChanges()) {
@@ -151,6 +154,9 @@ public class IdentifierGrammarToolWindow {
 
     private String getRecommendedPattern(Identifier id, Result.Recommendation recommendation) {
         RecommendationAlg.Rec rec = recommendation.getRec();
+        if (rec == null){
+            return "";
+        }
         String currentPOS = rec.getOriginal().getPosTags();
         int offset = 0;
         for(RecommendationAlg.Rec.Change change: rec.getChanges()){

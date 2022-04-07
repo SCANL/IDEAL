@@ -61,8 +61,11 @@ public class IRFactory {
             return IRType.TYPE_COLLECTION;
         }
         String cType = type.getCanonicalText();
-        if(cType.equals("boolean") || cType.equals("java.lang.Boolean")){
+        if(cType.equals("boolean") || cType.equals("java.lang.Boolean")) {
             return IRType.TYPE_BOOLEAN;
+        }
+        if(cType.equals("void")) {
+            return IRType.TYPE_VOID;
         }
         return IRType.TYPE_OTHER;
     }
