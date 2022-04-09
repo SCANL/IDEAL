@@ -3,6 +3,7 @@ package com.github.astyer.naturallanguagelabplugin.ui;
 import com.github.astyer.naturallanguagelabplugin.IR.Identifier;
 import com.github.astyer.naturallanguagelabplugin.rules.Recommendation.RecommendationAlg;
 import com.github.astyer.naturallanguagelabplugin.rules.Result;
+import org.javatuples.Pair;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -13,6 +14,7 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class IdentifierGrammarToolWindow {
 
@@ -135,21 +137,14 @@ public class IdentifierGrammarToolWindow {
         if (rec == null){
             return "";
         }
-        String currentID = rec.getOriginal().getId();
-        int offset = 0;
+        ArrayList<RecommendationAlg.WordPos> currentID = new ArrayList(rec.getOriginal());
+        Integer offset = 0;
         for (RecommendationAlg.Rec.Change change : rec.getChanges()) {
-            if (change instanceof RecommendationAlg.Rec.Remove) {
-                RecommendationAlg.Rec.Remove remove = (RecommendationAlg.Rec.Remove) change;
-                String ch = "<b><span style='color: red'>" + currentID.substring((remove.idIndex + offset), (remove.idIndex + offset) + remove.idLength) + "</span></b>";
-                int tempOffset = offset + (ch).length();
-                currentID = currentID.substring(0, remove.idIndex + offset) + ch + currentID.substring((remove.idIndex + offset) + remove.idLength);
-                offset = tempOffset;
-            } else if (change instanceof RecommendationAlg.Rec.Insert) {
-                RecommendationAlg.Rec.Insert insert = (RecommendationAlg.Rec.Insert) change;
-                currentID = currentID.substring(0, insert.idIndex) + "_" + currentID.substring(insert.idIndex);
-            }
+            Pair<ArrayList<RecommendationAlg.WordPos>, Integer> result = change.getColoredId(currentID, offset);
+            currentID = result.getValue0();
+            offset = result.getValue1();
         }
-        return noWrapStyling + currentID.replaceAll("\\.\\d*_", " ").replaceAll("_", "");
+        return noWrapStyling + currentID.stream().map(wordPos -> wordPos.getWord().replaceAll("_", "")).collect(Collectors.joining(" "));
     }
 
     private String getRecommendedPattern(Identifier id, Result.Recommendation recommendation) {
@@ -157,19 +152,14 @@ public class IdentifierGrammarToolWindow {
         if (rec == null){
             return "";
         }
-        String currentPOS = rec.getOriginal().getPosTags();
-        int offset = 0;
-        for(RecommendationAlg.Rec.Change change: rec.getChanges()){
-            if(change instanceof RecommendationAlg.Rec.Insert){
-                RecommendationAlg.Rec.Insert insert = (RecommendationAlg.Rec.Insert) change;
-                currentPOS = currentPOS.substring(0, insert.index +offset) + "<b><span style='color: green'>" + insert.change + "</span></b>" + currentPOS.substring(insert.index+offset);
-                offset += ("<b><span style='color: green'>" + "</span></b>").length();
-            }else if(change instanceof RecommendationAlg.Rec.Remove) {
-                RecommendationAlg.Rec.Remove remove = (RecommendationAlg.Rec.Remove) change;
-                currentPOS = currentPOS.substring(0, remove.index + offset) + currentPOS.substring(remove.index + offset + remove.length);
-            }
+        ArrayList<RecommendationAlg.WordPos> currentID = new ArrayList(rec.getOriginal());
+        Integer offset = 0;
+        for (RecommendationAlg.Rec.Change change : rec.getChanges()) {
+            Pair<ArrayList<RecommendationAlg.WordPos>, Integer> result = change.getColoredPOS(currentID, offset);
+            currentID = result.getValue0();
+            offset = result.getValue1();
         }
-        return noWrapStyling + currentPOS.replaceAll("_", " ");
+        return noWrapStyling + currentID.stream().map(wordPos -> wordPos.getPos().replaceAll("_", "")).collect(Collectors.joining(" "));
     }
 
     public JPanel getContent() {

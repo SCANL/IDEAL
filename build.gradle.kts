@@ -25,6 +25,10 @@ dependencies {
 
     implementation("org.junit.jupiter:junit-jupiter:5.4.2")
     implementation(project(":regex"))
+    // https://mvnrepository.com/artifact/org.javatuples/javatuples
+    implementation("org.javatuples:javatuples:1.2")
+
+
 }
 
 // Configure Gradle IntelliJ Plugin - read more: https://github.com/JetBrains/gradle-intellij-plugin
