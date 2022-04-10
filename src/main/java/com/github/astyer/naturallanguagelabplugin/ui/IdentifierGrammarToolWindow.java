@@ -3,6 +3,7 @@ package com.github.astyer.naturallanguagelabplugin.ui;
 import com.github.astyer.naturallanguagelabplugin.IR.Identifier;
 import com.github.astyer.naturallanguagelabplugin.rules.Recommendation.RecommendationAlg;
 import com.github.astyer.naturallanguagelabplugin.rules.Result;
+import com.github.astyer.naturallanguagelabplugin.rules.TagNames;
 import org.javatuples.Pair;
 
 import javax.swing.*;
@@ -10,10 +11,13 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class IdentifierGrammarToolWindow {
@@ -33,6 +37,7 @@ public class IdentifierGrammarToolWindow {
 
     private JLabel recommendedTitle;
     private JTable recommendedTable;
+    private JLabel recDescription;
 
     private JLabel exampleTitle;
     private JLabel exampleValue;
@@ -76,6 +81,7 @@ public class IdentifierGrammarToolWindow {
     }
 
     private void setInitialTextAndStyling() {
+        recDescription.setText("");
         exampleValue.setText("");
         explanationValue.setText("");
         knowMoreValue.setText(maxTextWidthStyling + knowMoreText);
@@ -124,17 +130,18 @@ public class IdentifierGrammarToolWindow {
         identifierName = id.getDisplayName();
         currentPattern = id.getPOS().replace('_', ' ');
         Result.Recommendation topRecommendation = result.getTopRecommendation();
-        recommendedIdentifier = getRecommendedIdentifier(id, topRecommendation);
-        recommendedPattern = getRecommendedPattern(id, topRecommendation);
+        recommendedIdentifier = getRecommendedIdentifier(topRecommendation);
+        recommendedPattern = getRecommendedPattern(topRecommendation);
         recommendedGenericPattern = topRecommendation.getName();
         updateTables();
         explanationValue.setText(maxTextWidthStyling + topRecommendation.getExplanation());
         exampleValue.setText(maxTextWidthStyling + topRecommendation.getExample());
+        recDescription.setText(getRecommendationDescription(recommendedIdentifier, recommendedPattern));
     }
 
-    private String getRecommendedIdentifier(Identifier id, Result.Recommendation recommendation) {
+    private String getRecommendedIdentifier(Result.Recommendation recommendation) {
         RecommendationAlg.Rec rec = recommendation.getRec();
-        if (rec == null){
+        if(rec == null) {
             return "";
         }
         ArrayList<RecommendationAlg.WordPos> currentID = new ArrayList(rec.getOriginal());
@@ -147,9 +154,9 @@ public class IdentifierGrammarToolWindow {
         return noWrapStyling + currentID.stream().map(wordPos -> wordPos.getWord().replaceAll("_", "")).collect(Collectors.joining(" "));
     }
 
-    private String getRecommendedPattern(Identifier id, Result.Recommendation recommendation) {
+    private String getRecommendedPattern(Result.Recommendation recommendation) {
         RecommendationAlg.Rec rec = recommendation.getRec();
-        if (rec == null){
+        if(rec == null) {
             return "";
         }
         ArrayList<RecommendationAlg.WordPos> currentID = new ArrayList(rec.getOriginal());
@@ -160,6 +167,48 @@ public class IdentifierGrammarToolWindow {
             offset = result.getValue1();
         }
         return noWrapStyling + currentID.stream().map(wordPos -> wordPos.getPos().replaceAll("_", "")).collect(Collectors.joining(" "));
+    }
+
+    private String getRecommendationDescription(String coloredIdentifier, String coloredRecPattern) {
+        ArrayList<String> removedWords = getColoredStrings(coloredIdentifier, "red");
+        ArrayList<String> addedPos = getColoredStrings(coloredRecPattern, "green");
+        if(removedWords.isEmpty() && addedPos.isEmpty()) {
+            return "No changes suggested.";
+        }
+        String removedWordsStr = formatStringList(removedWords.stream().map(word -> "\"" + word + "\"").collect(Collectors.toList()));
+        if(addedPos.isEmpty()) {
+            return "We suggest removing " + removedWordsStr + " from your identifier.";
+        }
+        String addedPosStr = formatStringList(addedPos.stream().map(TagNames::getName).collect(Collectors.toList()));
+        if(removedWords.isEmpty()) {
+            return "We suggest adding " + addedPosStr + " to your identifier.";
+        }
+        return "We suggest removing " + removedWordsStr + " and adding " + addedPosStr + " to your identifier.";
+    }
+
+    private ArrayList<String> getColoredStrings(String inputString, String color) {
+        ArrayList<String> coloredStrings = new ArrayList<>();
+        String[] splitInput = inputString.split(color + "'>");
+        for(String str: splitInput) {
+            int spanStart = str.indexOf("</span>");
+            if(spanStart != -1) {
+                coloredStrings.add(str.substring(0, spanStart));
+            }
+        }
+        return coloredStrings;
+    }
+
+    private String formatStringList(List<String> strings){
+        String formattedString = "";
+        if(strings.size() < 3) {
+            formattedString = String.join(" and ", strings);
+        }
+        else {
+            formattedString = String.join(", ", strings);
+            int lastCommaIndex = formattedString.lastIndexOf(',');
+            formattedString = formattedString.substring(0, lastCommaIndex) + ", and" + formattedString.substring(lastCommaIndex+1);
+        }
+        return formattedString;
     }
 
     public JPanel getContent() {
