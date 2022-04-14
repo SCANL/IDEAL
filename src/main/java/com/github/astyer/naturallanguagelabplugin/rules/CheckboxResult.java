@@ -1,5 +1,8 @@
 package com.github.astyer.naturallanguagelabplugin.rules;
 
+/**
+ * the result of checking against a checkbox
+ */
 public class CheckboxResult {
     private boolean matched = false;
     private boolean result = false;

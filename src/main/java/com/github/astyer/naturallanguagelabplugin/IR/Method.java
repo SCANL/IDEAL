@@ -2,12 +2,14 @@ package com.github.astyer.naturallanguagelabplugin.IR;
 
 import com.github.astyer.naturallanguagelabplugin.rules.POSTagger;
 import com.github.astyer.naturallanguagelabplugin.rules.Result;
-import com.github.astyer.naturallanguagelabplugin.rules.RuleVisitor;
 import com.intellij.psi.PsiElement;
 
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * represents a method in the users code
+ */
 public class Method implements Identifier{
     String name, displayName, canonicalType;
     POSTagger.POSResult pos;
@@ -61,11 +63,6 @@ public class Method implements Identifier{
     @Override
     public PsiElement getPsiObject() {
         return this.element;
-    }
-
-    @Override
-    public Optional<Result> accept(RuleVisitor visitor) {
-        return visitor.visitMethod(this);
     }
 
     @Override

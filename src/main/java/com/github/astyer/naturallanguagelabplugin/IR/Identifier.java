@@ -2,7 +2,6 @@ package com.github.astyer.naturallanguagelabplugin.IR;
 
 import com.github.astyer.naturallanguagelabplugin.rules.POSTagger;
 import com.github.astyer.naturallanguagelabplugin.rules.Result;
-import com.github.astyer.naturallanguagelabplugin.rules.RuleVisitor;
 import com.intellij.psi.PsiElement;
 
 import java.util.List;
@@ -19,7 +18,6 @@ public interface Identifier {
     String getDisplayName();
     IRFactory.IRType getType();
     PsiElement getPsiObject();
-    Optional<Result> accept(RuleVisitor visitor);
     String getPOS();
     String getIdentifierSplit();
     Identifier getParent();

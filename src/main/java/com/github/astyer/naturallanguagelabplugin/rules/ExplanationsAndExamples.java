@@ -4,6 +4,10 @@ import java.util.HashMap;
 import java.util.Map;
 import static java.util.Map.entry;
 
+/**
+ * A class to hold all the explanations and examples.
+ * This should at some point be extracted to a configuration file
+ */
 public class ExplanationsAndExamples {
 
     private static final HashMap<Rule, String> explanations = new HashMap<>(Map.ofEntries(

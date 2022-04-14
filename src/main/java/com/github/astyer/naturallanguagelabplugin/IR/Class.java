@@ -2,12 +2,14 @@ package com.github.astyer.naturallanguagelabplugin.IR;
 
 import com.github.astyer.naturallanguagelabplugin.rules.POSTagger;
 import com.github.astyer.naturallanguagelabplugin.rules.Result;
-import com.github.astyer.naturallanguagelabplugin.rules.RuleVisitor;
 import com.intellij.psi.PsiElement;
 
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * represents a class in the users code
+ */
 public class Class implements Identifier {
     String name, displayName, canonicalType;
     PsiElement element;
@@ -47,10 +49,6 @@ public class Class implements Identifier {
         Annotation,
         Record,
         Enum
-    }
-
-    public Optional<Result> accept(RuleVisitor v){
-        return v.visitClass(this);
     }
 
     @Override

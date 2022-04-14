@@ -5,13 +5,22 @@ import com.github.astyer.naturallanguagelabplugin.rules.Recommendation.Recommend
 
 import java.util.List;
 
+/**
+ * A class to represent the final result of the backend.
+ */
 public class Result{
     public static class Recommendation {
+        // does the identifier match the regex?
         private Boolean regexMatches;
+        // what POS tags can be inserted to make the identifier match more
         private List<String> nextPOSRecommendations;
+        // the explanation for the rule
         private String explanation;
+        // the example for the rule
         private String example;
+        // the name of the rule
         private String name;
+        // the recommendation that we suggest be applied to the identifier
         private RecommendationAlg.Rec rec;
 
         public Recommendation(String name, Boolean regexMatches, List<String> nextPOSRecommendations, String explanation, String example, RecommendationAlg.Rec rec){

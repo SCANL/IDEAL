@@ -9,12 +9,23 @@ import com.google.errorprone.annotations.Var;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
+/**
+ * A class to represent a conditional transition that can operate on classes, methods, and variables
+ */
 public class Checkbox {
     ClassCheckbox ccb;
     MethodCheckbox mcb;
     VariableCheckbox vcb;
     String name;
 
+    /**
+     * A basic constructor with dynamic arguments for each argument. these will each be run to get a value
+     * when the rule is checked.
+     * @param name
+     * @param ccb
+     * @param mcb
+     * @param vcb
+     */
     public Checkbox(String name, ClassCheckbox ccb, MethodCheckbox mcb, VariableCheckbox vcb){
         this.name = name;
         this.ccb = (ccb == null) ? c -> CheckboxResult.empty() : ccb;
@@ -34,11 +45,4 @@ public class Checkbox {
         }
         return null;
     }
-
-//    static Checkbox PosCheckbox(Pattern p){
-//        return new Checkbox("Regex matches " + p.pattern(),
-//                c -> new CheckboxResult( p.matcher(c.getPOS()).matches()),
-//                method -> new CheckboxResult(p.matcher(method.getPOS()).matches()),
-//                variable -> new CheckboxResult(p.matcher(variable.getPOS()).matches()));
-//    }
 }

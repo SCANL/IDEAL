@@ -3,6 +3,9 @@ package com.github.astyer.naturallanguagelabplugin.rules.tree;
 import com.github.astyer.naturallanguagelabplugin.rules.Recommendation.RecommendationAlg;
 import com.kipust.regex.Dfa;
 
+/**
+ * A class to store the result of a rule
+ */
 public class NodeResult {
     Dfa.DFAResult regexResult;
     String name;

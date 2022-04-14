@@ -13,13 +13,35 @@ import java.lang.reflect.Array;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * Gets a recommendation for an identifier for a given regex pattern
+ * This is why we cant use the standard library for regex
+ * We need to be able to figure out exactly where the string failed in addition to
+ * being given some options that would make the string match the regex better
+ */
 public class RecommendationAlg {
+    /**
+     * A class for a single recommendation.
+     */
     public static class Rec {
+        /**
+         * a single change. will either be insert or remove
+         * These indexes rely on previous changes to be applied before applying itself.
+         */
         public interface Change {
+            /**
+             * Apply the change to an identifier
+             * @param original
+             * @return
+             */
             ArrayList<WordPos> apply(ArrayList<WordPos> original);
             Pair<ArrayList<WordPos>, Integer> getColoredId(ArrayList<WordPos> original, int offset);
             Pair<ArrayList<WordPos>, Integer> getColoredPOS(ArrayList<WordPos> original, int offset);
         }
+
+        /**
+         * a change that will insert "change" at "index"
+         */
         public static class Insert implements Rec.Change {
             public int index;
             public String change;
@@ -51,6 +73,10 @@ public class RecommendationAlg {
             }
 
         }
+
+        /**
+         * A change that will remove the word at "index"
+         */
         public static class Remove implements Rec.Change {
             public int index;
 
@@ -80,6 +106,10 @@ public class RecommendationAlg {
             }
         }
 
+        /**
+         * Print out the debug info for the rec
+         * @return
+         */
         public String debug(){
             StringBuilder sb = new StringBuilder("Starting with \"");
             sb.append(this.original.toString()).append("\"\n");
@@ -101,9 +131,16 @@ public class RecommendationAlg {
             return sb.toString();
         }
 
+        // the original identifier
         private final List<WordPos> original;
+        // a list of changes to get to the final identifier
+        // note that applying the changes in order is important
         private final List<Change> changes;
 
+        /**
+         * get the final identifier by applying the changes
+         * @return
+         */
         public List<WordPos> getFinal(){
             ArrayList<WordPos> result = new ArrayList<>(original);
             for(Change change: changes){
@@ -112,19 +149,39 @@ public class RecommendationAlg {
             return result;
         }
 
+        /**
+         * create a new Rec from a word and list of changes
+         * @param original
+         * @param changes
+         */
         public Rec(List<WordPos> original, List<Change> changes){
             this.changes = changes;
             this.original = original;
 //            this.wordsRemoved = new ArrayList<>();
         }
+
+        /**
+         * copy a Rec
+         * @param other
+         */
         public Rec(Rec other){
             this.original = new ArrayList(other.original);
             this.changes = new ArrayList(other.changes);
         }
 
+        /**
+         * Add an insert to the changes
+         * @param index the index for the insert
+         * @param change the POS to be inserted
+         */
         public void addInsert(int index, String change) {
             this.changes.add(new Insert(index, change));
         }
+
+        /**
+         * adds a remove to the changes
+         * @param index the index to remove
+         */
         public void addRemove(int index) {
             this.changes.add(new Remove(index));
         }
@@ -153,6 +210,9 @@ public class RecommendationAlg {
         }
     }
 
+    /**
+     * a word and POS pair
+     */
     public static class WordPos{
         private String word;
         private String pos;
@@ -169,15 +229,27 @@ public class RecommendationAlg {
         }
     }
 
-    List<WordPos> original = new ArrayList<>();;
+    List<WordPos> original = new ArrayList<>();
+    /**
+     * A queue to hold eac reccomendations that we are going to try.
+     */
     Queue<Rec> toTry = new LinkedList<>();
     Pattern pattern;
     int timeout = 500;
 
+    /**
+     * sets the number of tries that we should try before giving up
+     * @param timeout
+     */
     public void setTimeout(int timeout) {
         this.timeout = timeout;
     }
 
+    /**
+     * Sets up the recommendation algorithem by processing the identifier
+     * @param pattern
+     * @param id
+     */
     public RecommendationAlg(Pattern pattern, Identifier id){
         String[] poss = id.getPosResult().getPosTags().split("_");
         String[] words = id.getPosResult().getId().split("_");
@@ -192,6 +264,13 @@ public class RecommendationAlg {
         this.pattern = pattern;
     }
 
+    /**
+     * Runs the actual recommendation algorithem
+     * It is basicly doing a bredth first search of the binary tree of all the possible changes that we could apply to
+     * the identifier. We can either add a new POS tag where the regex fails or we can remove the next word from the identifier
+     * where the regex fails. We keep running this until we find a sequence of changes that works.
+     * @return
+     */
     public Rec getRecommendation(){
         HashMap<String, Boolean> seen = new HashMap<>();
 //        List<Rec> works = new ArrayList<>();
@@ -244,16 +323,5 @@ public class RecommendationAlg {
             i++;
         }
         return i;
-    }
-
-    public static void main(String[] args) {
-        Pattern p = Pattern.Compile("&(*('NM_'),'NPL_')");
-//        String str = "P_NM_V_NM_N_";
-        // (black)NM_NM_(green)NM_(black)N_
-        Variable v = new Variable("userName","display name", null, null, IRFactory.IRType.TYPE_OTHER, false);
-        v.setPosResult(new POSTagger.POSResult("NM_NPL_N_N_", "user_Name_Admin_Name"));
-        RecommendationAlg r = new RecommendationAlg(p, v);
-        Rec recs = r.getRecommendation();
-        System.out.println(recs.debug());
     }
 }

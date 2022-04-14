@@ -7,6 +7,9 @@ import com.intellij.psi.util.PsiTypesUtil;
 
 import java.util.*;
 
+/**
+ * A factory to generate IR from PSI classes
+ */
 public class IRFactory {
 
     public enum IRType {

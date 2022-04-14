@@ -11,6 +11,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+/**
+ * A class to connect to the POS tagger and tag identifiers
+ */
 public class POSTagger {
     public static class POSResult{
         String posTags;
@@ -26,7 +29,10 @@ public class POSTagger {
             return Id;
         }
     }
+    //this folows the singleton pattern
     static POSTagger instance;
+    //we keep a cache of each identifier based on name, type and context. This should help speed things up
+    // though we don't have checks to make sure that it doesn't get too big
     Map<String, POSResult> cache;
 
     public static POSTagger getInstance(){
@@ -44,6 +50,11 @@ public class POSTagger {
         return name  + "|" + type +"|"+context;
     }
 
+    /**
+     * Tag an identifier
+     * @param id the identifier to tag
+     * @return the Result
+     */
     public POSResult tag(Identifier id){
         String name = id.getName();
         String type = id.getCanonicalType().toLowerCase(); //todo: remove before last .

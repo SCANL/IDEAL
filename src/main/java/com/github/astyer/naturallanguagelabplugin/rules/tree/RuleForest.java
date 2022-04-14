@@ -12,6 +12,10 @@ import com.github.astyer.naturallanguagelabplugin.rules.ExplanationsAndExamples;
 import com.github.astyer.naturallanguagelabplugin.rules.Rule;
 import com.kipust.regex.Pattern;
 
+/**
+ * Main class that contains all of the rules that get run against identifiers
+ * It is a singleton
+ */
 public class RuleForest {
     static RuleForest instance = null;
     public static RuleForest getInstance(){
@@ -22,6 +26,9 @@ public class RuleForest {
     }
 
     private RuleForest(){
+        //to create a new node in the tree you will need to create a new RuleNode
+        // then to attach it to a tree you run .addBranch with a checkbox as the conditional
+
         //create var
         RuleNode nmn = new RuleNode("NM* N", Pattern.Compile("&(*('NM_'),'N_')"), ExplanationsAndExamples.getExplanation(Rule.NMN), ExplanationsAndExamples.getExample(Rule.NMN));
         RuleNode vnmn = new RuleNode("V NM* N|NPL", Pattern.Compile("&('V_',&(*('NM_'),|('N_','NPL_')))"), ExplanationsAndExamples.getExplanation(Rule.VNMN), ExplanationsAndExamples.getExample(Rule.VNMN));//("V (NM )*(N|NPL)"));
@@ -156,8 +163,11 @@ public class RuleForest {
     private RuleNode methodTree;
 
 
-
-
+    /**
+     * run an identifier against the correct tree based on its type
+     * @param id the identifer to check
+     * @return the results of the run
+     */
     public List<NodeResult> runIdentifier(Identifier id){
         if(id instanceof Variable) {
             List<NodeResult> results = varTree.checkIdentifier(id, 0);
