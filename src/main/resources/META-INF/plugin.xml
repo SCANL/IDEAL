@@ -6,7 +6,6 @@
 
     <depends>com.intellij.modules.platform</depends>
     <depends>com.intellij.modules.java</depends>
-    <!-- we'll probably need a dependency on com.intellij.modules.lang for actually editing and highlighting text -->
 
     <actions>
     </actions>
@@ -23,5 +22,6 @@
         <toolWindow id="Identifier Grammar Pattern Suggestions" secondary="true" icon="AllIcons.General.Modified" anchor="right"
                     factoryClass="com.github.astyer.naturallanguagelabplugin.ui.IdentifierGrammarToolWindowFactory"/>
         <postStartupActivity implementation="com.github.astyer.naturallanguagelabplugin.extensions.MyStartupActivity"/>
+        <projectService serviceImplementation="com.github.astyer.naturallanguagelabplugin.extensions.PersistenceService" />
     </extensions>
 </idea-plugin>

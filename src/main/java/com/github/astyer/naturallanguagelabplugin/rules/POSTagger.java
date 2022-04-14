@@ -47,7 +47,7 @@ public class POSTagger {
     }
 
     private String getKey(String name, String type, String context){
-        return name  + "|" + type +"|"+context;
+        return name + "|" + type + "|" + context;
     }
 
     /**
@@ -61,17 +61,17 @@ public class POSTagger {
         String context = id.getContext();
         String key = getKey(name, type, context);
         if(cache.containsKey(key)){
-            System.out.println(name + " is in the cache");
+            //System.out.println(name + " is in the cache");
             return cache.get(key);
         }
         try {
             String urlStr = String.format("http://127.0.0.1:5000/%s/%s/%s", type, name, context);
-            System.out.println("Tagging "+urlStr);
+            //System.out.println("Tagging "+urlStr);
             URL url = new URL(urlStr);
             HttpURLConnection con = (HttpURLConnection) url.openConnection();
             con.setRequestMethod("GET");
             int status = con.getResponseCode();
-            System.out.println("got response code of "+status);
+            //System.out.println("got response code of "+status);
             if(status == 200) {
                 BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
                 String inputLine;
@@ -79,7 +79,7 @@ public class POSTagger {
                 while ((inputLine = in.readLine()) != null) {
                     content.append(inputLine);
                 }
-                System.out.println("received content of "+content);
+                //System.out.println("received content of "+content);
                 in.close();
                 con.disconnect();
                 String posTags = Arrays.stream(content.toString().split(","))
@@ -91,7 +91,7 @@ public class POSTagger {
                         .map(w -> w + "_")
                         .collect(Collectors.joining(""));
 
-                System.out.println("final result of "+posTags);
+                //System.out.println("final result of "+posTags);
                 POSResult result = new POSResult(posTags, finalId);
                 cache.put(key, result);
                 return result;

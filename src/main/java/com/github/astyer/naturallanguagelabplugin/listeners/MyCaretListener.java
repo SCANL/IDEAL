@@ -7,22 +7,17 @@ import com.intellij.openapi.editor.Caret;
 import com.intellij.openapi.editor.event.CaretEvent;
 import com.intellij.openapi.editor.event.CaretListener;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.wm.ToolWindow;
-import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.psi.*;
 import org.jetbrains.annotations.NotNull;
 
 public class MyCaretListener implements CaretListener {
-    private Project project;
-    private PsiDocumentManager psiDocumentManager;
-    private ToolWindow toolWindow;
-    private IdentifierGrammarToolWindow toolWindowContent;
+    private final PsiDocumentManager psiDocumentManager;
+    private final IdentifierGrammarToolWindow toolWindowContent;
 
     public MyCaretListener(Project project) {
-        this.project = project;
         psiDocumentManager = PsiDocumentManager.getInstance(project);
-        toolWindow = ToolWindowManager.getInstance(project).getToolWindow("Identifier Grammar Pattern Suggestions");
         toolWindowContent = IdentifierGrammarToolWindow.getInstance();
+        toolWindowContent.passProject(project);
     }
 
     @Override
@@ -36,7 +31,7 @@ public class MyCaretListener implements CaretListener {
                     PsiIdentifier identifier = (PsiIdentifier) psiElement;
                     Result result = IdentifierSuggestionResults.get(identifier);
                     if (result != null) {
-                        toolWindowContent.setCurrentIdentifier(result);
+                        toolWindowContent.setCurrentIdentifier(result, psiFile);
                     }
                 }
             }
