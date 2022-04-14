@@ -8,11 +8,18 @@ import com.intellij.ui.content.ContentFactory;
 import org.jetbrains.annotations.NotNull;
 
 public class IdentifierGrammarToolWindowFactory implements ToolWindowFactory {
+    /**
+     * Uses the instance of IdentifierGrammarToolWindow as tool window content and initializes it by passing in the
+     * current project.
+     * @param project the current project
+     * @param toolWindow the tool window to fill with content
+     */
     @Override
     public void createToolWindowContent(@NotNull Project project, @NotNull ToolWindow toolWindow) {
-        IdentifierGrammarToolWindow myToolWindow = IdentifierGrammarToolWindow.getInstance();
+        IdentifierGrammarToolWindow toolWindowContent = IdentifierGrammarToolWindow.getInstance();
+        toolWindowContent.passProject(project);
         ContentFactory contentFactory = ContentFactory.SERVICE.getInstance();
-        Content content = contentFactory.createContent(myToolWindow.getContent(), "", false);
+        Content content = contentFactory.createContent(toolWindowContent.getContent(), "", false);
         toolWindow.getContentManager().addContent(content);
     }
 }

@@ -20,6 +20,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Used as the tool window content. Swing components are associated with the IdentifierGrammarToolWindow.form file.
+ */
 public class IdentifierGrammarToolWindow {
 
     final String catalogueURL = "https://github.com/SCANL/identifier_name_structure_catalogue";
@@ -155,6 +158,13 @@ public class IdentifierGrammarToolWindow {
         }
     }
 
+    /**
+     * Called every time the caret is selecting an identifier.
+     * Sets all the display content of the tool window based on information about the identifier, its recommendation,
+     * and if it is being ignored.
+     * @param result the rules backend Result containing recommendation information for the identifier
+     * @param psiFile the file the identifier was found in
+     */
     public void setCurrentIdentifier(Result result, PsiFile psiFile) {
         Identifier id = result.getId();
         type = id.getCanonicalType();
@@ -243,6 +253,11 @@ public class IdentifierGrammarToolWindow {
         return coloredStrings;
     }
 
+    /**
+     * Formats a list of strings into a sentence form comma separated string with appropriate "and" usage.
+     * @param strings the list of strings
+     * @return a sentence form string list
+     */
     private String formatStringList(List<String> strings){
         String formattedString = "";
         if(strings.size() < 3) {

@@ -5,6 +5,9 @@ import com.intellij.psi.PsiIdentifier;
 
 import java.util.HashMap;
 
+/**
+ * Stores all the PsiIdentifiers and Results found in IdentifierGrammarInspection in a static HashMap.
+ */
 public class IdentifierSuggestionResults {
     private final static HashMap<PsiIdentifier, Result> identifierResults = new HashMap<>();
 

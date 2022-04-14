@@ -14,12 +14,20 @@ public class MyCaretListener implements CaretListener {
     private final PsiDocumentManager psiDocumentManager;
     private final IdentifierGrammarToolWindow toolWindowContent;
 
+    /**
+     * Gathers the project's PsiDocumentManager and the tool window content.
+     * @param project the current project
+     */
     public MyCaretListener(Project project) {
         psiDocumentManager = PsiDocumentManager.getInstance(project);
         toolWindowContent = IdentifierGrammarToolWindow.getInstance();
-        toolWindowContent.passProject(project);
     }
 
+    /**
+     * Called every time the caret location changes.
+     * Detects if the caret is currently over an identifier and updates the tool window if so.
+     * @param event the event that moved the caret
+     */
     @Override
     public void caretPositionChanged(@NotNull CaretEvent event) {
         final PsiFile psiFile = psiDocumentManager.getPsiFile(event.getEditor().getDocument());
