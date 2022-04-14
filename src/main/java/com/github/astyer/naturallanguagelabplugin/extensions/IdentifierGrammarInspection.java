@@ -2,6 +2,7 @@ package com.github.astyer.naturallanguagelabplugin.extensions;
 
 import com.github.astyer.naturallanguagelabplugin.IR.Class;
 import com.github.astyer.naturallanguagelabplugin.IR.IRFactory;
+import com.github.astyer.naturallanguagelabplugin.IR.Identifier;
 import com.github.astyer.naturallanguagelabplugin.IR.Method;
 import com.github.astyer.naturallanguagelabplugin.IR.Variable;
 import com.github.astyer.naturallanguagelabplugin.common.IdentifierSuggestionResults;
@@ -10,20 +11,16 @@ import com.github.astyer.naturallanguagelabplugin.rules.Result;
 import com.intellij.codeInspection.*;
 import com.intellij.codeInspection.util.IntentionFamilyName;
 import com.intellij.codeInspection.util.IntentionName;
-import com.intellij.lang.annotation.HighlightSeverity;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.psi.*;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Comparator;
-import java.util.Optional;
-
 public class IdentifierGrammarInspection extends AbstractBaseJavaLocalInspectionTool {
 
     private final ViewExplanationQuickFix myQuickFix = new ViewExplanationQuickFix();
-    private static AggregateRules aggregateRules = new AggregateRules();
+    private static final AggregateRules aggregateRules = new AggregateRules();
 
     @Override
     public void inspectionStarted(@NotNull LocalInspectionToolSession session, boolean isOnTheFly) {
@@ -33,7 +30,13 @@ public class IdentifierGrammarInspection extends AbstractBaseJavaLocalInspection
     @Override
     public @NotNull PsiElementVisitor buildVisitor(@NotNull ProblemsHolder holder, boolean isOnTheFly) {
         return new JavaElementVisitor() {
-            
+
+            private boolean isCurrentlyIgnored(Project project, Identifier id, String recommendationName) {
+                PersistenceService persistenceService = project.getService(PersistenceService.class);
+                String ignoreKey = PersistenceService.getIgnoreKey(id.getDisplayName(), id.getCanonicalType(), id.getContext(), recommendationName);
+                return persistenceService.identifierIsIgnored(ignoreKey);
+            }
+
             @Override
             public void visitVariable(PsiVariable variable) {
                 Variable IRVariable = IRFactory.createVariable(variable);
@@ -41,8 +44,8 @@ public class IdentifierGrammarInspection extends AbstractBaseJavaLocalInspection
                 PsiIdentifier variableIdentifier = variable.getNameIdentifier();
                 IdentifierSuggestionResults.put(variableIdentifier, result);
                 Result.Recommendation topRecommendation = result.getTopRecommendation();
-                if (topRecommendation != null && !topRecommendation.getRegexMatches()) {
-                    String description = "Variable name '" + variable.getName() + "' should use grammar pattern " + topRecommendation.getName(); //is the rule name in Recommendation?
+                if (!topRecommendation.getRegexMatches() && !isCurrentlyIgnored(variable.getProject(), result.getId(), topRecommendation.getName())) {
+                    String description = "Variable name '" + variable.getName() + "' should use grammar pattern " + topRecommendation.getName();
                     holder.registerProblem(variableIdentifier, description, myQuickFix);
                 }
 //                System.out.println(variable.getName() + " finished parsing at: " + System.currentTimeMillis());
@@ -51,12 +54,11 @@ public class IdentifierGrammarInspection extends AbstractBaseJavaLocalInspection
             @Override
             public void visitMethod(PsiMethod method) {
                 Method IRMethod = IRFactory.createMethod(method);
-                System.out.println(IRMethod.getDisplayName() + ": " + IRMethod.usesGenerics());
                 Result result = aggregateRules.runAll(IRMethod);
                 PsiIdentifier methodIdentifier = method.getNameIdentifier();
                 IdentifierSuggestionResults.put(methodIdentifier, result);
                 Result.Recommendation topRecommendation = result.getTopRecommendation();
-                if (topRecommendation != null && !topRecommendation.getRegexMatches()) {
+                if (!topRecommendation.getRegexMatches() && !isCurrentlyIgnored(method.getProject(), result.getId(), topRecommendation.getName())) {
                     String description = "Method name '" + method.getName() + "' should use grammar pattern " + topRecommendation.getName();
                     holder.registerProblem(methodIdentifier, description, myQuickFix);
                 }
@@ -70,7 +72,7 @@ public class IdentifierGrammarInspection extends AbstractBaseJavaLocalInspection
                 PsiIdentifier classIdentifier = aClass.getNameIdentifier();
                 IdentifierSuggestionResults.put(classIdentifier, result);
                 Result.Recommendation topRecommendation = result.getTopRecommendation();
-                if (topRecommendation != null && !topRecommendation.getRegexMatches()) {
+                if (!topRecommendation.getRegexMatches() && !isCurrentlyIgnored(aClass.getProject(), result.getId(), topRecommendation.getName())) {
                     String description = "Class name '" + aClass.getName() + "' should use grammar pattern " + topRecommendation.getName();
                     holder.registerProblem(classIdentifier, description, myQuickFix);
                 }

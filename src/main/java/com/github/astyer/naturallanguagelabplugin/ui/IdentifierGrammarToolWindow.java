@@ -1,23 +1,23 @@
 package com.github.astyer.naturallanguagelabplugin.ui;
 
 import com.github.astyer.naturallanguagelabplugin.IR.Identifier;
+import com.github.astyer.naturallanguagelabplugin.extensions.PersistenceService;
 import com.github.astyer.naturallanguagelabplugin.rules.Recommendation.RecommendationAlg;
 import com.github.astyer.naturallanguagelabplugin.rules.Result;
 import com.github.astyer.naturallanguagelabplugin.rules.TagNames;
 import org.javatuples.Pair;
+import com.intellij.codeInsight.daemon.DaemonCodeAnalyzer;
+import com.intellij.openapi.project.Project;
+import com.intellij.psi.PsiFile;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.net.URI;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class IdentifierGrammarToolWindow {
@@ -25,10 +25,12 @@ public class IdentifierGrammarToolWindow {
     final String catalogueURL = "https://github.com/SCANL/identifier_name_structure_catalogue";
     final String knowMoreText = "These recommendations are all part of a catalogue of grammar patterns. This catalogue documents the identifier naming styles and patterns that have been discovered by software researchers. You can access this catalogue via the button below.";
     final Font titleFont = new Font(null, Font.BOLD, 16);
-    final String maxTextWidthStyling = "<html><body style='width: 300px'>"; //determines the min width of the tables unfortunately
+    final String maxTextWidthStyling = "<html><body style='width: 315px'>"; //determines the min width of the tables unfortunately
     final String noWrapStyling = "<html><body style='white-space: nowrap'>";
 
     private static IdentifierGrammarToolWindow instance = null;
+    private Project project;
+    private PersistenceService persistenceService;
 
     private JPanel myToolWindowContent;
 
@@ -48,6 +50,7 @@ public class IdentifierGrammarToolWindow {
     private JLabel knowMoreTitle;
     private JLabel knowMoreValue;
     private JButton catalogueButton;
+    private JButton ignoreButton;
 
     private final JLabel[] titleLabels = {currentTitle, recommendedTitle, exampleTitle, explanationTitle, knowMoreTitle};
     private final JTable[] tables = {currentTable, recommendedTable};
@@ -57,9 +60,13 @@ public class IdentifierGrammarToolWindow {
     private String type = "";
     private String identifierName = "";
     private String currentPattern = "";
+    private String currentContext = "";
     private String recommendedIdentifier = "";
     private String recommendedPattern = "";
     private String recommendedGenericPattern = "";
+
+    private Result currentResult;
+    private PsiFile currentFile;
 
     public static IdentifierGrammarToolWindow getInstance() {
         if (instance == null) {
@@ -70,7 +77,7 @@ public class IdentifierGrammarToolWindow {
 
     public IdentifierGrammarToolWindow() {
         setInitialTextAndStyling();
-        updateTables();
+        updateTables(false);
         catalogueButton.addActionListener(e -> {
             try {
                 Desktop.getDesktop().browse(URI.create(catalogueURL));
@@ -78,6 +85,23 @@ public class IdentifierGrammarToolWindow {
                 System.err.println("Failed to navigate to SCANL catalogue");
             }
         });
+        ignoreButton.addActionListener(e -> {
+            String ignoreKey = PersistenceService.getIgnoreKey(identifierName, type, currentContext, recommendedGenericPattern);
+            if (!persistenceService.identifierIsIgnored(ignoreKey)) {
+                persistenceService.ignoreIdentifier(ignoreKey);
+            } else {
+                persistenceService.unignoreIdentifier(ignoreKey);
+            }
+            // Refresh the file so the inspection is run again
+            DaemonCodeAnalyzer.getInstance(project).restart(currentFile);
+            // Update the sidebar
+            this.setCurrentIdentifier(currentResult, currentFile);
+        });
+    }
+
+    public void passProject(Project p) {
+        project = p;
+        persistenceService = project.getService(PersistenceService.class);
     }
 
     private void setInitialTextAndStyling() {
@@ -102,9 +126,9 @@ public class IdentifierGrammarToolWindow {
         }
     }
 
-    private void updateTables() {
+    private void updateTables(boolean currentlyIgnoring) {
         updateCurrentTable();
-        updateRecommendedTable();
+        updateRecommendedTable(currentlyIgnoring);
     }
 
     private void updateCurrentTable() {
@@ -117,26 +141,47 @@ public class IdentifierGrammarToolWindow {
                 currentHeaders
         ));
     }
-    private void updateRecommendedTable() {
-        recommendedTable.setModel(new DefaultTableModel(
-                new String[][] {{type, recommendedIdentifier, recommendedPattern, recommendedGenericPattern}},
-                recommendedHeaders
-        ));
+    private void updateRecommendedTable(boolean currentlyIgnoring) {
+        if (!currentlyIgnoring) {
+            recommendedTable.setModel(new DefaultTableModel(
+                    new String[][]{{type, recommendedIdentifier, recommendedPattern, recommendedGenericPattern}},
+                    recommendedHeaders
+            ));
+        } else {
+            recommendedTable.setModel(new DefaultTableModel(
+                    new String[][]{{"Ignored", "Ignored", "Ignored", "Ignored"}},
+                    recommendedHeaders
+            ));
+        }
     }
 
-    public void setCurrentIdentifier(Result result) {
+    public void setCurrentIdentifier(Result result, PsiFile psiFile) {
         Identifier id = result.getId();
         type = id.getCanonicalType();
         identifierName = id.getDisplayName();
         currentPattern = id.getPOS().replace('_', ' ');
+        currentContext = id.getContext();
+        currentResult = result;
+        currentFile = psiFile;
         Result.Recommendation topRecommendation = result.getTopRecommendation();
         recommendedIdentifier = getRecommendedIdentifier(topRecommendation);
         recommendedPattern = getRecommendedPattern(topRecommendation);
         recommendedGenericPattern = topRecommendation.getName();
-        updateTables();
-        explanationValue.setText(maxTextWidthStyling + topRecommendation.getExplanation());
-        exampleValue.setText(maxTextWidthStyling + topRecommendation.getExample());
-        recDescription.setText(getRecommendationDescription(recommendedIdentifier, recommendedPattern));
+
+        String ignoreKey = PersistenceService.getIgnoreKey(identifierName, type, currentContext, topRecommendation.getName());
+        if (!persistenceService.identifierIsIgnored(ignoreKey)) {
+            updateTables(false);
+            explanationValue.setText(maxTextWidthStyling + topRecommendation.getExplanation());
+            exampleValue.setText(maxTextWidthStyling + topRecommendation.getExample());
+            recDescription.setText(maxTextWidthStyling + getRecommendationDescription(recommendedIdentifier, recommendedPattern));
+            ignoreButton.setText("Ignore Recommendation");
+        } else {
+            updateTables(true);
+            explanationValue.setText("Identifier is currently being ignored.");
+            exampleValue.setText("Identifier is currently being ignored.");
+            recDescription.setText("");
+            ignoreButton.setText("Stop Ignoring Recommendation");
+        }
     }
 
     private String getRecommendedIdentifier(Result.Recommendation recommendation) {
