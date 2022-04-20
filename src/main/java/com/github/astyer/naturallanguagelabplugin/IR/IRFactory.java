@@ -8,7 +8,8 @@ import com.intellij.psi.util.PsiTypesUtil;
 import java.util.*;
 
 /**
- * A factory to generate IR from PSI classes
+ * A factory used to create internal representations of variables, methods, and classes.
+ * These IR identifiers contain meta information that the rules backend needs to make recommendations.
  */
 public class IRFactory {
 
@@ -19,25 +20,11 @@ public class IRFactory {
         TYPE_OTHER
     }
 
-    public String IRTypeToString(IRType type, Identifier id){
-        switch (type){
-            case TYPE_BOOLEAN:
-                return "Boolean";
-            case TYPE_COLLECTION:
-                return "Array";
-            case TYPE_VOID:
-                return "Void";
-            case TYPE_OTHER:
-                return id.getCanonicalType();
-        }
-        return "UNKNOWN_TYPE";
-    }
-
     /**
      * Checks if the PsiType is some kind of collection
      * Currently checks for standard arrays and anything that is a Collection or Map
-     * @param type
-     * @param project
+     * @param type the PsiType of the identifier
+     * @param project the current project
      * @return if the PsiType is some kind of collection
      */
     private static boolean isSomeCollection(PsiType type, Project project) {
@@ -84,20 +71,17 @@ public class IRFactory {
     /**
      * Check if psiMethod performs any kind of type conversions
      * Currently only checks for any explicit casting
-     * @param psiMethod
+     * @param psiMethod the method in question
      * @return if psiMethod performs any kind of type conversions
      */
     private static boolean performsConversion(PsiMethod psiMethod) {
         PsiTypeCastExpression castExpression = PsiTreeUtil.findChildOfType(psiMethod, PsiTypeCastExpression.class);
-        if(castExpression != null) {
-            return true;
-        }
-        return false;
+        return castExpression != null;
     }
 
     /**
      * Check if psiMethod overrides any methods from a class that is an event listener
-     * @param psiMethod
+     * @param psiMethod the method in question
      * @return if psiMethod overrides an event listener method
      */
     private static boolean performsEventDrivenFunctionality(PsiMethod psiMethod) {
@@ -120,7 +104,7 @@ public class IRFactory {
 
     /**
      * Check if psiMethod is a generic method, i.e. one of its parameters resolve to a generic type
-     * @param psiMethod
+     * @param psiMethod the method in question
      * @return if psiMethod uses generics
      */
     private static boolean usesGenerics(PsiMethod psiMethod) {
@@ -140,7 +124,7 @@ public class IRFactory {
     /**
      * Check if psiVariable is the result of some method that performs looping.
      * Specifically, if the method name contains the word "contains" or the word "find".
-     * @param psiVariable
+     * @param psiVariable the variable in question
      * @return if psiVariable is a loop result
      */
     private static boolean isLoopResult(PsiVariable psiVariable) {
@@ -159,7 +143,7 @@ public class IRFactory {
      * Check if psiMethod performs any looping by meeting either of two conditions.
      * 1. If it calls a method with a name that contains the word "contains" or the word "find".
      * 2. If the method uses some loop, including for, for each, while, do while, etc.
-     * @param psiMethod
+     * @param psiMethod the method in question
      * @return if psiMethod performs looping
      */
     private static boolean performsLooping(PsiMethod psiMethod) {
@@ -174,6 +158,11 @@ public class IRFactory {
         return loopStatement != null;
     }
 
+    /**
+     * Creates an IR Variable from the given PsiVariable with meta info needed by the rules backend
+     * @param psiVariable the given PsiVariable
+     * @return an internal representation Variable
+     */
     public static Variable createVariable(PsiVariable psiVariable) {
         IRType type = typeToIRType(psiVariable.getType(), psiVariable.getProject());
         String canonicalType = getCanonicalType(psiVariable.getType());
@@ -181,12 +170,17 @@ public class IRFactory {
         return new Variable(displayName, displayName, canonicalType, psiVariable, type, isLoopResult(psiVariable));
     }
 
+    /**
+     * Creates an IR Method from the given PsiMethod with meta info needed by the rules backend
+     * @param psiMethod the given PsiMethod
+     * @return an internal representation Method
+     */
     public static Method createMethod(PsiMethod psiMethod) {
         IRType type = typeToIRType(psiMethod.getReturnType(), psiMethod.getProject());
         String typeString = getCanonicalType(psiMethod.getReturnType());
 
         String displayName = psiMethod.getName();
-        List<String> params = new ArrayList(); //add params to the name because the POS tagger expects it
+        List<String> params = new ArrayList(); // add params to the name because the POS tagger expects it
         for(PsiParameter param : psiMethod.getParameterList().getParameters()){
             params.add(getCanonicalType(param.getType()));
         }
@@ -194,8 +188,13 @@ public class IRFactory {
         return new Method(name, displayName, typeString, psiMethod, type, performsConversion(psiMethod), performsEventDrivenFunctionality(psiMethod), usesGenerics(psiMethod), performsLooping(psiMethod));
     }
 
+    /**
+     * Creates an IR Class from the given PsiClass with meta info needed by the rules backend
+     * @param psiClass the given PsiClass
+     * @return an internal representation Class
+     */
     public static Class createClass(PsiClass psiClass) {
-        Class.ClassType type = Class.ClassType.Class; //always Class type for now as we have no rules that need further specification
+        Class.ClassType type = Class.ClassType.Class; // always Class type for now as we have no rules that need further specification
         String displayName = psiClass.getName();
         return new Class(displayName, displayName, psiClass, type);
     }
