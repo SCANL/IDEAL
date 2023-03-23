@@ -14,7 +14,7 @@ RUN cd ensemble_tagger && pip3 install -r requirements.txt
 ENV PYTHONPATH=/app/ensemble_tagger
 ENV PERL5LIB=/app/ensemble_tagger/POSSE/Scripts
 
-RUN pip3 install git+https://github.com/casics/spiral.git
+RUN pip3 install git+https://github.com/cnewman/spiral.git
 
 WORKDIR /app/ensemble_tagger/ensemble_tagger_implementation
 
